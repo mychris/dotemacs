@@ -154,56 +154,56 @@
 	:ensure t)
 #+end_src
 * Interface enhancements
-** Ido [built-in] - Interactively do things with buffers and files
-#+begin_src emacs-lisp
-;  (use-package ido
-;    :diminish
-;    :defer 1
-;    :init
-;    (setq-default
-;     ido-save-directory-list-file (expand-file-name "ido.last" (getenv "EMACS_CACHE_DIR"))
-;     ido-enable-flex-matching t
-;     ido-everywhere t)
-;    :config
-;    (ido-mode 1))
+** [INACTIVE] Ido [built-in] - Interactively do things with buffers and files
+#+begin_src emacs-lisp :tangle nil
+  (use-package ido
+    :diminish
+    :defer 1
+    :init
+    (setq-default
+     ido-save-directory-list-file (expand-file-name "ido.last" (getenv "EMACS_CACHE_DIR"))
+     ido-enable-flex-matching t
+     ido-everywhere t)
+    :config
+    (ido-mode 1))
 #+end_src
-** Ivy - Incremental Vertical completYon
-#+begin_src emacs-lisp
-;  (use-package ivy
-;	:ensure t
-;	:diminish
-;	:defer 1
-;	:config
-;	(setq-default ivy-use-virtual-buffers t)
-;	(setq-default ivy-display-style 'fancy)
-;	;(setq-default ivy-re-builders-alist '((t . ivy--regex-fuzzy)))
-;	:bind (("C-c C-r" . ivy-resume))
-;	:init
-;	(ivy-mode 1))
+** [INACTIVE] Ivy - Incremental Vertical completYon
+#+begin_src emacs-lisp :tangle nil
+  (use-package ivy
+	:ensure t
+	:diminish
+	:defer 1
+	:config
+	(setq-default ivy-use-virtual-buffers t)
+	(setq-default ivy-display-style 'fancy)
+	;(setq-default ivy-re-builders-alist '((t . ivy--regex-fuzzy)))
+	:bind (("C-c C-r" . ivy-resume))
+	:init
+	(ivy-mode 1))
 #+end_src
-** Counsel - Various completion functions using Ivy
-#+begin_src emacs-lisp
-;  (use-package counsel
-;	:ensure t
-;	:after ivy
-;	:bind (("M-x" . counsel-M-x)
-;		   ("C-x C-f" . counsel-find-file)
-;		   :map minibuffer-local-map
-;		   ("C-r" . counsel-minibuffer-history)))
+** [Inactive] Counsel - Various completion functions using Ivy
+#+begin_src emacs-lisp :tangle nil
+  (use-package counsel
+	:ensure t
+	:after ivy
+	:bind (("M-x" . counsel-M-x)
+		   ("C-x C-f" . counsel-find-file)
+		   :map minibuffer-local-map
+		   ("C-r" . counsel-minibuffer-history)))
 #+end_src
-** Swiper - Isearch with an overview
-#+begin_src emacs-lisp
-;  (use-package swiper
-;	:ensure t
-;	:after ivy
-;	:bind (("C-s" . swiper))
-;	:init
-;	(defun swiper-advice-recenter ()
-;	  "Recenter display after swiper.  Ignore ARGS."
-;	  (recenter))
-;	(setq enable-recursive-minibuffers t)
-;	:config
-;	(advice-add 'swiper :after #'swiper-advice-recenter))
+** [INACTIVE] Swiper - Isearch with an overview
+#+begin_src emacs-lisp :tangle nil
+  (use-package swiper
+	:ensure t
+	:after ivy
+	:bind (("C-s" . swiper))
+	:init
+	(defun swiper-advice-recenter ()
+	  "Recenter display after swiper.  Ignore ARGS."
+	  (recenter))
+	(setq enable-recursive-minibuffers t)
+	:config
+	(advice-add 'swiper :after #'swiper-advice-recenter))
 #+end_src
 ** Consult - Consulting completing-read
 #+begin_src emacs-lisp
@@ -684,7 +684,6 @@ Elpy currently has problems with upstream ~jedi~.
 	:ensure t
 	:commands magit-status
 	:config
-	(setq-default magit-completing-read-function 'ivy-completing-read)
 	(magit-auto-revert-mode 1)
 	:hook
 	(magit-mode-hook . magit-load-config-extensions))
