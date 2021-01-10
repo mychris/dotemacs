@@ -1,0 +1,11 @@
+elpa/
+settings.el
+
+# those directories should be somewhere else, but keep them here in case
+# emacs is loaded without the configuration.
+auto-save-list/
+elpy/
+eshell/history
+package-quickstart.el
+transient/
+
