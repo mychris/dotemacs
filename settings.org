@@ -687,6 +687,9 @@ Elpy currently has problems with upstream ~jedi~.
 	(magit-auto-revert-mode 1)
 	:hook
 	(magit-mode-hook . magit-load-config-extensions))
+
+  (use-package gitignore-mode
+	:ensure t)
 #+end_src
 * OTHER
 #+begin_src emacs-lisp
