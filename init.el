@@ -18,6 +18,10 @@
 
 ;;;; Bootstrap use-package
 
+;; this should already be loaded, but I got an error in emacs-27.1 for some reason.
+;; TODO: investigate
+(unless (boundp 'package-archives)
+  (require 'package))
 (setq-default gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
 (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/"))
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
