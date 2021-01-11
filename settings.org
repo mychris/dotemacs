@@ -281,7 +281,7 @@
 	  :defer 1
 	  :diminish
 	  :config
-	  (setq-default which-key-idle-delay 0.25)
+	  (setq-default which-key-idle-delay 0.75)
 	  :init
 	  (which-key-mode 1))
 #+end_src
