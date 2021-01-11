@@ -732,8 +732,11 @@ Elpy currently has problems with upstream ~jedi~.
 
   (use-package flycheck
 	:ensure t
-	:init
-	(global-flycheck-mode))
+	:defer 1
+	:hook
+	(lsp-mode . flycheck-mode)
+	(emacs-lisp-mode . flycheck-mode)
+	)
 
   (use-package flycheck-pos-tip
 	:ensure t
