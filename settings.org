@@ -8,9 +8,6 @@
 #+begin_src emacs-lisp
   (use-package emacs
 	:init
-	(tool-bar-mode -1)      ;; this is too much
-	(menu-bar-mode 1)       ;; keep for colleagues
-	(scroll-bar-mode 1)     ;; keep for colleagues
 	(global-hl-line-mode 1) ;; highlight the line in all windows
 	(setq-default
 	 large-file-warning-threshold (* 100 1000 1000)
