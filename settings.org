@@ -154,6 +154,49 @@
 	:ensure t)
 #+end_src
 * Interface enhancements
+** Minibuffer [built-in]
+#+begin_src emacs-lisp
+  (use-package minibuffer
+	:demand
+	:config
+	(defun kill-other-buffers ()
+	  "Kill all other buffers."
+	  (interactive)
+	  (mapc 'kill-buffer (delq (current-buffer) (buffer-list))))
+
+	;; https://www.emacswiki.org/emacs/KillingBuffers#toc9
+	(setq-default kill-this-buffer-save-list '("*scratch*"))
+	(defun kill-this-buffer-save ()
+	  "Only kill buffers not in the kill-buffer-save-list."
+	  (interactive)
+	  (if (member (buffer-name (current-buffer)) kill-this-buffer-save-list)
+		  (progn
+			(erase-buffer)
+			(bury-buffer))
+		(kill-buffer (current-buffer))))
+
+	(defun myext-focus-minibuffer-or-completion ()
+	  "Focus the active minibuffer or completion window.
+  TODO: needs refactoring."
+	  (interactive)
+	  (let* ((mini (active-minibuffer-window))
+			 (completions (get-window-with-predicate
+						   (lambda (window)
+							 (org-string-match-p
+							  "\\*\\(Completions\\|Embark Collect \\(Live\\|Completions\\)\\)"
+							  (format "%s" window))))))
+		(cond ((and mini (not (minibufferp)))
+			   (select-window mini nil))
+			  ((and completions (not (eq (selected-window) completions)))
+			   (select-window completions nil)))))
+	(setq-default completion-styles '(orderless partial-completion))
+	(setq-default completion-cycle-threshold 5)
+	(setq-default completion-ignore-case t)
+	(setq-default completion-category-defaults nil)
+	:bind (("H-f" . myext-focus-minibuffer-or-completion)
+		   ("C-x k" . kill-this-buffer-save))
+	)
+#+end_src
 ** [INACTIVE] Ido [built-in] - Interactively do things with buffers and files
 #+begin_src emacs-lisp :tangle no
   (use-package ido
@@ -306,34 +349,6 @@
 		   ("<delete>" . neotree-delete-node)
 		   ("C-h" . neotree-hidden-file-toggle)
 		   ("r" . neotree-rename-node)))
-#+end_src
-* Buffer management
-#+begin_src emacs-lisp
-  ;; use ibuffer by default
-  ;; https://www.emacswiki.org/emacs/IbufferMode
-  (defalias 'list-buffers 'ibuffer)
-  (setq-default completion-styles '(orderless partial-completion))
-  (setq-default completion-cycle-threshold 5)
-  (setq-default completion-ignore-case t)
-  (setq-default completion-category-defaults nil)
-
-  (defun kill-other-buffers ()
-	"Kill all other buffers."
-	(interactive)
-	(mapc 'kill-buffer (delq (current-buffer) (buffer-list))))
-
-  ;; https://www.emacswiki.org/emacs/KillingBuffers#toc9
-  (setq-default kill-this-buffer-save-list '("*scratch*"))
-  (defun kill-this-buffer-save ()
-	"Only kill buffers not in the kill-buffer-save-list."
-	(interactive)
-	(if (member (buffer-name (current-buffer)) kill-this-buffer-save-list)
-		(progn
-		  (erase-buffer)
-		  (bury-buffer))
-	  (kill-buffer (current-buffer))))
-
-  (global-set-key (kbd "C-x k") 'kill-this-buffer-save)
 #+end_src
 * Visual
 ** highlight-thing - Minimalistic minor mode to highlight current thing under point
