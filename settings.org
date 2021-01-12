@@ -480,8 +480,7 @@
   (use-package ample-theme
 	:ensure t
 	:defer t
-	:init
-	(load-theme 'ample-flat t))
+	:init)
 
   (use-package sexy-monochrome-theme
 	:ensure t
@@ -489,7 +488,9 @@
 
   (use-package doom-themes
 	:ensure t
-	:defer t)
+	:defer t
+	:init
+	(load-theme 'doom-one t))
 
   (set-face-attribute 'default nil :font "Source Code Pro:size=14:hintstyle=hintfull:autohint=true:antialise=true:rgba=rgb")
 #+end_src
