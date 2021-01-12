@@ -762,9 +762,9 @@ Elpy currently has problems with upstream ~jedi~.
 		   ([remap indent-for-tab-command] . company-indent-or-complete-common)
 		   :map company-active-map
 		   ("C-n" . company-select-next)
-		   ("tab" . company-select-next)
+		   ("<tab>" . company-select-next)
 		   ("C-p" . company-select-previous)
-		   ("backtab" . company-select-previous))
+		   ("<backtab>" . company-select-previous))
 	:init
 	(add-hook 'after-init-hook 'global-company-mode))
 
