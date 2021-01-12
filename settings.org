@@ -148,6 +148,9 @@
 	:diminish
 	:init
 	(setq-default display-line-numbers-type t)
+	(setq-default display-line-numbers-width-start t)
+	(setq-default display-line-numbers-grow-only t)
+	(set-face-attribute 'line-number-current-line nil :weight 'bold)
 	:config
 	(global-display-line-numbers-mode)
 	:hook
@@ -829,7 +832,7 @@ Elpy currently has problems with upstream ~jedi~.
 
   ;;; misc stuff
 
-  (add-hook 'shell-mode-hook (lambda () (linum-mode 0)))
-  (add-hook 'term-mode-hook (lambda () (linum-mode 0)))
+  (add-hook 'shell-mode-hook (lambda () (display-line-numbers-mode 0)))
+  (add-hook 'term-mode-hook (lambda () (display-line-numbers-mode 0)))
   (setq sh-basic-offset 2)
 #+end_src
