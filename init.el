@@ -12,6 +12,9 @@
 
 ;;;; Customization information
 
+;; increase thi early, decrease later on again
+(setq gc-cons-threshold (* 200 1000 1000))
+
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (when (file-exists-p custom-file)
   (load custom-file))
@@ -82,9 +85,22 @@
 
 ;;;; Load settings
 
-(add-to-list 'load-path "~/.emacs.d/contrib/")
+(add-to-list 'load-path (file-name-as-directory (expand-file-name "contrib" user-emacs-directory)))
 
-(require 'org)
-(org-babel-load-file (expand-file-name "settings.org" user-emacs-directory))
+;; only load the org file if it is newer than the el file.
+;; Compile the el file after loading it from the org file.
+(let* ((settings-org (expand-file-name "settings.org" user-emacs-directory))
+       (settings-el (concat (file-name-sans-extension settings-org) ".el")))
+  (if (file-exists-p settings-org)
+      (if (and (file-exists-p settings-el)
+               (time-less-p
+				(file-attribute-modification-time (file-attributes settings-org))
+				(file-attribute-modification-time (file-attributes settings-el))))
+		  (load-file settings-el)
+		(progn
+		  (require 'org)
+          (org-babel-load-file settings-org)
+		  (byte-compile-file settings-el)))
+    (error "Init org file '%s' missing." settings-org)))
 
 ;;; init.el ends here

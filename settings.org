@@ -11,7 +11,6 @@
 	(global-hl-line-mode 1) ;; highlight the line in all windows
 	(setq-default
 	 large-file-warning-threshold (* 100 1000 1000)
-	 gc-cons-threshold (* 50 1000 1000)              ;; GC every 50MB
 	 show-trailing-whitespace t                      ;; Highlight trailing whitespace
 	 frame-title-name '("%b")                        ;; set frame title to buffer name
 	 echo-keystrokes 0                               ;; use the which-key package
@@ -21,7 +20,14 @@
 	(put 'upcase-region 'disabled nil)
 	(put 'downcase-region 'disabled nil)
 	(put 'dired-find-alternate-file 'disabled nil)
-	(put 'overwrite-mode 'disabled t))
+	(put 'overwrite-mode 'disabled t)
+	:hook
+	(after-init-hook . (lambda ()
+						 (setq gc-cons-threshold 800000)
+						 (message "Emacs ready in %s with %d GC's."
+								  (format "%.2f seconds"
+										  (float-time (time-subtract after-init-time before-init-time)))
+								  gcs-done))))
 #+end_src
 ** Emacs server and desktop
 #+begin_src emacs-lisp
@@ -127,6 +133,7 @@
 #+begin_src emacs-lisp
   (use-package recentf
 	:diminish
+	:defer 1
 	:init
 	(setq-default
 	 recentf-save-file (expand-file-name "recentf" (getenv "EMACS_CACHE_DIR"))
