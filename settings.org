@@ -668,8 +668,9 @@ Elpy currently has problems with upstream ~jedi~.
 	   (python . t)
 	   (perl . t)))
 	:bind (:map org-mode-map
-				("C-c a" . org-agenda))
-	)
+				("C-c a" . org-agenda)
+				("C-c ." . org-time-stamp)
+				("C-c C-." . org-time-stamp-inactive)))
 
   (use-package org-superstar
 	:ensure t
