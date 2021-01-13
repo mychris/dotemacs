@@ -346,6 +346,19 @@
 	  :init
 	  (which-key-mode 1))
 #+end_src
+** free-keys - Show free keybindings for modkeys or prefixes
+I found the ~~free-keys~~ documentation a bit confusing in the beginning.
+If the prefix should be changed (using "p" in the buffer), do not type the prefix (don't hold C-c), but write the string into the completion buffer (type "C" "-" "c").
+Same is true for the prefix argument.
+Execute ~~free-keys~~ using C-u M-x "free-keys" and then type "C" "-" "c" into the completion buffer.
+#+begin_src emacs-lisp
+  (use-package free-keys
+	:ensure t
+	:defer 1
+	:diminish
+	:config
+	(setq-default free-keys-modifiers '("" "C" "M" "C-M" "H")))
+#+end_src
 * File manager
 ** neotree - A tree plugin like NerdTree for Vim
 #+begin_src emacs-lisp
