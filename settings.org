@@ -357,7 +357,8 @@ Execute ~~free-keys~~ using C-u M-x "free-keys" and then type "C" "-" "c" into t
 	:defer 1
 	:diminish
 	:config
-	(setq-default free-keys-modifiers '("" "C" "M" "C-M" "H")))
+	(setq-default free-keys-modifiers '("" "C" "M" "C-M" "H"))
+	:bind (("C-h C-k" . 'free-keys)))
 #+end_src
 * File manager
 ** neotree - A tree plugin like NerdTree for Vim
