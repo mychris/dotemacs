@@ -314,7 +314,7 @@
 		   ("H-e b" . embark-become)
 		   ("H-e c" . embark-collect-toggle-view))
 	:hook
-	(minibuffer-setup-hook . embark-collect-completions-after-delay)
+	(minibuffer-setup-hook . embark-collect-completions-after-input)
 	(embark-collect-mode-hook . (lambda ()
 								  (setq show-trailing-whitespace nil))))
 
