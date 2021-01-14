@@ -262,6 +262,7 @@
   (use-package consult
 	:ensure t
 	:defer 1
+	:commands (consult-narrow-help)
 	:config
 	(setq-default consult-line-numbers-widen t)
 	(setq-default completion-in-region-function #'consult-completion-in-region)
@@ -823,7 +824,7 @@ Elpy currently has problems with upstream ~jedi~.
 #+begin_src emacs-lisp
   (use-package magit
 	:ensure t
-	:commands magit-status
+	:commands (magit-status git-commit-turn-on-flyspell)
 	:config
 	(magit-auto-revert-mode 1)
 	(git-commit-turn-on-flyspell)
