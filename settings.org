@@ -315,7 +315,12 @@
 	:hook
 	(minibuffer-setup-hook . embark-collect-completions-after-delay)
 	(embark-collect-mode-hook . (lambda ()
-								   (setq show-trailing-whitespace nil))))
+								  (setq show-trailing-whitespace nil))))
+
+  (use-package embark-consult
+	:ensure t
+	:after (embark consult)
+	:hook (embark-collect-mode-hook . embark-consult-preview-minor-mode))
 #+end_src
 ** Orderless - Use space-separated search terms in any order when completing with Icomplete or the default interface
 #+begin_src emacs-lisp
