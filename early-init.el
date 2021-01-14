@@ -6,6 +6,10 @@
 
 ;;; Code:
 
+;; increase this early, decrease later on again
+;; define it in init and early-init for compatibility
+(setq gc-cons-threshold (* 200 1000 1000))
+
 ;; Initialise installed packages
 (setq package-enable-at-startup t)
 

@@ -23,11 +23,11 @@
 	(put 'overwrite-mode 'disabled t)
 	:hook
 	(after-init-hook . (lambda ()
-						 (setq gc-cons-threshold 800000)
 						 (message "Emacs ready in %s with %d GC's."
 								  (format "%.2f seconds"
 										  (float-time (time-subtract after-init-time before-init-time)))
-								  gcs-done))))
+								  gcs-done)
+						 (setq gc-cons-threshold 800000))))
 #+end_src
 ** Emacs server and desktop
 #+begin_src emacs-lisp
