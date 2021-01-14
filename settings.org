@@ -821,6 +821,7 @@ Elpy currently has problems with upstream ~jedi~.
 	:commands magit-status
 	:config
 	(magit-auto-revert-mode 1)
+	(git-commit-turn-on-flyspell)
 	:hook
 	(magit-mode-hook . magit-load-config-extensions))
 
