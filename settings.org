@@ -623,7 +623,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 
   (use-package company-lsp
 	:ensure t
-	:after company lsp-mode
+	:after (company lsp-mode)
 	:init
 	(push 'company-lsp company-backends))
 #+end_src
@@ -678,7 +678,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 
   (use-package flycheck-rust
 	:ensure t
-	:after rust-mode
+	:after (flycheck rust-mode)
 	:init
 	(with-eval-after-load 'rust-mode
 	  (add-hook 'flycheck-mode-hook #'flycheck-rust-setup)))
@@ -705,7 +705,7 @@ Also, it looks like parameter substitution inside strings are not to be complete
 
   (use-package company-shell
 	:ensure t
-	:after company shell
+	:after (company shell)
 	:config
 	:hook
 	(sh-mode-hook . (lambda ()
