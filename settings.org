@@ -206,8 +206,8 @@
 		   ("C-x k" . kill-this-buffer-save))
 	)
 #+end_src
-** [INACTIVE] Ido [built-in] - Interactively do things with buffers and files
-#+begin_src emacs-lisp :tangle no
+** COMMENT Ido [built-in] - Interactively do things with buffers and files
+#+begin_src emacs-lisp
   (use-package ido
     :diminish
     :defer 1
@@ -219,8 +219,8 @@
     :config
     (ido-mode 1))
 #+end_src
-** [INACTIVE] Ivy - Incremental Vertical completYon
-#+begin_src emacs-lisp :tangle no
+** COMMENT Ivy - Incremental Vertical completYon
+#+begin_src emacs-lisp
   (use-package ivy
 	:ensure t
 	:diminish
@@ -233,8 +233,8 @@
 	:init
 	(ivy-mode 1))
 #+end_src
-** [INACTIVE] Counsel - Various completion functions using Ivy
-#+begin_src emacs-lisp :tangle no
+** COMMENT Counsel - Various completion functions using Ivy
+#+begin_src emacs-lisp
   (use-package counsel
 	:ensure t
 	:after ivy
@@ -243,8 +243,8 @@
 		   :map minibuffer-local-map
 		   ("C-r" . counsel-minibuffer-history)))
 #+end_src
-** [INACTIVE] Swiper - Isearch with an overview
-#+begin_src emacs-lisp :tangle no
+** COMMENT Swiper - Isearch with an overview
+#+begin_src emacs-lisp
   (use-package swiper
 	:ensure t
 	:after ivy
