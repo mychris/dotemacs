@@ -20,8 +20,8 @@
 (setq frame-inhibit-implied-resize t)
 
 ;; Some early customizations
-(setq-default tool-bar-mode -1)  ;; this is too much
-(setq-default menu-bar-mode 1)   ;; for colleagues
-(setq-default scroll-bar-mode 1) ;; keep for colleagues
+(tool-bar-mode -1)  ;; this is too much
+(menu-bar-mode 1)   ;; for colleagues
+(scroll-bar-mode 1) ;; keep for colleagues
 
 ;;; early-init.el ends here
