@@ -206,6 +206,19 @@
 		   ("C-x k" . kill-this-buffer-save))
 	)
 #+end_src
+** isearch [built-in]
+#+begin_src emacs-lisp
+  (use-package isearch
+	:diminish
+	:config
+	(setq search-highlight t)
+	(setq search-whitespace-regexp ".*?")
+	(setq isearch-lax-whitespace t)
+	(setq isearch-regexp-lax-whitespace nil)
+	(setq isearch-lazy-highlight t)
+	:bind (:map isearch-mode-map
+				("C-g" . isearch-cancel)))
+#+end_src
 ** COMMENT Ido [built-in] - Interactively do things with buffers and files
 #+begin_src emacs-lisp
   (use-package ido
