@@ -354,6 +354,15 @@
 	:bind (:map minibuffer-local-completion-map
 				("SPC" . nil)))
 #+end_src
+** eyebrowse - Easy window config switching
+#+begin_src emacs-lisp
+  (use-package eyebrowse
+	:ensure t
+	:diminish
+	:defer 1
+	:config
+	(eyebrowse-mode))
+#+end_src
 * Help / Discovery / Cheat sheets
 ** which-key - Display available key bindings in popup
 #+begin_src emacs-lisp
