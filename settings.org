@@ -733,6 +733,12 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
 This is missing completion for functions and variables defined in other files which are sourced.
 Also, it looks like parameter substitution inside strings are not to be completed.
 #+begin_src emacs-lisp
+  (use-package sh-script
+	:config
+	(setq-default sh-basic-offset 2)
+	:hook
+	(sh-mode-hook . flycheck-mode))
+
   (use-package shell
 	:config
 	(setq-default sh-basic-offset 2)
@@ -742,7 +748,7 @@ Also, it looks like parameter substitution inside strings are not to be complete
 
   (use-package company-shell
 	:ensure t
-	:after (company shell)
+	:after (company sh-script)
 	:config
 	:hook
 	(sh-mode-hook . (lambda ()
