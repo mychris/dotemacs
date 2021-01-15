@@ -219,6 +219,14 @@
 	:bind (:map isearch-mode-map
 				("C-g" . isearch-cancel)))
 #+end_src
+** autorevert [built-in]
+#+begin_src emacs-lisp
+  (use-package autorevert
+	:diminish auto-revert-mode
+	:config
+	(setq auto-revert-verbose t)
+	:hook (after-init-hook . global-auto-revert-mode))
+#+end_src
 ** COMMENT Ido [built-in] - Interactively do things with buffers and files
 #+begin_src emacs-lisp
   (use-package ido
