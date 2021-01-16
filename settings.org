@@ -21,6 +21,7 @@
 	(put 'downcase-region 'disabled nil)
 	(put 'dired-find-alternate-file 'disabled nil)
 	(put 'overwrite-mode 'disabled t)
+	(global-unset-key (kbd "C-z")) ;; Use C-z as a prefix key.
 	:hook
 	(after-init-hook . (lambda ()
 						 (message "Emacs ready in %s with %d GC's."
