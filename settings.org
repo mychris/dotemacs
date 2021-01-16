@@ -200,7 +200,8 @@
 			  ((and completions (not (eq (selected-window) completions)))
 			   (select-window completions nil)))))
 	(setq-default completion-styles '(orderless partial-completion))
-	(setq-default completion-cycle-threshold 5)
+	(setq-default completion-cycle-threshold t)
+	(setq-default completion-category-overrides '((file (styles . (basic partial-completion)))))
 	(setq-default completion-ignore-case t)
 	(setq-default completion-category-defaults nil)
 	:bind (("H-f" . myext-focus-minibuffer-or-completion)
@@ -284,7 +285,6 @@
   (use-package consult
 	:ensure t
 	:defer 1
-	:commands (consult-narrow-help)
 	:config
 	(setq-default consult-line-numbers-widen t)
 	(setq-default completion-in-region-function #'consult-completion-in-region)
@@ -297,8 +297,14 @@
 		   ("M-g M-g" . consult-goto-line)
 		   ("M-X" . consult-mode-command)
 		   ("M-s m" . consult-mark)
+		   ("M-s i" . consult-imenu)
+		   ("M-s y" . consult-yank)
+		   ("M-s l" . consult-line)
+		   ("M-s g" . consult-ripgrep)
 		   :map minibuffer-local-completion-map
-		   ("<tab>" . minibuffer-force-complete)))
+		   ("<tab>" . minibuffer-complete)
+		   :map consult-narrow-map
+		   ("?" . consult-narrow-help)))
 #+end_src
 ** Marginalia - Enrich existing commands with completion annotations
 #+begin_src emacs-lisp
