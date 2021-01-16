@@ -838,7 +838,9 @@ Elpy currently has problems with upstream ~jedi~.
 	:bind (:map org-mode-map
 				("C-c a" . org-agenda)
 				("C-c ." . org-time-stamp)
-				("C-c C-." . org-time-stamp-inactive)))
+				("C-c C-." . org-time-stamp-inactive))
+	:hook
+	(org-mode-hook . abbrev-mode))
 
   (use-package org-superstar
 	:ensure t
