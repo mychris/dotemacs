@@ -451,6 +451,13 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 		   ("C-h" . neotree-hidden-file-toggle)
 		   ("r" . neotree-rename-node)))
 #+end_src
+** Quick file opening shortcuts
+#+begin_src emacs-lisp
+  (use-package emacs
+	:bind (("<escape> <escape> c" . (lambda ()
+									  (interactive) (find-file "~/.emacs.d/settings.org")))
+		   ))
+#+end_src
 * Visual
 ** highlight-thing - Minimalistic minor mode to highlight current thing under point
 #+begin_src emacs-lisp
