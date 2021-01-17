@@ -579,7 +579,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package avy
 	:ensure t
-	:bind ("M-s" . avy-goto-char))
+	:bind ("C-z c" . avy-goto-char))
 #+end_src
 ** ace-window - Quickly switch windows
 #+begin_src emacs-lisp
