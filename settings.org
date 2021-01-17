@@ -428,7 +428,6 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package free-keys
 	:ensure t
-	:defer 1
 	:diminish
 	:config
 	(setq-default free-keys-modifiers '("" "C" "M" "C-M" "H"))
