@@ -411,14 +411,14 @@
 * Help / Discovery / Cheat sheets
 ** which-key - Display available key bindings in popup
 #+begin_src emacs-lisp
-	(use-package which-key
-	  :ensure t
-	  :defer 1
-	  :diminish
-	  :config
-	  (setq-default which-key-idle-delay 0.75)
-	  :init
-	  (which-key-mode 1))
+  (use-package which-key
+	:ensure t
+	:defer 1
+	:diminish
+	:config
+	(setq-default which-key-idle-delay 0.75)
+	:init
+    (which-key-mode 1))
 #+end_src
 ** free-keys - Show free keybindings for modkeys or prefixes
 I found the ~free-keys~ documentation a bit confusing in the beginning.
