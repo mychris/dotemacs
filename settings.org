@@ -11,7 +11,6 @@
 	(global-hl-line-mode 1) ;; highlight the line in all windows
 	(setq-default
 	 large-file-warning-threshold (* 100 1000 1000)
-	 show-trailing-whitespace t                      ;; Highlight trailing whitespace
 	 frame-title-name '("%b")                        ;; set frame title to buffer name
 	 echo-keystrokes 0                               ;; use the which-key package
 	 visible-bell t)
@@ -28,7 +27,9 @@
 								  (format "%.2f seconds"
 										  (float-time (time-subtract after-init-time before-init-time)))
 								  gcs-done)
-						 (setq gc-cons-threshold 800000))))
+						 (setq gc-cons-threshold 800000)))
+	(prog-mode-hook . (lambda ()
+						(setq show-trailing-whitespace t))))
 #+end_src
 ** Emacs server and desktop
 #+begin_src emacs-lisp
@@ -783,7 +784,6 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 	  (add-hook 'flycheck-mode-hook #'flycheck-rust-setup)))
 
   (setq mouse-wheel-scroll-amount '(3 ((shift) . 1) ((control) . nil)))
-  (setq show-trailing-whitespace t)
   (setq mouse-wheel-progressive-speed nil)
 #+end_src
 ** Emacs-lisp
