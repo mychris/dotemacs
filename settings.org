@@ -372,22 +372,22 @@
 	:demand
 	:config
 	(defun myext-orderless-literal-style-dispatcher (pattern _index _total)
-	  "Style dispatcher which recognizes patterns which have an '=' as suffix and
+	  "Style dispatcher which recognizes patterns which have an ';' as suffix and
   dispatches those to the orderless-literal style"
-	  (when (string-suffix-p "=" pattern)
+	  (when (string-suffix-p ";" pattern)
 		`(orderless-literal . ,(substring pattern 0 -1))))
 	(defun myext-orderless-strict-initialism-style-disptacher (pattern _index _total)
-	  "style dispatcher which recognizes patterns which have a ':' as prefix and
+	  "style dispatcher which recognizes patterns which have a ';' as prefix and
   dispatches those to the orderless-strict-initialism style"
-	  (when (string-prefix-p ":" pattern)
+	  (when (string-prefix-p ";" pattern)
 		`(orderless-strict-initialism . ,(substring pattern 1))))
 	(setq-default orderless-component-separator " +")
 	(setq-default orderless-matching-styles
-	 '(orderless-prefixes
-	   orderless-literal
-	   orderless-strict-leading-initialism
-	   orderless-regexp
-	   orderless-flex))
+				  '(orderless-prefixes
+					orderless-literal
+					orderless-strict-leading-initialism
+					orderless-regexp
+					orderless-flex))
 	(setq-default orderless-style-dispatchers
 				  '(myext-orderless-literal-style-dispatcher
 					myext-orderless-strict-initialism-style-disptacher))
