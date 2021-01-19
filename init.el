@@ -20,6 +20,10 @@
 (when (file-exists-p custom-file)
   (load custom-file))
 
+;;;; Custom load-path
+
+(add-to-list 'load-path (file-name-as-directory (expand-file-name "elisp" user-emacs-directory)))
+
 ;;;; Bootstrap use-package
 
 ;; this should already be loaded, but I got an error in emacs-27.1 for some reason.
