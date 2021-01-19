@@ -337,7 +337,7 @@
 	(setq-default embark-collect-live-initial-delay 0.8)
 	(setq-default embark-action-indicator
 				  (lambda (map)
-					(which-key--show-keymap "Embark" map nil nil 'mo-paging)
+					(which-key--show-keymap "Embark" map nil nil 'no-paging)
 					#'which-key--hide-popup-ignore-command)
 				  embark-become-indicator embark-action-indicator)
 	:bind (("H-e" . embark-act)
