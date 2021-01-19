@@ -406,7 +406,23 @@
 	:diminish
 	:defer 1
 	:config
-	(eyebrowse-mode))
+	(eyebrowse-mode)
+	:bind (("M-1" . eyebrowse-switch-to-window-config-1)
+		   ("M-2" . eyebrowse-switch-to-window-config-2)
+		   ("M-3" . eyebrowse-switch-to-window-config-3)
+		   ("M-4" . eyebrowse-switch-to-window-config-4)
+		   ("M-5" . eyebrowse-switch-to-window-config-5)
+		   ("M-6" . eyebrowse-switch-to-window-config-6)
+		   ("M-7" . eyebrowse-switch-to-window-config-7)
+		   ("M-`" . eyebrowse-last-window-config)
+		   ("M-0" . eyebrowse-close-window-config)))
+
+  (use-package zed-eyebrowse
+	:after (eyebrowse)
+	:bind (("M-~" . zed-eyebrowse-toggle-monocle))
+	:hook
+	(eyebrowse-pre-window-switch-hook . zed-eyebrowse-monocle-window-config-switch)
+	(window-configuration-change-hook . zed-eyebrowse-monocle-window-config-change))
 #+end_src
 * Help / Discovery / Cheat sheets
 ** which-key - Display available key bindings in popup
