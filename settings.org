@@ -744,14 +744,14 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 		   :map company-active-map
 		   ("C-n" . company-select-next-or-abort)
 		   ("<tab>" . company-complete-common-or-cycle)
-		   ("C-p" . company-select-previous-next-or-abort))
+		   ("C-p" . company-select-previous-or-abort))
 	:hook (after-init-hook . global-company-mode))
 
   (use-package company-quickhelp
 	:ensure t
 	:after company
 	:init
-	(add-hook 'company-mode-hook 'company-quickhelp-mode))
+	:hook (company-mode-hook . company-quickhelp-mode))
 
   (use-package company-lsp
 	:ensure t
