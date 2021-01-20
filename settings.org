@@ -200,18 +200,32 @@
 			   (select-window mini nil))
 			  ((and completions (not (eq (selected-window) completions)))
 			   (select-window completions nil)))))
-	(setq-default completion-styles '(orderless partial-completion))
-	(setq-default completion-cycle-threshold t)
-	(setq-default completion-category-overrides '((file (styles . (basic partial-completion)))))
-	(setq-default completion-ignore-case t)
-	(setq-default completion-category-defaults nil)
-	(setq-default enable-recursive-minibuffers t)
-	(setq-default minibuffer-depth-indicator-function (lambda (depth)
+  ;  (setq completion-styles '(orderless partial-completion))
+	(setq completion-cycle-threshold 5)
+  ;  (setq completion-category-overrides '((file (styles . (basic partial-completion)))))
+	(setq completion-ignore-case t)
+	(setq completion-category-defaults nil)
+	(setq completion-auto-help nil)
+	(setq read-file-name-completion-ignore-case t)
+	(setq read-buffer-completion-ignore-case t)
+	(setq completion-ignore-case t)
+	(setq enable-recursive-minibuffers t)
+	(setq minibuffer-eldef-shorten-default t)
+	(setq minibuffer-depth-indicator-function (lambda (depth)
 														(format "[%2d] " depth)))
 	(minibuffer-depth-indicate-mode 1)
+	(minibuffer-electric-default-mode 1)
+
 	:bind (("H-f" . myext-focus-minibuffer-or-completion)
-		   ("C-x k" . kill-this-buffer-save))
-	)
+		   ("C-x k" . kill-this-buffer-save)
+		   :map minibuffer-local-completion-map
+		   ("RET" . minibuffer-force-complete-and-exit)
+		   ("<tab>" . minibuffer-complete)
+		   ("<backtab>" . minibuffer-force-complete)
+		   ("M-RET" . exit-minibuffer)
+		   :map minibuffer-local-filename-completion-map
+		   ("RET" . minibuffer-force-complete-and-exit)
+		   ))
 #+end_src
 ** isearch [built-in]
 #+begin_src emacs-lisp
@@ -285,42 +299,43 @@
 	:config
 	(advice-add 'swiper :after #'swiper-advice-recenter))
 #+end_src
-** Consult - Consulting completing-read
+** COMMENT Consult - Consulting completing-read
 #+begin_src emacs-lisp
-  (use-package consult
-	:ensure t
-	:defer 1
-	:config
-	(setq-default consult-line-numbers-widen t)
-	(setq-default completion-in-region-function #'consult-completion-in-region)
-	(setq-default consult-async-input-debounce 0.5)
-	(setq-default consult-async-input-throttle 0.8)
-	(setq-default consult-narrow-key ">")
-	(setq-default consult-widen-key "<")
-	(define-key consult-narrow-map (vconcat consult-narrow-key "?") #'consult-narrow-help)
-	:bind (("M-g g" . consult-goto-line)
-		   ("M-g M-g" . consult-goto-line)
-		   ("M-X" . consult-mode-command)
-		   ("M-s m" . consult-mark)
-		   ("M-s i" . consult-imenu)
-		   ("M-s y" . consult-yank)
-		   ("M-s l" . consult-line)
-		   ("M-s g" . consult-ripgrep)
-		   :map minibuffer-local-completion-map
-		   ("<tab>" . minibuffer-complete)
-		   :map consult-narrow-map
-		   ("?" . consult-narrow-help)))
+	(use-package consult
+	  :ensure t
+	  :demand
+	  :config
+	  (setq consult-line-numbers-widen t)
+	  (setq completion-in-region-function 'consult-completion-in-region)
+	  (setq register-preview-function 'consult-register-preview)
+	  (setq consult-async-min-input 3)
+	  (setq consult-async-input-debounce 0.5)
+	  (setq consult-async-input-throttle 0.8)
+	  (setq
+   consult-narrow-key ">")
+	  :bind (("M-g g" . consult-goto-line)
+			 ("M-g M-g" . consult-goto-line)
+			 ("M-X" . consult-mode-command)
+			 ("M-s m" . consult-mark)
+			 ("M-s i" . consult-imenu)
+			 ("M-s y" . consult-yank)
+			 ("M-s l" . consult-line)
+			 ("M-s g" . consult-ripgrep)
+			 :map consult-narrow-map
+			 ("?" . consult-narrow-help)))
+
 #+end_src
-** Marginalia - Enrich existing commands with completion annotations
+** COMMENT Marginalia - Enrich existing commands with completion annotations
 #+begin_src emacs-lisp
   (use-package marginalia
 	:ensure t
-	:demand
 	:config
-	(setq-default marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light))
-	(marginalia-mode 1))
+	(setq-default marginalia-annotators
+				  '(marginalia-annotators-heavy
+					marginalia-annotators-light))
+	(marginalia-mode))
 #+end_src
-** Embark - Conveniently act on minibuffer completions
+** COMMENT Embark - Conveniently act on minibuffer completions
 #+begin_src emacs-lisp
   (use-package embark
 	:ensure t
@@ -348,14 +363,6 @@
 						  (abort-recursive-edit)
 						(keyboard-quit))))
 		   :map minibuffer-local-completion-map
-		   ("C-n" . (lambda ()
-					  (interactive)
-					  (embark-switch-to-collect-completions)
-					  (goto-char (point-min))))
-		   ("C-p" . (lambda ()
-					  (interactive)
-					  (embark-switch-to-collect-completions)
-					  (goto-char (point-max))))
 		   ("H-e a" . embark-act)
 		   ("H-e n" . embark-act-noexit)
 		   ("H-e b" . embark-become)
@@ -368,9 +375,10 @@
   (use-package embark-consult
 	:ensure t
 	:after (embark consult)
+	:demand t
 	:hook (embark-collect-mode-hook . embark-consult-preview-minor-mode))
 #+end_src
-** Orderless - Use space-separated search terms in any order when completing with Icomplete or the default interface
+** COMMENT Orderless - Use space-separated search terms in any order when completing with Icomplete or the default interface
 #+begin_src emacs-lisp
   (use-package orderless
 	:ensure t
@@ -386,18 +394,32 @@
   dispatches those to the orderless-strict-initialism style"
 	  (when (string-prefix-p ";" pattern)
 		`(orderless-strict-initialism . ,(substring pattern 1))))
-	(setq-default orderless-component-separator " +")
-	(setq-default orderless-matching-styles
+	(setq orderless-component-separator " +")
+	(setq orderless-matching-styles
 				  '(orderless-prefixes
 					orderless-literal
 					orderless-strict-leading-initialism
 					orderless-regexp
 					orderless-flex))
-	(setq-default orderless-style-dispatchers
+	(setq orderless-style-dispatchers
 				  '(myext-orderless-literal-style-dispatcher
 					myext-orderless-strict-initialism-style-disptacher))
 	:bind (:map minibuffer-local-completion-map
 				("SPC" . nil)))
+#+end_src
+** helm - Helm is an Emacs incremental and narrowing framework
+#+begin_src emacs-lisp
+  (use-package helm
+	:ensure t
+	:config
+	(setq helm-default-display-buffer-functions '(display-buffer-in-side-window))
+	(helm-mode)
+	:bind (("M-x" . helm-M-x)
+		   ("C-x C-f" . helm-find-files)
+		   ("C-x b" . helm-buffers-list)
+		   ("M-s i" . helm-imenu)
+		   ("M-s l" . helm-occur)
+		   ("M-s g" . helm-do-grep-ag)))
 #+end_src
 ** eyebrowse - Easy window config switching
 #+begin_src emacs-lisp
