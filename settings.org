@@ -377,6 +377,14 @@
 	:after (embark consult)
 	:demand t
 	:hook (embark-collect-mode-hook . embark-consult-preview-minor-mode))
+
+  (use-package zed-embark
+	:after (embark consult)
+	:hook
+    (prot-embark-clear-live-buffers . zed-embark-clear-all-collection-buffers)
+	:bind (:map minibuffer-local-completion-map
+				("C-n" . zed-embark-switch-to-completion-buffer-top)))
+
 #+end_src
 ** COMMENT Orderless - Use space-separated search terms in any order when completing with Icomplete or the default interface
 #+begin_src emacs-lisp
