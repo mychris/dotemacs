@@ -735,10 +735,6 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 	(org-mode-hook . yas-minor-mode)
 	:config
 	(yas-reload-all))
-
-  (use-package yasnippet-snippets
-	:ensure t
-	:after yasnippet)
 #+end_src
 ** lsp - Language Server Protocol support for Emacs
 #+begin_src emacs-lisp
