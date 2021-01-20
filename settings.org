@@ -642,6 +642,45 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 	(aw-leading-char-face ((t (:inherit ace-jump-face-foreground :height 3.0))))
 	:bind (([remap other-window] . ace-window)))
 #+end_src
+** modalka - Easily introduce native modal editing of your own design
+#+begin_src emacs-lisp
+  (use-package modalka
+	:ensure t
+	:config
+	:bind (("M-SPC" . modalka-mode)
+		   :map modalka-mode-map
+		   ("RET" . modalka-mode)
+		   ("f" . forward-char)
+		   ("F" . forward-word)
+		   ("b" . backward-char)
+		   ("B" . backward-word)
+		   ("n" . next-line)
+		   ("N" . forward-sentence)
+		   ("p" . previous-line)
+		   ("P" . backward-sentence)
+		   ("{" . backward-paragraph)
+		   ("}" . forward-paragraph)
+		   ("v" . golden-ratio-scroll-screen-down)
+		   ("V" . golden-ration-scroll-screen-up)
+		   ("a" . beginning-of-line)
+		   ("e" . end-of-line)
+		   ("d" . delete-char)
+		   ("c" . avy-goto-char)
+		   ("D" . kill-word)
+		   ("s" . isearch-forward)
+		   ("r" . isearch-backward)
+		   ("/" . undo-tree-undo)
+		   ("?" . undo-tree-redo)
+		   ("SPC" . set-mark-command)
+		   ("w" . kill-region)
+		   ("W" . kill-ring-save)
+		   ("y" . yank-pop)
+		   ("=" . er/expand-region)
+		   ("u" . universal-argument)
+		   ("+" . text-scale-increase)
+		   ("-" . text-scale-decrease))
+	)
+#+end_src
 * Coloring / themes / fonts
 #+begin_src emacs-lisp
   (use-package all-the-icons
