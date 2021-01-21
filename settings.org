@@ -776,6 +776,11 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 	(setq-default eshell-save-history-on-exit t))
 #+end_src
 * Programming generic
+** abbrev [built-in]
+#+begin_src emacs-lisp
+  (use-package abbrev
+	:diminish)
+#+end_src
 ** yasnippet - A template system for Emacs
 #+begin_src emacs-lisp
   (use-package yasnippet
