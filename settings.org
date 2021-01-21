@@ -949,6 +949,17 @@ Elpy currently has problems with upstream ~jedi~.
 	:init
 	(advice-add 'python-mode :before 'elpy-enable))
 #+end_src
+** Groovy
+#+begin_src emacs-lisp
+  (use-package groovy-mode
+	:ensure t)
+#+end_src
+** jenkinsfile-mode
+#+begin_src emacs-lisp
+  (use-package jenkinsfile-mode
+	:ensure t
+	:after groovy-mode)
+#+end_src
 * Markup languages
 ** Org Mode
 #+begin_src emacs-lisp
