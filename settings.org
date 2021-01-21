@@ -786,11 +786,13 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   (use-package yasnippet
 	:ensure t
 	:diminish yas-minor-mode
-	:commands (yas-minor-mode)
+	:commands (yas-minor-mode yas-reload-all)
 	:hook
 	(prog-mode-hook . yas-minor-mode)
 	(org-mode-hook . yas-minor-mode)
 	:config
+	(setq yas-snippet-dirs
+		  `(,(file-name-as-directory (expand-file-name "snippets" user-emacs-directory))))
 	(yas-reload-all))
 #+end_src
 ** lsp - Language Server Protocol support for Emacs
