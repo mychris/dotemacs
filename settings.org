@@ -40,29 +40,26 @@
 
   (use-package desktop
 	:init
-	(setq-default
-	 desktop-auto-save-timeout 300
-	 desktop-dirname (file-name-as-directory (getenv "EMACS_CACHE_DIR"))
-	 desktop-path `(,desktop-dirname)
-	 desktop-base-file-name "desktop"
-	 desktop-files-not-to-save nil
-	 desktop-globals-to-clear nil
-	 desktop-load-locked-desktop t
-	 desktop-missing-file-warning nil
-	 desktop-restore-eager 0
-	 desktop-restore-frames nil
-	 desktop-save 'ask-if-new)
+	(setq-default desktop-auto-save-timeout 300)
+	(setq-default desktop-dirname (file-name-as-directory (getenv "EMACS_CACHE_DIR")))
+	(setq-default desktop-path `(,desktop-dirname))
+	(setq-default desktop-base-file-name "desktop")
+	(setq-default desktop-files-not-to-save nil)
+	(setq-default desktop-globals-to-clear nil)
+	(setq-default desktop-load-locked-desktop t)
+	(setq-default desktop-missing-file-warning nil)
+	(setq-default desktop-restore-eager 0)
+	(setq-default desktop-restore-frames nil)
+	(setq-default desktop-save 'ask-if-new)
 	(desktop-save-mode 1))
 
   (use-package emacs
 	:init
-	(setq-default
-	 initial-buffer-choice t
-	 inhibit-startup-echo-area-message "cgo"
-	 inhibit-startup-message t
-	 inhibit-startup-screen t
-	 inhibit-startup-buffer-menu t
-	 inhibit-x-resources t))
+	(setq-default initial-buffer-choice t)
+	(setq-default inhibit-startup-message t)
+	(setq-default inhibit-startup-screen t)
+	(setq-default inhibit-startup-buffer-menu t)
+	(setq-default inhibit-x-resources t))
 #+end_src
 ** Make sure that UTF-8 is used everywhere.
 #+begin_src emacs-lisp
@@ -81,11 +78,10 @@
   (use-package savehist
 	:diminish
 	:init
-	(setq-default
-	 savehist-file (expand-file-name "savehist" (getenv "EMACS_CACHE_DIR"))
-	 history-length 1000
-	 history-delete-duplicates t
-	 savehist-save-minibuffer-history t)
+	(setq-default savehist-file (expand-file-name "savehist" (getenv "EMACS_CACHE_DIR")))
+	(setq-default history-length 1000)
+	(setq-default history-delete-duplicates t)
+	(setq-default savehist-save-minibuffer-history t)
 	:config
 	(savehist-mode 1))
 #+end_src
@@ -94,9 +90,8 @@
   (use-package saveplace
 	:diminish
 	:init
-	(setq-default
-	 save-place-file (expand-file-name "saveplace" (getenv "EMACS_CACHE_DIR"))
-	 save-place-forget-unreadable-files t)
+	(setq-default save-place-file (expand-file-name "saveplace" (getenv "EMACS_CACHE_DIR")))
+	(setq-default save-place-forget-unreadable-files t)
 	:config
 	(save-place-mode 1))
 #+end_src
@@ -107,13 +102,12 @@
 	(let
 		((backup-dir (file-name-as-directory (expand-file-name "backups" (getenv "EMACS_CACHE_DIR")))))
 	  (unless (file-exists-p backup-dir) (make-directory backup-dir t))
-	  (setq-default
-	   backup-directory-alist `(("." . ,backup-dir))
-	   backup-by-copying t
-	   delete-old-versions t
-	   kept-new-versions 5
-	   kept-old-versions 2
-	   create-lockfiles nil)))
+	  (setq-default backup-directory-alist `(("." . ,backup-dir)))
+	  (setq-default backup-by-copying t)
+	  (setq-default delete-old-versions t)
+	  (setq-default kept-new-versions 5)
+	  (setq-default kept-old-versions 2)
+	  (setq-default create-lockfiles nil)))
 #+end_src
 ** Auto-save
 #+begin_src emacs-lisp
@@ -124,12 +118,11 @@
 		 (auto-save-list-dir (file-name-as-directory(expand-file-name "auto-save-list" (getenv "EMACS_CACHE_DIR")))))
 	  (unless (file-exists-p auto-save-dir) (make-directory auto-save-dir t))
 	  (unless (file-exists-p auto-save-list-dir) (make-directory auto-save-list-dir t))
-	  (setq-default
-	   auto-save-file-name-transforms `((".*" ,auto-save-dir t))
-	   auto-save-list-file-prefix (expand-file-name "saves-" auto-save-list-dir)
-	   auto-save-default t
-	   auto-save-timeout 10
-	   auto-save-interval 200)))
+	  (setq-default auto-save-file-name-transforms `((".*" ,auto-save-dir t)))
+	  (setq-default auto-save-list-file-prefix (expand-file-name "saves-" auto-save-list-dir))
+	  (setq-default auto-save-default t)
+	  (setq-default auto-save-timeout 10)
+	  (setq-default auto-save-interval(setq-default 200))))
 #+end_src
 ** Completion for recent files and directories
 #+begin_src emacs-lisp
@@ -137,10 +130,9 @@
 	:diminish
 	:defer 1
 	:init
-	(setq-default
-	 recentf-save-file (expand-file-name "recentf" (getenv "EMACS_CACHE_DIR"))
-	 recentf-max-saved-items 200
-	 recentf-exclude '("\\.gz" "\\.xz" "\\.zip" "/elpa/" "/ssh:" "/sudo:"))
+	(setq-default recentf-save-file (expand-file-name "recentf" (getenv "EMACS_CACHE_DIR")))
+	(setq-default recentf-max-saved-items 200)
+	(setq-default recentf-exclude '("\\.gz" "\\.xz" "\\.zip" "/elpa/" "/ssh:" "/sudo:"))
 	:config
 	(recentf-mode 1))
 #+end_src
@@ -420,6 +412,7 @@
   (use-package helm
 	:ensure t
 	:diminish
+    :defer nil
 	:config
 	(setq helm-default-display-buffer-functions '(display-buffer-in-side-window))
 	(helm-mode)
@@ -670,6 +663,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 		   ("D" . kill-word)
 		   ("s" . isearch-forward)
 		   ("r" . isearch-backward)
+		   ("l" . recenter-top-bottom)
 		   ("/" . undo-tree-undo)
 		   ("?" . undo-tree-redo)
 		   ("SPC" . set-mark-command)
