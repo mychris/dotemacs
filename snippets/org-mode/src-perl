@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: src-perl
+# key: <perl
+# --
+#+begin_src perl
+$0
+#+end_src
