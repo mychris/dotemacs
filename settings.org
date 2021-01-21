@@ -419,6 +419,7 @@
 #+begin_src emacs-lisp
   (use-package helm
 	:ensure t
+	:diminish
 	:config
 	(setq helm-default-display-buffer-functions '(display-buffer-in-side-window))
 	(helm-mode)
