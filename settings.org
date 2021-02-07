@@ -1028,9 +1028,14 @@ Elpy currently has problems with upstream ~jedi~.
 	:commands (magit-status git-commit-turn-on-flyspell)
 	:config
 	(magit-auto-revert-mode 1)
-	(git-commit-turn-on-flyspell)
 	:hook
-	(magit-mode-hook . magit-load-config-extensions))
+	(magit-mode-hook . magit-load-config-extensions)
+	(git-commit-setup-hook . git-commit-turn-on-flyspell)
+	:bind (:map magit-section-mode-map
+				("M-1" . nil)
+				("M-2" . nil)
+				("M-3" . nil)
+				("M-4" . nil)))
 
   (use-package gitignore-mode
 	:ensure t)
