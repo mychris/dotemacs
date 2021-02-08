@@ -637,6 +637,63 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 	:defer 1
 	:bind (("C-=" . er/expand-region)))
 #+end_src
+** string-inflection - underscore -> UPCASE -> CamelCase -> lowerCamelCase conversion of names
+#+begin_src emacs-lisp
+  (use-package string-inflection
+	:ensure t
+	:config
+	(defun string-inflection-cycle-auto-detection ()
+	  (interactive)
+      (cond
+	   ((eq major-mode 'java-mode)
+		(string-inflection-java-style-cycle))
+	   ((eq major-mode 'python-mode)
+		(string-inflection-python-style-cycle))
+	   ((eq major-mode 'ruby-mode)
+		(string-inflection-ruby-style-cycle))
+	   (t
+		(string-inflection-all-cycle))))
+	(evil-define-operator evil-string-inflection-upcase (beg end _type)
+	  "Change text to ALL_UPPERCASE."
+	  :move-point nil
+	  (interactive "<R>")
+	  (let ((str (buffer-substring-no-properties beg end)))
+		(save-excursion
+		  (delete-region beg end)
+		  (insert (string-inflection-upcase-function str)))))
+	(evil-define-operator evil-string-inflection-underscore (beg end _type)
+	  "Change text to all_lowercase_with_underscores."
+	  :move-point nil
+	  (interactive "<R>")
+	  (let ((str (buffer-substring-no-properties beg end)))
+		(save-excursion
+		  (delete-region beg end)
+		  (insert (string-inflection-underscore-function str)))))
+	(evil-define-operator evil-string-inflection (beg end _type)
+	  "Change the text by cycling through the string inflection functions."
+	  :move-point nil
+	  (interactive "<R>")
+	  (let ((str (buffer-substring-no-properties beg end)))
+		(save-excursion
+		  (delete-region beg end)
+		  (insert
+		   (cond
+			((eq major-mode 'java-mode)
+			 (string-inflection-java-style-cycle-function str))
+			((eq major-mode 'python-mode)
+			 (string-inflection-python-style-cycle-function str))
+			((eq major-mode 'ruby-mode)
+			 (string-inflection-ruby-style-cycle-function str))
+			(t
+			 (string-inflection-all-cycle-function str)))))))
+	:bind (("M-u" . string-inflection-upcase)
+		   ("M-l" . string-inflection-cycle-auto-detection)
+		   :map evil-normal-state-map
+		   ("gu" . evil-string-inflection-underscore)
+		   ("gU" . evil-string-inflection-upcase)
+		   ("g~" . evil-string-inflection))
+	)
+#+end_src
 * Kill-ring
 ** System clipboard integration
 #+begin_src emacs-lisp
