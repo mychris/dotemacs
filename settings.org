@@ -974,11 +974,6 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 
   (use-package cquery
 	:ensure t)
-
-  (use-package ggtags
-	:ensure t
-	:init
-	(add-hook 'c-mode-common-hook 'ggtags-mode))
 #+end_src
 ** Rust
 #+begin_src emacs-lisp
