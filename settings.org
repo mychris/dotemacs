@@ -750,13 +750,12 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+end_src
 ** Avy - Jump to arbitrary positions in visible text and select text quickly
 #+begin_src emacs-lisp
-	(use-package avy
-	  :ensure t
-	  :bind (("M-g g" . evil-avy-goto-line)
-			 ("M-g M-g" . evil-avy-goto-line)
-			 :map evil-normal-state-map
-			 ("f" . evil-avy-goto-char)
-			 ("F" . evil-avy-goto-word-0)))
+  (use-package avy
+	:ensure t
+	:bind (("M-g g" . evil-avy-goto-line)
+		   ("M-g M-g" . evil-avy-goto-line)
+		   ("M-g c" . evil-avy-goto-char)
+		   ("M-g w" . evil-avy-goto-word-0)))
 #+end_src
 ** ace-window - Quickly switch windows
 #+begin_src emacs-lisp
