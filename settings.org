@@ -800,6 +800,23 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 	(setq-default eshell-hist-ignoredups t)
 	(setq-default eshell-save-history-on-exit t))
 #+end_src
+* Project management
+** projectile - Manage and navigate projects in Emacs easily
+#+begin_src emacs-lisp
+  (use-package projectile
+	:ensure t
+	:config
+	(projectile-mode)
+	)
+#+end_src
+** helm-projectile - Helm integration for Projectile
+#+begin_src emacs-lisp
+  (use-package helm-projectile
+	:ensure t
+	:config
+	(helm-projectile-on)
+	)
+#+end_src
 * Programming generic
 ** abbrev [built-in]
 #+begin_src emacs-lisp
@@ -833,6 +850,16 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 	(setq-default lsp-ui-peek-enable t)
 	(setq-default lsp-ui-sideline-enable nil)
 	(define-key lsp-ui-mode-map [C-down-mouse-1] 'xref-find-definitions-at-mouse))
+#+end_src
+** ggtags - emacs frontend to GNU Global source code tagging system
+#+begin_src emacs-lisp
+  (use-package ggtags
+	:ensure t)
+#+end_src
+** helm-gtags - GNU Global helm interface
+#+begin_src emacs-lisp
+  (use-package helm-gtags
+	:ensure t)
 #+end_src
 ** company - Modular text completion framework
 #+begin_src emacs-lisp
@@ -885,8 +912,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
    indent-tabs-mode t)
 
   (use-package cquery
-	:ensure t
-	:hook (c-mode-common-hook . lsp-cquery-enable))
+	:ensure t)
 
   (use-package ggtags
 	:ensure t
