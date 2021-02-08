@@ -1,5 +1,6 @@
 *.elc
 elpa/
+projectile-bookmarks.eld
 settings.el
 
 # those directories should be somewhere else, but keep them here in case
