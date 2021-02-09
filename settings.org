@@ -941,7 +941,8 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 ** ggtags - emacs frontend to GNU Global source code tagging system
 #+begin_src emacs-lisp
   (use-package ggtags
-	:ensure t)
+	:ensure t
+	:diminish)
 #+end_src
 ** helm-gtags - GNU Global helm interface
 #+begin_src emacs-lisp
@@ -980,6 +981,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   (use-package flycheck
 	:ensure t
 	:defer 1
+	:diminish
 	:hook
 	(lsp-mode-hook . flycheck-mode)
 	(emacs-lisp-mode-hook . flycheck-mode))
