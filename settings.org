@@ -831,7 +831,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 	 line-number-mode t
 	 column-number-mode t
 	 mode-line-percent-position '(-3 "%p")
-										  ;   mode-line-position-column-line-format '(" %l,%c") ; Emacs 28
+	 ;; mode-line-position-column-line-format '(" %l,%c") ; Emacs 28
 	 mode-line-format
 	 '("%e"
 	   mode-line-front-space
