@@ -645,10 +645,16 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package string-inflection
 	:ensure t
+	:commands (string-inflection-upcase-function
+			   string-inflection-underscore-function
+			   string-inflection-java-style-cycle-function
+			   string-inflection-python-style-cycle-function
+			   string-inflection-ruby-style-cycle-function
+			   string-inflection-all-cycle-function)
 	:config
 	(defun string-inflection-cycle-auto-detection ()
 	  (interactive)
-      (cond
+	  (cond
 	   ((eq major-mode 'java-mode)
 		(string-inflection-java-style-cycle))
 	   ((eq major-mode 'python-mode)
