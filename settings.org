@@ -451,6 +451,12 @@
 		   ("M-s l" . helm-occur)
 		   ("M-s g" . helm-do-grep-ag)))
 #+end_src
+** helm-rg - a helm interface to ripgrep
+#+begin_src emacs-lisp
+  (use-package helm-rg
+	:ensure t
+	:after helm)
+#+end_src
 ** perspective - switch between named "perspectives" of the editor
 #+begin_src emacs-lisp
   (use-package perspective
