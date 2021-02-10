@@ -1064,8 +1064,6 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 	"OpenJDK C/C++ Programming Style.")
 
   (c-add-style "OpenJDK" openjdk-cc-style nil)
-
-  (c-set-style "OpenJDK")
 #+end_src
 ** Rust
 #+begin_src emacs-lisp
