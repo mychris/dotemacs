@@ -7,266 +7,266 @@
 ** General Emacs configuration
 #+begin_src emacs-lisp
   (use-package emacs
-	:init
-	(global-hl-line-mode 1) ;; highlight the line in all windows
-	(setq-default
-	 large-file-warning-threshold (* 100 1000 1000)
-	 frame-title-name '("%b")                        ;; set frame title to buffer name
-	 echo-keystrokes 0                               ;; use the which-key package
-	 visible-bell t)
-	(defalias 'yes-or-no-p 'y-or-n-p)
-	(put 'narrow-to-region 'disabled nil)
-	(put 'upcase-region 'disabled nil)
-	(put 'downcase-region 'disabled nil)
-	(put 'dired-find-alternate-file 'disabled nil)
-	(put 'overwrite-mode 'disabled t)
-	(global-unset-key (kbd "C-z")) ;; Use C-z as a prefix key.
-	:hook
-	(after-init-hook . (lambda ()
-						 (message "Emacs ready in %s with %d GC's."
-								  (format "%.2f seconds"
-										  (float-time (time-subtract after-init-time before-init-time)))
-								  gcs-done)
-						 (setq gc-cons-threshold 800000)))
-	(prog-mode-hook . (lambda ()
-						(setq show-trailing-whitespace t))))
+    :init
+    (global-hl-line-mode 1) ;; highlight the line in all windows
+    (setq-default
+     large-file-warning-threshold (* 100 1000 1000)
+     frame-title-name '("%b")                        ;; set frame title to buffer name
+     echo-keystrokes 0                               ;; use the which-key package
+     visible-bell t)
+    (defalias 'yes-or-no-p 'y-or-n-p)
+    (put 'narrow-to-region 'disabled nil)
+    (put 'upcase-region 'disabled nil)
+    (put 'downcase-region 'disabled nil)
+    (put 'dired-find-alternate-file 'disabled nil)
+    (put 'overwrite-mode 'disabled t)
+    (global-unset-key (kbd "C-z")) ;; Use C-z as a prefix key.
+    :hook
+    (after-init-hook . (lambda ()
+			 (message "Emacs ready in %s with %d GC's."
+				  (format "%.2f seconds"
+					  (float-time (time-subtract after-init-time before-init-time)))
+				  gcs-done)
+			 (setq gc-cons-threshold 800000)))
+    (prog-mode-hook . (lambda ()
+			(setq show-trailing-whitespace t))))
 #+end_src
 ** Emacs server and desktop
 #+begin_src emacs-lisp
   (use-package server
-	:defer 1
-	:config
-	(server-start))
+    :defer 1
+    :config
+    (server-start))
 
   (use-package desktop
-	:init
-	(setq-default desktop-auto-save-timeout 300)
-	(setq-default desktop-dirname (file-name-as-directory (getenv "EMACS_CACHE_DIR")))
-	(setq-default desktop-path `(,desktop-dirname))
-	(setq-default desktop-base-file-name "desktop")
-	(setq-default desktop-files-not-to-save nil)
-	(setq-default desktop-globals-to-clear nil)
-	(setq-default desktop-load-locked-desktop t)
-	(setq-default desktop-missing-file-warning nil)
-	(setq-default desktop-restore-eager 0)
-	(setq-default desktop-restore-frames nil)
-	(setq-default desktop-save 'ask-if-new)
-	(desktop-save-mode 0))
+    :init
+    (setq-default desktop-auto-save-timeout 300)
+    (setq-default desktop-dirname (file-name-as-directory (getenv "EMACS_CACHE_DIR")))
+    (setq-default desktop-path `(,desktop-dirname))
+    (setq-default desktop-base-file-name "desktop")
+    (setq-default desktop-files-not-to-save nil)
+    (setq-default desktop-globals-to-clear nil)
+    (setq-default desktop-load-locked-desktop t)
+    (setq-default desktop-missing-file-warning nil)
+    (setq-default desktop-restore-eager 0)
+    (setq-default desktop-restore-frames nil)
+    (setq-default desktop-save 'ask-if-new)
+    (desktop-save-mode 0))
 
   (use-package emacs
-	:init
-	(setq-default initial-buffer-choice t)
-	(setq-default inhibit-startup-message t)
-	(setq-default inhibit-startup-screen t)
-	(setq-default inhibit-startup-buffer-menu t)
-	(setq-default inhibit-x-resources t))
+    :init
+    (setq-default initial-buffer-choice t)
+    (setq-default inhibit-startup-message t)
+    (setq-default inhibit-startup-screen t)
+    (setq-default inhibit-startup-buffer-menu t)
+    (setq-default inhibit-x-resources t))
 #+end_src
 ** Make sure that UTF-8 is used everywhere.
 #+begin_src emacs-lisp
   (use-package emacs
-	:init
-	(set-terminal-coding-system 'utf-8)
-	(set-keyboard-coding-system 'utf-8)
-	(set-language-environment 'utf-8)
-	(set-selection-coding-system 'utf-8)
-	(prefer-coding-system 'utf-8)
-	(set-input-method nil)
-	(setq-default locale-coding-system 'utf-8))
+    :init
+    (set-terminal-coding-system 'utf-8)
+    (set-keyboard-coding-system 'utf-8)
+    (set-language-environment 'utf-8)
+    (set-selection-coding-system 'utf-8)
+    (prefer-coding-system 'utf-8)
+    (set-input-method nil)
+    (setq-default locale-coding-system 'utf-8))
 #+end_src
 ** Savehist (minibuffer history)
 #+begin_src emacs-lisp
   (use-package savehist
-	:diminish
-	:init
-	(setq-default savehist-file (expand-file-name "savehist" (getenv "EMACS_CACHE_DIR")))
-	(setq-default history-length 1000)
-	(setq-default history-delete-duplicates t)
-	(setq-default savehist-save-minibuffer-history t)
-	:config
-	(savehist-mode 1))
+    :diminish
+    :init
+    (setq-default savehist-file (expand-file-name "savehist" (getenv "EMACS_CACHE_DIR")))
+    (setq-default history-length 1000)
+    (setq-default history-delete-duplicates t)
+    (setq-default savehist-save-minibuffer-history t)
+    :config
+    (savehist-mode 1))
 #+end_src
 ** Saveplace (cursor position)
 #+begin_src emacs-lisp
   (use-package saveplace
-	:diminish
-	:init
-	(setq-default save-place-file (expand-file-name "saveplace" (getenv "EMACS_CACHE_DIR")))
-	(setq-default save-place-forget-unreadable-files t)
-	:config
-	(save-place-mode 1))
+    :diminish
+    :init
+    (setq-default save-place-file (expand-file-name "saveplace" (getenv "EMACS_CACHE_DIR")))
+    (setq-default save-place-forget-unreadable-files t)
+    :config
+    (save-place-mode 1))
 #+end_src
 ** Backups
 #+begin_src emacs-lisp
   (use-package emacs
-	:init
-	(let
-		((backup-dir (file-name-as-directory (expand-file-name "backups" (getenv "EMACS_CACHE_DIR")))))
-	  (unless (file-exists-p backup-dir) (make-directory backup-dir t))
-	  (setq-default backup-directory-alist `(("." . ,backup-dir)))
-	  (setq-default backup-by-copying t)
-	  (setq-default delete-old-versions t)
-	  (setq-default kept-new-versions 5)
-	  (setq-default kept-old-versions 2)
-	  (setq-default create-lockfiles nil)))
+    :init
+    (let
+	((backup-dir (file-name-as-directory (expand-file-name "backups" (getenv "EMACS_CACHE_DIR")))))
+      (unless (file-exists-p backup-dir) (make-directory backup-dir t))
+      (setq-default backup-directory-alist `(("." . ,backup-dir)))
+      (setq-default backup-by-copying t)
+      (setq-default delete-old-versions t)
+      (setq-default kept-new-versions 5)
+      (setq-default kept-old-versions 2)
+      (setq-default create-lockfiles nil)))
 #+end_src
 ** Auto-save
 #+begin_src emacs-lisp
   (use-package emacs
-	:init
-	(let
-		((auto-save-dir (file-name-as-directory (expand-file-name "auto-save" (getenv "EMACS_CACHE_DIR"))))
-		 (auto-save-list-dir (file-name-as-directory(expand-file-name "auto-save-list" (getenv "EMACS_CACHE_DIR")))))
-	  (unless (file-exists-p auto-save-dir) (make-directory auto-save-dir t))
-	  (unless (file-exists-p auto-save-list-dir) (make-directory auto-save-list-dir t))
-	  (setq-default auto-save-file-name-transforms `((".*" ,auto-save-dir t)))
-	  (setq-default auto-save-list-file-prefix (expand-file-name "saves-" auto-save-list-dir))
-	  (setq-default auto-save-default t)
-	  (setq-default auto-save-timeout 10)
-	  (setq-default auto-save-interval 200)))
+    :init
+    (let
+	((auto-save-dir (file-name-as-directory (expand-file-name "auto-save" (getenv "EMACS_CACHE_DIR"))))
+	 (auto-save-list-dir (file-name-as-directory(expand-file-name "auto-save-list" (getenv "EMACS_CACHE_DIR")))))
+      (unless (file-exists-p auto-save-dir) (make-directory auto-save-dir t))
+      (unless (file-exists-p auto-save-list-dir) (make-directory auto-save-list-dir t))
+      (setq-default auto-save-file-name-transforms `((".*" ,auto-save-dir t)))
+      (setq-default auto-save-list-file-prefix (expand-file-name "saves-" auto-save-list-dir))
+      (setq-default auto-save-default t)
+      (setq-default auto-save-timeout 10)
+      (setq-default auto-save-interval 200)))
 #+end_src
 ** Completion for recent files and directories
 #+begin_src emacs-lisp
   (use-package recentf
-	:diminish
-	:defer 1
-	:init
-	(setq-default recentf-save-file (expand-file-name "recentf" (getenv "EMACS_CACHE_DIR")))
-	(setq-default recentf-max-saved-items 200)
-	(setq-default recentf-exclude '("\\.gz" "\\.xz" "\\.zip" "/elpa/" "/ssh:" "/sudo:"))
-	:config
-	(recentf-mode 1))
+    :diminish
+    :defer 1
+    :init
+    (setq-default recentf-save-file (expand-file-name "recentf" (getenv "EMACS_CACHE_DIR")))
+    (setq-default recentf-max-saved-items 200)
+    (setq-default recentf-exclude '("\\.gz" "\\.xz" "\\.zip" "/elpa/" "/ssh:" "/sudo:"))
+    :config
+    (recentf-mode 1))
 #+end_src
 ** Line numbers
 #+begin_src emacs-lisp
   (use-package display-line-numbers
-	:diminish
-	:init
-	(setq-default display-line-numbers-type t)
-	(setq-default display-line-numbers-width-start t)
-	(setq-default display-line-numbers-grow-only t)
-	(set-face-attribute 'line-number-current-line nil :weight 'bold)
-	:config
-	(global-display-line-numbers-mode)
-	:hook
-	(prog-mode-hook . (lambda ()
-						(setq display-line-numbers-type 'visual))))
+    :diminish
+    :init
+    (setq-default display-line-numbers-type t)
+    (setq-default display-line-numbers-width-start t)
+    (setq-default display-line-numbers-grow-only t)
+    (set-face-attribute 'line-number-current-line nil :weight 'bold)
+    :config
+    (global-display-line-numbers-mode)
+    :hook
+    (prog-mode-hook . (lambda ()
+			(setq display-line-numbers-type 'visual))))
 #+end_src
 ** S - The long lost Emacs string manipulation library
 #+begin_src emacs-lisp
   (use-package s
-	:ensure t)
+    :ensure t)
 #+end_src
 * Evil
 ** evil - Extensible Vi layer for Emacs.
 #+begin_src emacs-lisp
   (use-package evil
-	:ensure t
-	:init
-	(setq evil-want-integration t)
-	(setq evil-want-keybinding nil)
-	(setq evil-want-C-u-scroll t)
-	(setq evil-search-module 'evil-search)
-	:config
-	(evil-mode 1))
+    :ensure t
+    :init
+    (setq evil-want-integration t)
+    (setq evil-want-keybinding nil)
+    (setq evil-want-C-u-scroll t)
+    (setq evil-search-module 'evil-search)
+    :config
+    (evil-mode 1))
 #+end_src
 ** org-evil - Evil extensions for Org.
 #+begin_src emacs-lisp
   (use-package org-evil
-	:ensure t
-	:after (evil org)
-	)
+    :ensure t
+    :after (evil org)
+    )
 #+end_src
 ** evil-collection - A set of keybindings for Evil mode
 #+begin_src emacs-lisp
   (use-package evil-collection
-	:ensure t
-	:after evil
-	:config
-	(evil-collection-init))
+    :ensure t
+    :after evil
+    :config
+    (evil-collection-init))
 #+end_src
 * Interface enhancements
 ** Minibuffer [built-in]
 #+begin_src emacs-lisp
   (use-package minibuffer
-	:demand
-	:config
-	(defun kill-other-buffers ()
-	  "Kill all other buffers."
-	  (interactive)
-	  (mapc 'kill-buffer (delq (current-buffer) (buffer-list))))
+    :demand
+    :config
+    (defun kill-other-buffers ()
+      "Kill all other buffers."
+      (interactive)
+      (mapc 'kill-buffer (delq (current-buffer) (buffer-list))))
 
-	;; https://www.emacswiki.org/emacs/KillingBuffers#toc9
-	(setq-default kill-this-buffer-save-list '("*scratch*"))
-	(defun kill-this-buffer-save ()
-	  "Only kill buffers not in the kill-buffer-save-list."
-	  (interactive)
-	  (if (member (buffer-name (current-buffer)) kill-this-buffer-save-list)
-		  (progn
-			(erase-buffer)
-			(bury-buffer))
-		(kill-buffer (current-buffer))))
+    ;; https://www.emacswiki.org/emacs/KillingBuffers#toc9
+    (setq-default kill-this-buffer-save-list '("*scratch*"))
+    (defun kill-this-buffer-save ()
+      "Only kill buffers not in the kill-buffer-save-list."
+      (interactive)
+      (if (member (buffer-name (current-buffer)) kill-this-buffer-save-list)
+	  (progn
+	    (erase-buffer)
+	    (bury-buffer))
+	(kill-buffer (current-buffer))))
 
-	(defun myext-focus-minibuffer-or-completion ()
-	  "Focus the active minibuffer or completion window.
+    (defun myext-focus-minibuffer-or-completion ()
+      "Focus the active minibuffer or completion window.
   TODO: needs refactoring."
-	  (interactive)
-	  (let* ((mini (active-minibuffer-window))
-			 (completions (get-window-with-predicate
-						   (lambda (window)
-							 (org-string-match-p
-							  "\\*\\(Completions\\|Embark Collect \\(Live\\|Completions\\)\\)"
-							  (format "%s" window))))))
-		(cond ((and mini (not (minibufferp)))
-			   (select-window mini nil))
-			  ((and completions (not (eq (selected-window) completions)))
-			   (select-window completions nil)))))
-  ;  (setq completion-styles '(orderless partial-completion))
-	(setq completion-cycle-threshold 5)
-  ;  (setq completion-category-overrides '((file (styles . (basic partial-completion)))))
-	(setq completion-ignore-case t)
-	(setq completion-category-defaults nil)
-	(setq completion-auto-help nil)
-	(setq read-file-name-completion-ignore-case t)
-	(setq read-buffer-completion-ignore-case t)
-	(setq completion-ignore-case t)
-	(setq enable-recursive-minibuffers t)
-	(setq minibuffer-eldef-shorten-default t)
-	(setq minibuffer-depth-indicator-function (lambda (depth)
-														(format "[%2d] " depth)))
-	(minibuffer-depth-indicate-mode 1)
-	(minibuffer-electric-default-mode 1)
+      (interactive)
+      (let* ((mini (active-minibuffer-window))
+	     (completions (get-window-with-predicate
+			   (lambda (window)
+			     (org-string-match-p
+			      "\\*\\(Completions\\|Embark Collect \\(Live\\|Completions\\)\\)"
+			      (format "%s" window))))))
+	(cond ((and mini (not (minibufferp)))
+	       (select-window mini nil))
+	      ((and completions (not (eq (selected-window) completions)))
+	       (select-window completions nil)))))
+					  ;  (setq completion-styles '(orderless partial-completion))
+    (setq completion-cycle-threshold 5)
+					  ;  (setq completion-category-overrides '((file (styles . (basic partial-completion)))))
+    (setq completion-ignore-case t)
+    (setq completion-category-defaults nil)
+    (setq completion-auto-help nil)
+    (setq read-file-name-completion-ignore-case t)
+    (setq read-buffer-completion-ignore-case t)
+    (setq completion-ignore-case t)
+    (setq enable-recursive-minibuffers t)
+    (setq minibuffer-eldef-shorten-default t)
+    (setq minibuffer-depth-indicator-function (lambda (depth)
+						(format "[%2d] " depth)))
+    (minibuffer-depth-indicate-mode 1)
+    (minibuffer-electric-default-mode 1)
 
-	:bind (("H-f" . myext-focus-minibuffer-or-completion)
-		   ("C-x k" . kill-this-buffer-save)
-		   :map minibuffer-local-completion-map
-		   ("RET" . minibuffer-force-complete-and-exit)
-		   ("<tab>" . minibuffer-complete)
-		   ("<backtab>" . minibuffer-force-complete)
-		   ("M-RET" . exit-minibuffer)
-		   :map minibuffer-local-filename-completion-map
-		   ("RET" . minibuffer-force-complete-and-exit)
-		   ))
+    :bind (("H-f" . myext-focus-minibuffer-or-completion)
+	   ("C-x k" . kill-this-buffer-save)
+	   :map minibuffer-local-completion-map
+	   ("RET" . minibuffer-force-complete-and-exit)
+	   ("<tab>" . minibuffer-complete)
+	   ("<backtab>" . minibuffer-force-complete)
+	   ("M-RET" . exit-minibuffer)
+	   :map minibuffer-local-filename-completion-map
+	   ("RET" . minibuffer-force-complete-and-exit)
+	   ))
 #+end_src
 ** isearch [built-in]
 #+begin_src emacs-lisp
   (use-package isearch
-	:diminish
-	:config
-	(setq search-highlight t)
-	(setq search-whitespace-regexp ".*?")
-	(setq isearch-lax-whitespace t)
-	(setq isearch-regexp-lax-whitespace nil)
-	(setq isearch-lazy-highlight t)
-	:bind (:map isearch-mode-map
-				("C-g" . isearch-cancel)))
+    :diminish
+    :config
+    (setq search-highlight t)
+    (setq search-whitespace-regexp ".*?")
+    (setq isearch-lax-whitespace t)
+    (setq isearch-regexp-lax-whitespace nil)
+    (setq isearch-lazy-highlight t)
+    :bind (:map isearch-mode-map
+		("C-g" . isearch-cancel)))
 #+end_src
 ** autorevert [built-in]
 #+begin_src emacs-lisp
   (use-package autorevert
-	:diminish auto-revert-mode
-	:config
-	(setq auto-revert-verbose t)
-	:hook (after-init-hook . global-auto-revert-mode))
+    :diminish auto-revert-mode
+    :config
+    (setq auto-revert-verbose t)
+    :hook (after-init-hook . global-auto-revert-mode))
 #+end_src
 ** COMMENT Ido [built-in] - Interactively do things with buffers and files
 #+begin_src emacs-lisp
@@ -284,256 +284,256 @@
 ** COMMENT Ivy - Incremental Vertical completYon
 #+begin_src emacs-lisp
   (use-package ivy
-	:ensure t
-	:diminish
-	:defer 1
-	:config
-	(setq-default ivy-use-virtual-buffers t)
-	(setq-default ivy-display-style 'fancy)
-	;(setq-default ivy-re-builders-alist '((t . ivy--regex-fuzzy)))
-	:bind (("C-c C-r" . ivy-resume))
-	:init
-	(ivy-mode 1))
+    :ensure t
+    :diminish
+    :defer 1
+    :config
+    (setq-default ivy-use-virtual-buffers t)
+    (setq-default ivy-display-style 'fancy)
+					  ;(setq-default ivy-re-builders-alist '((t . ivy--regex-fuzzy)))
+    :bind (("C-c C-r" . ivy-resume))
+    :init
+    (ivy-mode 1))
 #+end_src
 ** COMMENT Counsel - Various completion functions using Ivy
 #+begin_src emacs-lisp
   (use-package counsel
-	:ensure t
-	:after ivy
-	:bind (("M-x" . counsel-M-x)
-		   ("C-x C-f" . counsel-find-file)
-		   :map minibuffer-local-map
-		   ("C-r" . counsel-minibuffer-history)))
+    :ensure t
+    :after ivy
+    :bind (("M-x" . counsel-M-x)
+	   ("C-x C-f" . counsel-find-file)
+	   :map minibuffer-local-map
+	   ("C-r" . counsel-minibuffer-history)))
 #+end_src
 ** COMMENT Swiper - Isearch with an overview
 #+begin_src emacs-lisp
   (use-package swiper
-	:ensure t
-	:after ivy
-	:bind (("C-s" . swiper))
-	:init
-	(defun swiper-advice-recenter ()
-	  "Recenter display after swiper.  Ignore ARGS."
-	  (recenter))
-	(setq enable-recursive-minibuffers t)
-	:config
-	(advice-add 'swiper :after #'swiper-advice-recenter))
+    :ensure t
+    :after ivy
+    :bind (("C-s" . swiper))
+    :init
+    (defun swiper-advice-recenter ()
+      "Recenter display after swiper.  Ignore ARGS."
+      (recenter))
+    (setq enable-recursive-minibuffers t)
+    :config
+    (advice-add 'swiper :after #'swiper-advice-recenter))
 #+end_src
 ** COMMENT Consult - Consulting completing-read
 #+begin_src emacs-lisp
-	(use-package consult
-	  :ensure t
-	  :demand
-	  :config
-	  (setq consult-line-numbers-widen t)
-	  (setq completion-in-region-function 'consult-completion-in-region)
-	  (setq register-preview-function 'consult-register-preview)
-	  (setq consult-async-min-input 3)
-	  (setq consult-async-input-debounce 0.5)
-	  (setq consult-async-input-throttle 0.8)
-	  (setq
-   consult-narrow-key ">")
-	  :bind (("M-g g" . consult-goto-line)
-			 ("M-g M-g" . consult-goto-line)
-			 ("M-X" . consult-mode-command)
-			 ("M-s m" . consult-mark)
-			 ("M-s i" . consult-imenu)
-			 ("M-s y" . consult-yank)
-			 ("M-s l" . consult-line)
-			 ("M-s g" . consult-ripgrep)
-			 :map consult-narrow-map
-			 ("?" . consult-narrow-help)))
+  (use-package consult
+    :ensure t
+    :demand
+    :config
+    (setq consult-line-numbers-widen t)
+    (setq completion-in-region-function 'consult-completion-in-region)
+    (setq register-preview-function 'consult-register-preview)
+    (setq consult-async-min-input 3)
+    (setq consult-async-input-debounce 0.5)
+    (setq consult-async-input-throttle 0.8)
+    (setq
+     consult-narrow-key ">")
+    :bind (("M-g g" . consult-goto-line)
+	   ("M-g M-g" . consult-goto-line)
+	   ("M-X" . consult-mode-command)
+	   ("M-s m" . consult-mark)
+	   ("M-s i" . consult-imenu)
+	   ("M-s y" . consult-yank)
+	   ("M-s l" . consult-line)
+	   ("M-s g" . consult-ripgrep)
+	   :map consult-narrow-map
+	   ("?" . consult-narrow-help)))
 
 #+end_src
 ** COMMENT Marginalia - Enrich existing commands with completion annotations
 #+begin_src emacs-lisp
   (use-package marginalia
-	:ensure t
-	:config
-	(setq-default marginalia-annotators
-				  '(marginalia-annotators-heavy
-					marginalia-annotators-light))
-	(marginalia-mode))
+    :ensure t
+    :config
+    (setq-default marginalia-annotators
+		  '(marginalia-annotators-heavy
+		    marginalia-annotators-light))
+    (marginalia-mode))
 #+end_src
 ** COMMENT Embark - Conveniently act on minibuffer completions
 #+begin_src emacs-lisp
   (use-package embark
-	:ensure t
-	:config
-	(setq-default embark-collect-initial-view-alist
-				  '((file . list)
-					(buffer . list)
-					(symbol . list)
-					(line . list)
-					(xref-location . list)
-					(kill-ring . zebra)
-					(t . list)))
-	(setq-default embark-collect-live-update-delay 0.5)
-	(setq-default embark-collect-live-initial-delay 0.8)
-	(setq-default embark-action-indicator
-				  (lambda (map)
-					(which-key--show-keymap "Embark" map nil nil 'no-paging)
-					#'which-key--hide-popup-ignore-command)
-				  embark-become-indicator embark-action-indicator)
-	:bind (("H-e" . embark-act)
-		   :map embark-collect-mode-map
-		   ("C-g" . (lambda ()
-					  (interactive)
-					  (if (derived-mode-p 'embark-collect-mode)
-						  (abort-recursive-edit)
-						(keyboard-quit))))
-		   :map minibuffer-local-completion-map
-		   ("H-e a" . embark-act)
-		   ("H-e n" . embark-act-noexit)
-		   ("H-e b" . embark-become)
-		   ("H-e c" . embark-collect-toggle-view))
-	:hook
-	(minibuffer-setup-hook . embark-collect-completions-after-input)
-	(embark-collect-mode-hook . (lambda ()
-								  (setq show-trailing-whitespace nil))))
+    :ensure t
+    :config
+    (setq-default embark-collect-initial-view-alist
+		  '((file . list)
+		    (buffer . list)
+		    (symbol . list)
+		    (line . list)
+		    (xref-location . list)
+		    (kill-ring . zebra)
+		    (t . list)))
+    (setq-default embark-collect-live-update-delay 0.5)
+    (setq-default embark-collect-live-initial-delay 0.8)
+    (setq-default embark-action-indicator
+		  (lambda (map)
+		    (which-key--show-keymap "Embark" map nil nil 'no-paging)
+		    #'which-key--hide-popup-ignore-command)
+		  embark-become-indicator embark-action-indicator)
+    :bind (("H-e" . embark-act)
+	   :map embark-collect-mode-map
+	   ("C-g" . (lambda ()
+		      (interactive)
+		      (if (derived-mode-p 'embark-collect-mode)
+			  (abort-recursive-edit)
+			(keyboard-quit))))
+	   :map minibuffer-local-completion-map
+	   ("H-e a" . embark-act)
+	   ("H-e n" . embark-act-noexit)
+	   ("H-e b" . embark-become)
+	   ("H-e c" . embark-collect-toggle-view))
+    :hook
+    (minibuffer-setup-hook . embark-collect-completions-after-input)
+    (embark-collect-mode-hook . (lambda ()
+				  (setq show-trailing-whitespace nil))))
 
   (use-package embark-consult
-	:ensure t
-	:after (embark consult)
-	:demand t
-	:hook (embark-collect-mode-hook . embark-consult-preview-minor-mode))
+    :ensure t
+    :after (embark consult)
+    :demand t
+    :hook (embark-collect-mode-hook . embark-consult-preview-minor-mode))
 
   (use-package zed-embark
-	:after (embark consult)
-	:hook
+    :after (embark consult)
+    :hook
     (prot-embark-clear-live-buffers . zed-embark-clear-all-collection-buffers)
-	:bind (:map minibuffer-local-completion-map
-				("C-n" . zed-embark-switch-to-completion-buffer-top)))
+    :bind (:map minibuffer-local-completion-map
+		("C-n" . zed-embark-switch-to-completion-buffer-top)))
 
 #+end_src
 ** COMMENT Orderless - Use space-separated search terms in any order when completing with Icomplete or the default interface
 #+begin_src emacs-lisp
   (use-package orderless
-	:ensure t
-	:demand
-	:config
-	(defun myext-orderless-literal-style-dispatcher (pattern _index _total)
-	  "Style dispatcher which recognizes patterns which have an ';' as suffix and
+    :ensure t
+    :demand
+    :config
+    (defun myext-orderless-literal-style-dispatcher (pattern _index _total)
+      "Style dispatcher which recognizes patterns which have an ';' as suffix and
   dispatches those to the orderless-literal style"
-	  (when (string-suffix-p ";" pattern)
-		`(orderless-literal . ,(substring pattern 0 -1))))
-	(defun myext-orderless-strict-initialism-style-disptacher (pattern _index _total)
-	  "style dispatcher which recognizes patterns which have a ';' as prefix and
+      (when (string-suffix-p ";" pattern)
+	`(orderless-literal . ,(substring pattern 0 -1))))
+    (defun myext-orderless-strict-initialism-style-disptacher (pattern _index _total)
+      "style dispatcher which recognizes patterns which have a ';' as prefix and
   dispatches those to the orderless-strict-initialism style"
-	  (when (string-prefix-p ";" pattern)
-		`(orderless-strict-initialism . ,(substring pattern 1))))
-	(setq orderless-component-separator " +")
-	(setq orderless-matching-styles
-				  '(orderless-prefixes
-					orderless-literal
-					orderless-strict-leading-initialism
-					orderless-regexp
-					orderless-flex))
-	(setq orderless-style-dispatchers
-				  '(myext-orderless-literal-style-dispatcher
-					myext-orderless-strict-initialism-style-disptacher))
-	:bind (:map minibuffer-local-completion-map
-				("SPC" . nil)))
+      (when (string-prefix-p ";" pattern)
+	`(orderless-strict-initialism . ,(substring pattern 1))))
+    (setq orderless-component-separator " +")
+    (setq orderless-matching-styles
+	  '(orderless-prefixes
+	    orderless-literal
+	    orderless-strict-leading-initialism
+	    orderless-regexp
+	    orderless-flex))
+    (setq orderless-style-dispatchers
+	  '(myext-orderless-literal-style-dispatcher
+	    myext-orderless-strict-initialism-style-disptacher))
+    :bind (:map minibuffer-local-completion-map
+		("SPC" . nil)))
 #+end_src
 ** helm - Helm is an Emacs incremental and narrowing framework
 #+begin_src emacs-lisp
   (use-package helm
-	:ensure t
-	:diminish
+    :ensure t
+    :diminish
     :defer nil
-	:config
-	(setq helm-default-display-buffer-functions '(display-buffer-in-side-window))
-	(helm-mode)
-	:bind (("M-x" . helm-M-x)
-		   ("C-x C-f" . helm-find-files)
-		   ("C-x b" . helm-buffers-list)
-		   ("M-s i" . helm-imenu)
-		   ("M-s l" . helm-occur)
-		   ("M-s g" . helm-do-grep-ag)))
+    :config
+    (setq helm-default-display-buffer-functions '(display-buffer-in-side-window))
+    (helm-mode)
+    :bind (("M-x" . helm-M-x)
+	   ("C-x C-f" . helm-find-files)
+	   ("C-x b" . helm-buffers-list)
+	   ("M-s i" . helm-imenu)
+	   ("M-s l" . helm-occur)
+	   ("M-s g" . helm-do-grep-ag)))
 #+end_src
 ** helm-rg - a helm interface to ripgrep
 #+begin_src emacs-lisp
   (use-package helm-rg
-	:ensure t
-	:after helm)
+    :ensure t
+    :after helm)
 #+end_src
 ** perspective - switch between named "perspectives" of the editor
 #+begin_src emacs-lisp
   (use-package perspective
-	:ensure t
-	:commands (persp-switch persp-kill persp-current-name)
-	:init
-	(setq persp-initial-frame-name "001")
-	(defun persp-switch-to-frame-1 ()
-	  (interactive)
-	  (persp-switch "001"))
-	(defun persp-switch-to-frame-2 ()
-	  (interactive)
-	  (persp-switch "010"))
-	(defun persp-switch-to-frame-3 ()
-	  (interactive)
-	  (persp-switch "011"))
-	(defun persp-switch-to-frame-4 ()
-	  (interactive)
-	  (persp-switch "100"))
-	(defun persp-switch-to-frame-5 ()
-	  (interactive)
-	  (persp-switch "101"))
-	(defun persp-switch-to-frame-6 ()
-	  (interactive)
-	  (persp-switch "110"))
-	(defun persp-switch-to-frame-7 ()
-	  (interactive)
-	  (persp-switch "111"))
-	(defun persp-kill-current-frame ()
-	  (interactive)
-	  (persp-kill (persp-current-name)))
-	:config
-	(persp-mode)
-	:bind (("M-1" . persp-switch-to-frame-1)
-		   ("M-2" . persp-switch-to-frame-2)
-		   ("M-3" . persp-switch-to-frame-3)
-		   ("M-4" . persp-switch-to-frame-4)
-		   ("M-5" . persp-switch-to-frame-5)
-		   ("M-6" . persp-switch-to-frame-6)
-		   ("M-7" . persp-switch-to-frame-7)
-		   ("M-0" . persp-kill-current-frame)))
+    :ensure t
+    :commands (persp-switch persp-kill persp-current-name)
+    :init
+    (setq persp-initial-frame-name "001")
+    (defun persp-switch-to-frame-1 ()
+      (interactive)
+      (persp-switch "001"))
+    (defun persp-switch-to-frame-2 ()
+      (interactive)
+      (persp-switch "010"))
+    (defun persp-switch-to-frame-3 ()
+      (interactive)
+      (persp-switch "011"))
+    (defun persp-switch-to-frame-4 ()
+      (interactive)
+      (persp-switch "100"))
+    (defun persp-switch-to-frame-5 ()
+      (interactive)
+      (persp-switch "101"))
+    (defun persp-switch-to-frame-6 ()
+      (interactive)
+      (persp-switch "110"))
+    (defun persp-switch-to-frame-7 ()
+      (interactive)
+      (persp-switch "111"))
+    (defun persp-kill-current-frame ()
+      (interactive)
+      (persp-kill (persp-current-name)))
+    :config
+    (persp-mode)
+    :bind (("M-1" . persp-switch-to-frame-1)
+	   ("M-2" . persp-switch-to-frame-2)
+	   ("M-3" . persp-switch-to-frame-3)
+	   ("M-4" . persp-switch-to-frame-4)
+	   ("M-5" . persp-switch-to-frame-5)
+	   ("M-6" . persp-switch-to-frame-6)
+	   ("M-7" . persp-switch-to-frame-7)
+	   ("M-0" . persp-kill-current-frame)))
 #+end_src
 ** COMMENT eyebrowse - Easy window config switching
 #+begin_src emacs-lisp
   (use-package eyebrowse
-	:ensure t
-	:diminish
-	:defer 1
-	:config
-	(eyebrowse-mode)
-	:bind (("M-1" . eyebrowse-switch-to-window-config-1)
-		   ("M-2" . eyebrowse-switch-to-window-config-2)
-		   ("M-3" . eyebrowse-switch-to-window-config-3)
-		   ("M-4" . eyebrowse-switch-to-window-config-4)
-		   ("M-5" . eyebrowse-switch-to-window-config-5)
-		   ("M-6" . eyebrowse-switch-to-window-config-6)
-		   ("M-7" . eyebrowse-switch-to-window-config-7)
-		   ("M-`" . eyebrowse-last-window-config)
-		   ("M-0" . eyebrowse-close-window-config)))
+    :ensure t
+    :diminish
+    :defer 1
+    :config
+    (eyebrowse-mode)
+    :bind (("M-1" . eyebrowse-switch-to-window-config-1)
+	   ("M-2" . eyebrowse-switch-to-window-config-2)
+	   ("M-3" . eyebrowse-switch-to-window-config-3)
+	   ("M-4" . eyebrowse-switch-to-window-config-4)
+	   ("M-5" . eyebrowse-switch-to-window-config-5)
+	   ("M-6" . eyebrowse-switch-to-window-config-6)
+	   ("M-7" . eyebrowse-switch-to-window-config-7)
+	   ("M-`" . eyebrowse-last-window-config)
+	   ("M-0" . eyebrowse-close-window-config)))
 
   (use-package zed-eyebrowse
-	:after (eyebrowse)
-	:bind (("M-~" . zed-eyebrowse-toggle-monocle))
-	:hook
-	(eyebrowse-pre-window-switch-hook . zed-eyebrowse-monocle-window-config-switch)
-	(window-configuration-change-hook . zed-eyebrowse-monocle-window-config-change))
+    :after (eyebrowse)
+    :bind (("M-~" . zed-eyebrowse-toggle-monocle))
+    :hook
+    (eyebrowse-pre-window-switch-hook . zed-eyebrowse-monocle-window-config-switch)
+    (window-configuration-change-hook . zed-eyebrowse-monocle-window-config-change))
 #+end_src
 * Help / Discovery / Cheat sheets
 ** which-key - Display available key bindings in popup
 #+begin_src emacs-lisp
   (use-package which-key
-	:ensure t
-	:defer 1
-	:diminish
-	:config
-	(setq-default which-key-idle-delay 0.75)
-	:init
+    :ensure t
+    :defer 1
+    :diminish
+    :config
+    (setq-default which-key-idle-delay 0.75)
+    :init
     (which-key-mode 1))
 #+end_src
 ** free-keys - Show free keybindings for modkeys or prefixes
@@ -543,204 +543,212 @@ Same is true for the prefix argument.
 Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the completion buffer.
 #+begin_src emacs-lisp
   (use-package free-keys
-	:ensure t
-	:diminish
-	:config
-	(setq-default free-keys-modifiers '("" "C" "M" "C-M" "H"))
-	:bind (("C-h C-k" . 'free-keys)))
+    :ensure t
+    :diminish
+    :config
+    (setq-default free-keys-modifiers '("" "C" "M" "C-M" "H"))
+    :bind (("C-h C-k" . 'free-keys)))
 #+end_src
 ** keyfreq - track command frequencies
 #+begin_src emacs-lisp
   (use-package keyfreq
-	:ensure t
-	:config
-	(setq-default keyfreq-buffer "*keyfreq-show*")
-	(setq-default keyfreq-file (expand-file-name "keyfreq.hist" (getenv "EMACS_CACHE_DIR")))
-	(setq-default keyfreq-file-lock (expand-file-name "keyfreq.hist.lock" (getenv "EMACS_CACHE_DIR")))
-	(setq-default keyfreq-excluded-commands
-				  '(self-insert-command
-					org-self-insert-command
-					mwheel-scroll
-					mouse-set-point))
-	:hook
-	(after-init-hook . keyfreq-mode)
-	(after-init-hook . keyfreq-autosave-mode))
+    :ensure t
+    :config
+    (setq-default keyfreq-buffer "*keyfreq-show*")
+    (setq-default keyfreq-file (expand-file-name "keyfreq.hist" (getenv "EMACS_CACHE_DIR")))
+    (setq-default keyfreq-file-lock (expand-file-name "keyfreq.hist.lock" (getenv "EMACS_CACHE_DIR")))
+    (setq-default keyfreq-excluded-commands
+		  '(self-insert-command
+		    org-self-insert-command
+		    mwheel-scroll
+		    mouse-set-point))
+    :hook
+    (after-init-hook . keyfreq-mode)
+    (after-init-hook . keyfreq-autosave-mode))
 #+end_src
 ** help-fns+.el - Extensions to `help-fns.el'
 #+begin_src emacs-lisp
   (use-package help-fns+)
 #+end_src
 * File manager
+** dired [built-in] - directory editor
+#+begin_src emacs-lisp
+  (use-package dired
+    :after (evil evil-collection)
+    :init
+    (evil-collection-define-key 'normal 'dired-mode-map
+      "gf" 'fzf))
+#+end_src
 ** neotree - A tree plugin like NerdTree for Vim
 #+begin_src emacs-lisp
   (use-package neotree
-	:ensure t
-	:defer 1
-	:init
-	(setq-default neo-smart-open t)
-	(setq-default neo-dont-be-alone t)
-	(setq-default neo-theme 'nerd)
-	(setq-default neo-vc-integration '(face char))
-	(setq-default neo-window-fixed-size nil)
-	(setq-default neo-window-width 55)
-	(setq-default neo-theme (if (display-graphic-p) 'icons 'arrow))
-	:bind (([f8] . neotree-toggle)
-		   :map neotree-mode-map
-		   ("<C-return>" . neotree-change-root)
-		   ("d" . neotree-delete-node)
-		   ("<delete>" . neotree-delete-node)
-		   ("C-h" . neotree-hidden-file-toggle)
-		   ("r" . neotree-rename-node)))
+    :ensure t
+    :defer 1
+    :init
+    (setq-default neo-smart-open t)
+    (setq-default neo-dont-be-alone t)
+    (setq-default neo-theme 'nerd)
+    (setq-default neo-vc-integration '(face char))
+    (setq-default neo-window-fixed-size nil)
+    (setq-default neo-window-width 55)
+    (setq-default neo-theme (if (display-graphic-p) 'icons 'arrow))
+    :bind (([f8] . neotree-toggle)
+	   :map neotree-mode-map
+	   ("<C-return>" . neotree-change-root)
+	   ("d" . neotree-delete-node)
+	   ("<delete>" . neotree-delete-node)
+	   ("C-h" . neotree-hidden-file-toggle)
+	   ("r" . neotree-rename-node)))
 #+end_src
 ** Quick file opening shortcuts
 #+begin_src emacs-lisp	(use-package emacs
   (use-package quick-file-access
-	:load-path "elisp"
-	:config
-	(setq-default quick-file-access-file-list
-				  '("~/.emacs.d/settings.org"
-					"~/.emacs.d/init.el"
-					"~/.emacs.d/early-init.el"))
-	:bind (("<escape> <escape> o" . quick-file-access-open-file)
-		   :map evil-normal-state-map
-		   (",o" . quick-file-access-open-file)))
+    :load-path "elisp"
+    :config
+    (setq-default quick-file-access-file-list
+		  '("~/.emacs.d/settings.org"
+		    "~/.emacs.d/init.el"
+		    "~/.emacs.d/early-init.el"))
+    :bind (("<escape> <escape> o" . quick-file-access-open-file)
+	   :map evil-normal-state-map
+	   (",o" . quick-file-access-open-file)))
 #+end_src
 * Visual
 ** highlight-thing - Minimalistic minor mode to highlight current thing under point
 #+begin_src emacs-lisp
   (use-package highlight-thing
-	:ensure t
-	:defer 1
-	:diminish
-	:init
-	(setq-default highlight-thing-delay-seconds 2)
-	(setq-default highlight-thing-exclude-thing-under-point t)
-	(setq-default highlight-thing-prefer-active-region t)
-	:config
-	(global-highlight-thing-mode 1))
+    :ensure t
+    :defer 1
+    :diminish
+    :init
+    (setq-default highlight-thing-delay-seconds 2)
+    (setq-default highlight-thing-exclude-thing-under-point t)
+    (setq-default highlight-thing-prefer-active-region t)
+    :config
+    (global-highlight-thing-mode 1))
 
   (use-package hi-lock
-	:diminish)
+    :diminish)
 #+end_src
 ** undo-tree - Treat undo history as a tree
 #+begin_src emacs-lisp
   (use-package undo-tree
-	:ensure t
-	:diminish
-	:defer 1
-	:init
-	(let
-		((undo-dir (file-name-as-directory (expand-file-name "undo" (getenv "EMACS_CACHE_DIR")))))
-	  (unless (file-exists-p undo-dir) (make-directory undo-dir t))
-	  (setq-default undo-tree-auto-save-history t) ;; Automatically save the undo history
-	  (setq-default undo-tree-history-directory-alist `(("." . ,undo-dir))) ;; Save history to folder
-	  (setq-default undo-tree-visualizer-diff t) ;; Display diff in undo-tree visualizer by default
-	  )
-	:config
-	(global-undo-tree-mode 1))
+    :ensure t
+    :diminish
+    :defer 1
+    :init
+    (let
+	((undo-dir (file-name-as-directory (expand-file-name "undo" (getenv "EMACS_CACHE_DIR")))))
+      (unless (file-exists-p undo-dir) (make-directory undo-dir t))
+      (setq-default undo-tree-auto-save-history t) ;; Automatically save the undo history
+      (setq-default undo-tree-history-directory-alist `(("." . ,undo-dir))) ;; Save history to folder
+      (setq-default undo-tree-visualizer-diff t) ;; Display diff in undo-tree visualizer by default
+      )
+    :config
+    (global-undo-tree-mode 1))
 #+end_src
 * Editing
 ** expand-region - Increas the selected region by semantic units
 #+begin_src emacs-lisp
   (use-package expand-region
-	:ensure t
-	:defer 1
-	:bind (("C-=" . er/expand-region)))
+    :ensure t
+    :defer 1
+    :bind (("C-=" . er/expand-region)))
 #+end_src
 ** string-inflection - underscore -> UPCASE -> CamelCase -> lowerCamelCase conversion of names
 #+begin_src emacs-lisp
   (use-package string-inflection
-	:ensure t
-	:commands (string-inflection-upcase-function
-			   string-inflection-underscore-function
-			   string-inflection-java-style-cycle-function
-			   string-inflection-python-style-cycle-function
-			   string-inflection-ruby-style-cycle-function
-			   string-inflection-all-cycle-function)
-	:config
-	(defun string-inflection-cycle-auto-detection ()
-	  (interactive)
-	  (cond
-	   ((eq major-mode 'java-mode)
-		(string-inflection-java-style-cycle))
-	   ((eq major-mode 'python-mode)
-		(string-inflection-python-style-cycle))
-	   ((eq major-mode 'ruby-mode)
-		(string-inflection-ruby-style-cycle))
-	   (t
-		(string-inflection-all-cycle))))
-	(evil-define-operator evil-string-inflection-upcase (beg end _type)
-	  "Change text to ALL_UPPERCASE."
-	  :move-point nil
-	  (interactive "<R>")
-	  (let ((str (buffer-substring-no-properties beg end)))
-		(save-excursion
-		  (delete-region beg end)
-		  (insert (string-inflection-upcase-function str)))))
-	(evil-define-operator evil-string-inflection-underscore (beg end _type)
-	  "Change text to all_lowercase_with_underscores."
-	  :move-point nil
-	  (interactive "<R>")
-	  (let ((str (buffer-substring-no-properties beg end)))
-		(save-excursion
-		  (delete-region beg end)
-		  (insert (string-inflection-underscore-function str)))))
-	(evil-define-operator evil-string-inflection (beg end _type)
-	  "Change the text by cycling through the string inflection functions."
-	  :move-point nil
-	  (interactive "<R>")
-	  (let ((str (buffer-substring-no-properties beg end)))
-		(save-excursion
-		  (delete-region beg end)
-		  (insert
-		   (cond
-			((eq major-mode 'java-mode)
-			 (string-inflection-java-style-cycle-function str))
-			((eq major-mode 'python-mode)
-			 (string-inflection-python-style-cycle-function str))
-			((eq major-mode 'ruby-mode)
-			 (string-inflection-ruby-style-cycle-function str))
-			(t
-			 (string-inflection-all-cycle-function str)))))))
-	:bind (("M-u" . string-inflection-upcase)
-		   ("M-l" . string-inflection-cycle-auto-detection)
-		   :map evil-normal-state-map
-		   ("gu" . evil-string-inflection-underscore)
-		   ("gU" . evil-string-inflection-upcase)
-		   ("g~" . evil-string-inflection))
-	)
+    :ensure t
+    :commands (string-inflection-upcase-function
+	       string-inflection-underscore-function
+	       string-inflection-java-style-cycle-function
+	       string-inflection-python-style-cycle-function
+	       string-inflection-ruby-style-cycle-function
+	       string-inflection-all-cycle-function)
+    :config
+    (defun string-inflection-cycle-auto-detection ()
+      (interactive)
+      (cond
+       ((eq major-mode 'java-mode)
+	(string-inflection-java-style-cycle))
+       ((eq major-mode 'python-mode)
+	(string-inflection-python-style-cycle))
+       ((eq major-mode 'ruby-mode)
+	(string-inflection-ruby-style-cycle))
+       (t
+	(string-inflection-all-cycle))))
+    (evil-define-operator evil-string-inflection-upcase (beg end _type)
+      "Change text to ALL_UPPERCASE."
+      :move-point nil
+      (interactive "<R>")
+      (let ((str (buffer-substring-no-properties beg end)))
+	(save-excursion
+	  (delete-region beg end)
+	  (insert (string-inflection-upcase-function str)))))
+    (evil-define-operator evil-string-inflection-underscore (beg end _type)
+      "Change text to all_lowercase_with_underscores."
+      :move-point nil
+      (interactive "<R>")
+      (let ((str (buffer-substring-no-properties beg end)))
+	(save-excursion
+	  (delete-region beg end)
+	  (insert (string-inflection-underscore-function str)))))
+    (evil-define-operator evil-string-inflection (beg end _type)
+      "Change the text by cycling through the string inflection functions."
+      :move-point nil
+      (interactive "<R>")
+      (let ((str (buffer-substring-no-properties beg end)))
+	(save-excursion
+	  (delete-region beg end)
+	  (insert
+	   (cond
+	    ((eq major-mode 'java-mode)
+	     (string-inflection-java-style-cycle-function str))
+	    ((eq major-mode 'python-mode)
+	     (string-inflection-python-style-cycle-function str))
+	    ((eq major-mode 'ruby-mode)
+	     (string-inflection-ruby-style-cycle-function str))
+	    (t
+	     (string-inflection-all-cycle-function str)))))))
+    :bind (("M-u" . string-inflection-upcase)
+	   ("M-l" . string-inflection-cycle-auto-detection)
+	   :map evil-normal-state-map
+	   ("gu" . evil-string-inflection-underscore)
+	   ("gU" . evil-string-inflection-upcase)
+	   ("g~" . evil-string-inflection))
+    )
 #+end_src
 * Kill-ring
 ** System clipboard integration
 #+begin_src emacs-lisp
   (use-package emacs
-	:config
-	(setq-default save-interprogram-paste-before-kill t))
+    :config
+    (setq-default save-interprogram-paste-before-kill t))
 #+end_src
 * Movement / Navigation
 #+begin_src emacs-lisp
   (defun backward-kill-char-or-word ()
-	"Kill characters backward.
+    "Kill characters backward.
   If the characters behind the cursor form a word
   \(possibly with ablank behind it\), 'backward-kill-word'.
   If there are multiple blanks, 'delete-horizontal-space',
   otherwise 'backward-delete-char'"
-	(interactive)
-	(cond
-	 ((looking-back "[[:word:]][[:blank:]]?" 1)
-	  (backward-kill-word 1))
-	 ((looking-back "[[:blank:]]+" 1)
-	  (delete-horizontal-space t))
-	 (t
-	  (backward-delete-char 1))))
+    (interactive)
+    (cond
+     ((looking-back "[[:word:]][[:blank:]]?" 1)
+      (backward-kill-word 1))
+     ((looking-back "[[:blank:]]+" 1)
+      (delete-horizontal-space t))
+     (t
+      (backward-delete-char 1))))
 
-										  ; bind Meta-Backspace (M-DEL)
+					  ; bind Meta-Backspace (M-DEL)
   (global-set-key [?\M-\d] 'backward-kill-char-or-word)
 
   (setq scroll-error-top-bottom 'true
-		scroll-margin 0
-		scroll-conservatively 100000
-		scroll-preserve-screen-position 1)
+	scroll-margin 0
+	scroll-conservatively 100000
+	scroll-preserve-screen-position 1)
 
   (global-set-key [mouse-8] 'pop-tag-mark)
 
@@ -750,119 +758,119 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 ** golden-ratio-scroll-screen - Scroll half screen down or up, and highlight current line
 #+begin_src emacs-lisp
   (use-package golden-ratio-scroll-screen
-	:ensure t
-	:custom
-	(golden-ratio-scroll-highlight-flag nil "Do not highlight current line before/after scroll")
-	:bind (([remap scroll-down-command] . golden-ratio-scroll-screen-down)
-		   ([remap scroll-up-command] . golden-ratio-scroll-screen-up)))
+    :ensure t
+    :custom
+    (golden-ratio-scroll-highlight-flag nil "Do not highlight current line before/after scroll")
+    :bind (([remap scroll-down-command] . golden-ratio-scroll-screen-down)
+	   ([remap scroll-up-command] . golden-ratio-scroll-screen-up)))
 #+end_src
 ** move-text - Move current line or region with M-up or M-down.
 #+begin_src emacs-lisp
   (use-package move-text
-	:ensure t
-	:bind
-	(([M-up] . move-text-up)
-	 ([M-down] . move-text-down)))
+    :ensure t
+    :bind
+    (([M-up] . move-text-up)
+     ([M-down] . move-text-down)))
 #+end_src
 ** Avy - Jump to arbitrary positions in visible text and select text quickly
 #+begin_src emacs-lisp
   (use-package avy
-	:ensure t
-	:bind (("M-g g" . evil-avy-goto-line)
-		   ("M-g M-g" . evil-avy-goto-line)
-		   ("M-g c" . evil-avy-goto-char)
-		   ("M-g w" . evil-avy-goto-word-0)))
+    :ensure t
+    :bind (("M-g g" . evil-avy-goto-line)
+	   ("M-g M-g" . evil-avy-goto-line)
+	   ("M-g c" . evil-avy-goto-char)
+	   ("M-g w" . evil-avy-goto-word-0)))
 #+end_src
 ** ace-window - Quickly switch windows
 #+begin_src emacs-lisp
   (use-package ace-window
-	:ensure t
-	:custom
-	(aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
-	(aw-background nil)
-	:custom-face
-	(aw-leading-char-face ((t (:inherit ace-jump-face-foreground :height 3.0))))
-	:bind (([remap other-window] . ace-window)))
+    :ensure t
+    :custom
+    (aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
+    (aw-background nil)
+    :custom-face
+    (aw-leading-char-face ((t (:inherit ace-jump-face-foreground :height 3.0))))
+    :bind (([remap other-window] . ace-window)))
 #+end_src
 * Coloring / themes / fonts
 #+begin_src emacs-lisp
   (use-package all-the-icons
-	:ensure t
-	:defer 1)
+    :ensure t
+    :defer 1)
 
   (use-package zenburn-theme
-	:ensure t
-	:defer 1)
+    :ensure t
+    :defer 1)
 
   (use-package spacemacs-theme
-	:ensure t
-	:defer 1)
+    :ensure t
+    :defer 1)
 
   (use-package ample-theme
-	:ensure t
-	:defer 1)
+    :ensure t
+    :defer 1)
 
   (use-package sexy-monochrome-theme
-	:ensure t
-	:defer 1)
+    :ensure t
+    :defer 1)
 
   (use-package doom-themes
-	:ensure t
-	:init
-	(load-theme 'doom-one t))
+    :ensure t
+    :init
+    (load-theme 'doom-one t))
 
   (if window-system
-	  (let ((font-list (font-family-list)))
-		(cond
-		 ((member "Fira Code" font-list)
-		  (set-face-attribute 'default nil :font "Fira Code:size=14:hintstyle=hintfull:autohint=true:antialise=true:rgba=rgb"))
-		 ((member "Source Code Pro" font-list)
-		  (set-face-attribute 'default nil :font "Source Code Pro:size=14:hintstyle=hintfull:autohint=true:antialise=true:rgba=rgb"))
-		 ((member "Hack" font-list)
-		  (set-face-attribute 'default nil :font "Hack:size=14:hintstyle=hintfull:autohint=true:antialise=true:rgba=rgb"))
-		 (t (error "Failed to load custom fonts"))
-		 )))
+      (let ((font-list (font-family-list)))
+	(cond
+	 ((member "Fira Code" font-list)
+	  (set-face-attribute 'default nil :font "Fira Code:size=14:hintstyle=hintfull:autohint=true:antialise=true:rgba=rgb"))
+	 ((member "Source Code Pro" font-list)
+	  (set-face-attribute 'default nil :font "Source Code Pro:size=14:hintstyle=hintfull:autohint=true:antialise=true:rgba=rgb"))
+	 ((member "Hack" font-list)
+	  (set-face-attribute 'default nil :font "Hack:size=14:hintstyle=hintfull:autohint=true:antialise=true:rgba=rgb"))
+	 (t (error "Failed to load custom fonts"))
+	 )))
 #+end_src
 * Modeline
 #+begin_src emacs-lisp
   (use-package emacs
-	:init
-	(setq-default
-	 line-number-mode t
-	 column-number-mode t
-	 mode-line-percent-position '(-3 "%p")
-	 ;; mode-line-position-column-line-format '(" %l,%c") ; Emacs 28
-	 mode-line-format
-	 '("%e"
-	   mode-line-front-space
-	   mode-line-mule-info
-	   mode-line-client
-	   mode-line-modified
-	   mode-line-remote
-	   mode-line-frame-identification
-	   mode-line-buffer-identification
-	   "  "
-	   mode-line-position
-	   (vc-mode vc-mode)
-	   "  "
-	   mode-line-modes
-	   " "
-	   mode-line-misc-info
-	   mode-line-end-spaces)))
+    :init
+    (setq-default
+     line-number-mode t
+     column-number-mode t
+     mode-line-percent-position '(-3 "%p")
+     ;; mode-line-position-column-line-format '(" %l,%c") ; Emacs 28
+     mode-line-format
+     '("%e"
+       mode-line-front-space
+       mode-line-mule-info
+       mode-line-client
+       mode-line-modified
+       mode-line-remote
+       mode-line-frame-identification
+       mode-line-buffer-identification
+       "  "
+       mode-line-position
+       (vc-mode vc-mode)
+       "  "
+       mode-line-modes
+       " "
+       mode-line-misc-info
+       mode-line-end-spaces)))
 
   (use-package keycast
-	:ensure t
-	:commands keycast-mode
-	:config
-	(setq keycast-separator-width 1)
-	(setq keycast-remove-tail-elements nil)
-	(dolist (input '(self-insert-command
-					 org-self-insert-command))
-	  (add-to-list 'keycast-substitute-alist `(,input "." "Typing…")))
-	(dolist (event '(mouse-event-p
-					 mouse-movement-p
-					 mwheel-scroll))
-	  (add-to-list 'keycast-substitute-alist `(,event nil))))
+    :ensure t
+    :commands keycast-mode
+    :config
+    (setq keycast-separator-width 1)
+    (setq keycast-remove-tail-elements nil)
+    (dolist (input '(self-insert-command
+		     org-self-insert-command))
+      (add-to-list 'keycast-substitute-alist `(,input "." "Typing…")))
+    (dolist (event '(mouse-event-p
+		     mouse-movement-p
+		     mwheel-scroll))
+      (add-to-list 'keycast-substitute-alist `(,event nil))))
 #+end_src
 * Shells
 ** eshell
@@ -871,222 +879,232 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   (use-package esh-mode)
 
   (use-package em-hist
-	:after esh-mode
-	:config
-	(setq-default eshell-history-file-name (expand-file-name "eshell-history" (getenv "EMACS_CACHE_DIR")))
-	(setq-default eshell-hist-ignoredups t)
-	(setq-default eshell-save-history-on-exit t))
+    :after esh-mode
+    :config
+    (setq-default eshell-history-file-name (expand-file-name "eshell-history" (getenv "EMACS_CACHE_DIR")))
+    (setq-default eshell-hist-ignoredups t)
+    (setq-default eshell-save-history-on-exit t))
 #+end_src
 * Project management
 ** projectile - Manage and navigate projects in Emacs easily
 #+begin_src emacs-lisp
   (use-package projectile
-	:ensure t
-	:diminish
-	:init
-	(setq-default projectile-cache-file (expand-file-name "projectile.cache" (getenv "EMACS_CACHE_DIR")))
-	(setq-default projectile-known-projects-file (expand-file-name "projectile-bookmarks.eld" (getenv "EMACS_CACHE_DIR")))
-	(setq-default projectile-tags-backend 'ggtags)
-	(setq-default projectile-switch-project-action 'projectile-dired)
-	:config
-	(projectile-mode)
-	)
+    :ensure t
+    :diminish
+    :init
+    (setq-default projectile-cache-file (expand-file-name "projectile.cache" (getenv "EMACS_CACHE_DIR")))
+    (setq-default projectile-known-projects-file (expand-file-name "projectile-bookmarks.eld" (getenv "EMACS_CACHE_DIR")))
+    (setq-default projectile-tags-backend 'ggtags)
+    (setq-default projectile-switch-project-action 'projectile-dired)
+    :config
+    (projectile-mode)
+    )
 #+end_src
 ** helm-projectile - Helm integration for Projectile
 #+begin_src emacs-lisp
   (use-package helm-projectile
-	:ensure t
-	:after (helm projectile)
-	:config
-	(helm-projectile-on)
-	:bind (:map evil-normal-state-map
-				(",ps" . helm-projectile-switch-project))
-	)
+    :ensure t
+    :after (helm projectile)
+    :config
+    (helm-projectile-on)
+    :bind (:map evil-normal-state-map
+		(",ps" . helm-projectile-switch-project))
+    )
+#+end_src
+** fzf - A front-end for fzf.
+#+begin_src emacs-lisp
+  (use-package fzf
+    :ensure t
+    :after (projectile ggtags evil-collection)
+    :init
+    (evil-collection-define-key 'normal 'ggtags-mode-map
+      "gf" 'fzf-projectile)
+    (define-key evil-normal-state-map "gf" 'fzf))
 #+end_src
 * Programming generic
 ** abbrev [built-in]
 #+begin_src emacs-lisp
   (use-package abbrev
-	:diminish)
+    :diminish)
 #+end_src
 ** yasnippet - A template system for Emacs
 #+begin_src emacs-lisp
   (use-package yasnippet
-	:ensure t
-	:diminish yas-minor-mode
-	:commands (yas-minor-mode yas-reload-all)
-	:hook
-	(prog-mode-hook . yas-minor-mode)
-	(org-mode-hook . yas-minor-mode)
-	:config
-	(setq yas-snippet-dirs
-		  `(,(file-name-as-directory (expand-file-name "snippets" user-emacs-directory))))
-	(yas-reload-all))
+    :ensure t
+    :diminish yas-minor-mode
+    :commands (yas-minor-mode yas-reload-all)
+    :hook
+    (prog-mode-hook . yas-minor-mode)
+    (org-mode-hook . yas-minor-mode)
+    :config
+    (setq yas-snippet-dirs
+	  `(,(file-name-as-directory (expand-file-name "snippets" user-emacs-directory))))
+    (yas-reload-all))
 #+end_src
 ** lsp - Language Server Protocol support for Emacs
 #+begin_src emacs-lisp
   (use-package lsp-mode
-	:ensure t)
+    :ensure t)
 
   (use-package lsp-ui
-	:ensure t
-	:after lsp-mode
-	:hook (lsp-mode-hook . lsp-ui-mode)
-	:config
-	(setq-default lsp-ui-peek-enable t)
-	(setq-default lsp-ui-sideline-enable nil)
-	(define-key lsp-ui-mode-map [C-down-mouse-1] 'xref-find-definitions-at-mouse))
+    :ensure t
+    :after lsp-mode
+    :hook (lsp-mode-hook . lsp-ui-mode)
+    :config
+    (setq-default lsp-ui-peek-enable t)
+    (setq-default lsp-ui-sideline-enable nil)
+    (define-key lsp-ui-mode-map [C-down-mouse-1] 'xref-find-definitions-at-mouse))
 #+end_src
 ** ggtags - emacs frontend to GNU Global source code tagging system
 #+begin_src emacs-lisp
   (use-package ggtags
-	:ensure t
-	:diminish)
+    :ensure t
+    :diminish)
 #+end_src
 ** helm-gtags - GNU Global helm interface
 #+begin_src emacs-lisp
   (use-package helm-gtags
-	:ensure t)
+    :ensure t)
 #+end_src
 ** company - Modular text completion framework
 #+begin_src emacs-lisp
   (use-package company
-	:ensure t
-	:diminish
-	:custom
-	(tab-always-indent 'complete)
-	:bind (([remap c-indent-line-or-region] . company-indent-or-complete-common)
-		   ([remap indent-for-tab-command] . company-indent-or-complete-common)
-		   :map company-active-map
-		   ("C-n" . company-select-next-or-abort)
-		   ("<tab>" . company-complete-common-or-cycle)
-		   ("C-p" . company-select-previous-or-abort))
-	:hook (after-init-hook . global-company-mode))
+    :ensure t
+    :diminish
+    :custom
+    (tab-always-indent 'complete)
+    :bind (([remap c-indent-line-or-region] . company-indent-or-complete-common)
+	   ([remap indent-for-tab-command] . company-indent-or-complete-common)
+	   :map company-active-map
+	   ("C-n" . company-select-next-or-abort)
+	   ("<tab>" . company-complete-common-or-cycle)
+	   ("C-p" . company-select-previous-or-abort))
+    :hook (after-init-hook . global-company-mode))
 
   (use-package company-quickhelp
-	:ensure t
-	:after company
-	:init
-	:hook (company-mode-hook . company-quickhelp-mode))
+    :ensure t
+    :after company
+    :init
+    :hook (company-mode-hook . company-quickhelp-mode))
 
   (use-package company-lsp
-	:ensure t
-	:after (company lsp-mode)
-	:init
-	(push 'company-lsp company-backends))
+    :ensure t
+    :after (company lsp-mode)
+    :init
+    (push 'company-lsp company-backends))
 #+end_src
 ** flycheck - On-the-fly syntax checking
 #+begin_src emacs-lisp
   (use-package flycheck
-	:ensure t
-	:defer 1
-	:diminish
-	:hook
-	(lsp-mode-hook . flycheck-mode)
-	(emacs-lisp-mode-hook . flycheck-mode))
+    :ensure t
+    :defer 1
+    :diminish
+    :hook
+    (lsp-mode-hook . flycheck-mode)
+    (emacs-lisp-mode-hook . flycheck-mode))
 
   (use-package flycheck-pos-tip
-	:ensure t
-	:after flycheck
-	:init
-	(eval-after-load 'flycheck (flycheck-pos-tip-mode)))
+    :ensure t
+    :after flycheck
+    :init
+    (eval-after-load 'flycheck (flycheck-pos-tip-mode)))
 #+end_src
 * Programming languages
 ** C/C++
 #+begin_src emacs-lisp
   (use-package cquery
-	:ensure t)
+    :ensure t)
 
   (defconst openjdk-cc-style
-	`((c-recognize-knr-p . nil)
-	  (c-enable-xemacs-performance-kludge-p . t)
-	  (c-basic-offset . 2)
-	  (indent-tabs-mode . nil)
-	  (c-comment-only-line-offset . 0)
-	  (c-hanging-braces-alist . ((defun-open after)
-								 (defun-close before after)
-								 (class-open after)
-								 (class-close before after)
-								 (inexpr-class-open after)
-								 (inexpr-class-close before)
-								 (namespace-open after)
-								 (inline-open after)
-								 (inline-close before after)
-								 (block-open after)
-								 (block-close . c-snug-do-while)
-								 (extern-lang-open after)
-								 (extern-lang-close after)
-								 (statement-case-open after)
-								 (substatement-open after)))
-	  (c-hanging-colons-alist . ((case-label)
-								 (label after)
-								 (access-label after)
-								 (member-init-intro before)
-								 (inher-intro)))
-	  (c-hanging-semi&comma-criteria
-	   . (c-semi&comma-no-newlines-for-oneline-inliners
-		  c-semi&comma-inside-parenlist
-		  c-semi&comma-no-newlines-before-nonblanks))
-	  (c-indent-comments-syntactically-p . t)
-	  (comment-column . 40)
-	  (c-indent-comment-alist . ((other . (space . 2))))
-	  (c-cleanup-list . (brace-else-brace
-						 brace-elseif-brace
-						 brace-catch-brace
-						 empty-defun-braces
-						 defun-close-semi
-						 list-close-comma
-						 scope-operator))
-	  (c-offsets-alist . ((arglist-intro google-c-lineup-expression-plus-4)
-						  (func-decl-cont . ++)
-						  (member-init-intro . ++)
-						  (inher-intro . ++)
-						  (comment-intro . 0)
-						  (arglist-close . c-lineup-arglist)
-						  (topmost-intro . 0)
-						  (block-open . 0)
-						  (inline-open . 0)
-						  (substatement-open . 0)
-						  (statement-cont
-						   .
-						   (,(when (fboundp 'c-no-indent-after-java-annotations)
-							   'c-no-indent-after-java-annotations)
-							,(when (fboundp 'c-lineup-assignments)
-							   'c-lineup-assignments)
-							++))
-						  (label . /)
-						  (case-label . +)
-						  (statement-case-open . +)
-						  (statement-case-intro . +) ; case w/o {
-						  (access-label . /)
-						  (innamespace . 0))))
-	"OpenJDK C/C++ Programming Style.")
+    `((c-recognize-knr-p . nil)
+      (c-enable-xemacs-performance-kludge-p . t)
+      (c-basic-offset . 2)
+      (indent-tabs-mode . nil)
+      (c-comment-only-line-offset . 0)
+      (c-hanging-braces-alist . ((defun-open after)
+				 (defun-close before after)
+				 (class-open after)
+				 (class-close before after)
+				 (inexpr-class-open after)
+				 (inexpr-class-close before)
+				 (namespace-open after)
+				 (inline-open after)
+				 (inline-close before after)
+				 (block-open after)
+				 (block-close . c-snug-do-while)
+				 (extern-lang-open after)
+				 (extern-lang-close after)
+				 (statement-case-open after)
+				 (substatement-open after)))
+      (c-hanging-colons-alist . ((case-label)
+				 (label after)
+				 (access-label after)
+				 (member-init-intro before)
+				 (inher-intro)))
+      (c-hanging-semi&comma-criteria
+       . (c-semi&comma-no-newlines-for-oneline-inliners
+	  c-semi&comma-inside-parenlist
+	  c-semi&comma-no-newlines-before-nonblanks))
+      (c-indent-comments-syntactically-p . t)
+      (comment-column . 40)
+      (c-indent-comment-alist . ((other . (space . 2))))
+      (c-cleanup-list . (brace-else-brace
+			 brace-elseif-brace
+			 brace-catch-brace
+			 empty-defun-braces
+			 defun-close-semi
+			 list-close-comma
+			 scope-operator))
+      (c-offsets-alist . ((arglist-intro google-c-lineup-expression-plus-4)
+			  (func-decl-cont . ++)
+			  (member-init-intro . ++)
+			  (inher-intro . ++)
+			  (comment-intro . 0)
+			  (arglist-close . c-lineup-arglist)
+			  (topmost-intro . 0)
+			  (block-open . 0)
+			  (inline-open . 0)
+			  (substatement-open . 0)
+			  (statement-cont
+			   .
+			   (,(when (fboundp 'c-no-indent-after-java-annotations)
+			       'c-no-indent-after-java-annotations)
+			    ,(when (fboundp 'c-lineup-assignments)
+			       'c-lineup-assignments)
+			    ++))
+			  (label . /)
+			  (case-label . +)
+			  (statement-case-open . +)
+			  (statement-case-intro . +) ; case w/o {
+			  (access-label . /)
+			  (innamespace . 0))))
+    "OpenJDK C/C++ Programming Style.")
 
   (c-add-style "OpenJDK" openjdk-cc-style nil)
 #+end_src
 ** Rust
 #+begin_src emacs-lisp
   (use-package rust-mode
-	:ensure t)
+    :ensure t)
 
   (use-package cargo
-	:ensure t
-	:init
-	(add-hook 'rust-mode-hook 'cargo-minor-mode))
+    :ensure t
+    :init
+    (add-hook 'rust-mode-hook 'cargo-minor-mode))
 
   (use-package racer
-	:ensure t
-	:init
-	(add-hook 'rust-mode-hook 'racer-mode)
-	(add-hook 'racer-mode-hook 'eldoc-mode)
-	(add-hook 'racer-mode-hook 'company-mode))
+    :ensure t
+    :init
+    (add-hook 'rust-mode-hook 'racer-mode)
+    (add-hook 'racer-mode-hook 'eldoc-mode)
+    (add-hook 'racer-mode-hook 'company-mode))
 
   (use-package flycheck-rust
-	:ensure t
-	:after (flycheck rust-mode)
-	:init
-	(with-eval-after-load 'rust-mode
-	  (add-hook 'flycheck-mode-hook #'flycheck-rust-setup)))
+    :ensure t
+    :after (flycheck rust-mode)
+    :init
+    (with-eval-after-load 'rust-mode
+      (add-hook 'flycheck-mode-hook #'flycheck-rust-setup)))
 
   (setq mouse-wheel-scroll-amount '(3 ((shift) . 1) ((control) . nil)))
   (setq mouse-wheel-progressive-speed nil)
@@ -1094,9 +1112,9 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 ** Emacs-lisp
 #+begin_src emacs-lisp
   (use-package eldoc
-	:diminish
-	:config
-	(global-eldoc-mode 1))
+    :diminish
+    :config
+    (global-eldoc-mode 1))
 #+end_src
 ** Shell
 The shell mode is built-in.
@@ -1108,179 +1126,176 @@ This is missing completion for functions and variables defined in other files wh
 Also, it looks like parameter substitution inside strings are not to be completed.
 #+begin_src emacs-lisp
   (use-package sh-script
-	:config
-	(setq-default sh-basic-offset 2)
-	:hook
-	(sh-mode-hook . flycheck-mode))
+    :config
+    (setq-default sh-basic-offset 2)
+    :hook
+    (sh-mode-hook . flycheck-mode))
 
   (use-package shell
-	:config
-	(setq-default sh-basic-offset 2)
-	:hook
-	(sh-mode-hook . flycheck-mode)
-	(shell-mode-hook . (lambda () (display-line-numbers-mode 0))))
+    :config
+    (setq-default sh-basic-offset 2)
+    :hook
+    (sh-mode-hook . flycheck-mode)
+    (shell-mode-hook . (lambda () (display-line-numbers-mode 0))))
 
   (use-package company-shell
-	:ensure t
-	:after (company sh-script)
-	:config
-	:hook
-	(sh-mode-hook . (lambda ()
-					  (set
-					   (make-local-variable 'company-backends)
-					   '((company-dabbrev-code company-shell company-shell-env))))))
+    :ensure t
+    :after (company sh-script)
+    :config
+    :hook
+    (sh-mode-hook . (lambda ()
+		      (set
+		       (make-local-variable 'company-backends)
+		       '((company-dabbrev-code company-shell company-shell-env))))))
 #+end_src
 ** Python
 Elpy currently has problems with upstream ~jedi~.
 #+begin_src emacs-lisp
   (use-package python-mode
-	:ensure t
-	:defer t
-	:init
-	(defun my/python-mode-hook ()
-	  (setq fill-column 79))
-	:hook
-	(python-mode-hook . my/python-mode-hook)
-	(python-mode-hook . display-fill-column-indicator-mode)
-	)
+    :ensure t
+    :defer t
+    :init
+    (defun my/python-mode-hook ()
+      (setq fill-column 79))
+    :hook
+    (python-mode-hook . my/python-mode-hook)
+    (python-mode-hook . display-fill-column-indicator-mode)
+    )
 
   (use-package elpy
-	:ensure t
-	:defer t
-	:after python-mode
-	:init
-	(advice-add 'python-mode :before 'elpy-enable))
+    :ensure t
+    :defer t
+    :after python-mode
+    :init
+    (advice-add 'python-mode :before 'elpy-enable))
 #+end_src
 ** Groovy
 #+begin_src emacs-lisp
   (use-package groovy-mode
-	:ensure t)
+    :ensure t)
 #+end_src
 ** jenkinsfile-mode
 #+begin_src emacs-lisp
   (use-package jenkinsfile-mode
-	:ensure t
-	:after groovy-mode)
+    :ensure t
+    :after groovy-mode)
 #+end_src
 * Markup languages
 ** Org Mode
 #+begin_src emacs-lisp
   (use-package org
-	:config
-	(setq-default org-directory "~/Documents/org")
-	(setq-default org-imenu-depth 7)
-	;;
-	(setq-default org-adapt-indentation nil)
-	;; agenda
-	(setq-default org-agenda-files '("~/Documents/org"))
-	(setq-default org-agenda-span 14)
-	(setq-default org-agenda-start-on-weekday 1)
-	;; code blocks languages
-	(org-babel-do-load-languages
-	 'org-babel-load-languages
-	 '((emacs-lisp . t)
-	   (shell . t)
-	   (python . t)
-	   (perl . t)))
-	:bind (:map org-mode-map
-				("C-c a" . org-agenda)
-				("C-c ." . org-time-stamp)
-				("C-c C-." . org-time-stamp-inactive))
-	:hook
-	(org-mode-hook . abbrev-mode))
+    :config
+    (setq-default org-directory "~/Documents/org")
+    (setq-default org-imenu-depth 7)
+    ;;
+    (setq-default org-adapt-indentation nil)
+    ;; agenda
+    (setq-default org-agenda-files '("~/Documents/org"))
+    (setq-default org-agenda-span 14)
+    (setq-default org-agenda-start-on-weekday 1)
+    ;; code blocks languages
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '((emacs-lisp . t)
+       (shell . t)
+       (python . t)
+       (perl . t)))
+    :bind (:map org-mode-map
+		("C-c a" . org-agenda)
+		("C-c ." . org-time-stamp)
+		("C-c C-." . org-time-stamp-inactive))
+    :hook
+    (org-mode-hook . abbrev-mode))
 
   (use-package org-superstar
-	:ensure t
-	:after org
-	:commands org-superstar-mode
-	:config
-	(setq-default org-superstar-remove-leading-stars t)
-	(setq-default org-bullets-bullet-list '("◉" "○" "✸" "✿" "☼" "⚬"))
-	:hook
-	(org-mode-hook . org-superstar-mode))
+    :ensure t
+    :after org
+    :commands org-superstar-mode
+    :config
+    (setq-default org-superstar-remove-leading-stars t)
+    (setq-default org-bullets-bullet-list '("◉" "○" "✸" "✿" "☼" "⚬"))
+    :hook
+    (org-mode-hook . org-superstar-mode))
 #+end_src
 ** Markdown
 #+begin_src emacs-lisp
   (use-package markdown-mode
-	:ensure t
-	:mode (("\\.md\\'" . markdown-mode)
-		   ("\\.markdown\\'" . markdown-mode))
-	:config
-	(setq-default markdown-command "multimarkdown"))
+    :ensure t
+    :mode (("\\.md\\'" . markdown-mode)
+	   ("\\.markdown\\'" . markdown-mode))
+    :config
+    (setq-default markdown-command "multimarkdown"))
 #+end_src
 ** TOML
 #+begin_src emacs-lisp
   (use-package toml-mode
-	:ensure t
-	:mode (("\\.toml\\'" . toml-mode)))
+    :ensure t
+    :mode (("\\.toml\\'" . toml-mode)))
 #+end_src
 ** YAML
 #+begin_src emacs-lisp
   (use-package yaml-mode
-	:ensure t
-	:mode (("\\.yml\\'" . yaml-mode)
-		   ("\\.yaml\\'" . yaml-mode)))
+    :ensure t
+    :mode (("\\.yml\\'" . yaml-mode)
+	   ("\\.yaml\\'" . yaml-mode)))
 #+end_src
 ** JSON
 #+begin_src emacs-lisp
   (use-package json-mode
-	:ensure t
-	:mode (("\\.json\\'" . json-mode)))
+    :ensure t
+    :mode (("\\.json\\'" . json-mode)))
 #+end_src
 * Configuration files
 ** xmodmap
 #+begin_src emacs-lisp
   (use-package xmodmap-mode
-	:mode (("\\.Xmodmap\\'" . xmodmap-mode)))
+    :mode (("\\.Xmodmap\\'" . xmodmap-mode)))
 #+end_src
 * Version control
 ** Magit - A Git Porcelain inside Emacs
 #+begin_src emacs-lisp
   (use-package magit
-	:ensure t
-	:commands (magit-status git-commit-turn-on-flyspell)
-	:config
-	(magit-auto-revert-mode 1)
-	:hook
-	(magit-mode-hook . magit-load-config-extensions)
-	(git-commit-setup-hook . git-commit-turn-on-flyspell)
-	:bind (:map magit-section-mode-map
-				("M-1" . nil)
-				("M-2" . nil)
-				("M-3" . nil)
-				("M-4" . nil)))
+    :ensure t
+    :commands (magit-status git-commit-turn-on-flyspell)
+    :config
+    (magit-auto-revert-mode 1)
+    :hook
+    (magit-mode-hook . magit-load-config-extensions)
+    (git-commit-setup-hook . git-commit-turn-on-flyspell)
+    :bind (:map magit-section-mode-map
+		("M-1" . nil)
+		("M-2" . nil)
+		("M-3" . nil)
+		("M-4" . nil)))
 
   (use-package gitignore-mode
-	:ensure t)
+    :ensure t)
 #+end_src
 ** Monky  - Control Hg from Emacs
 #+begin_src emacs-lisp
   (use-package monky
-	:ensure t
-	:commands monky-status
-	:config
-	(setq-default monky-process-type 'cmdserver)
-	)
+    :ensure t
+    :commands monky-status
+    :config
+    (setq-default monky-process-type 'cmdserver)
+    )
 #+end_src
 * OTHER
 #+begin_src emacs-lisp
-  (use-package fzf
-	:ensure t)
-
   (defun my/ref-find-definitions-at-mouse (event)
-	"Find the definition of identifier at or around mouse click.
+    "Find the definition of identifier at or around mouse click.
   This command is intended to be bound to a mouse event."
-	(interactive "e")
-	(let ((identifier
-		   (save-excursion
-			 (mouse-set-point event)
-			 (xref-backend-identifier-at-point (xref-find-backend)))))
-	  (if identifier
-		  (xref-find-definitions identifier)
-		(user-error "No identifier here"))))
+    (interactive "e")
+    (let ((identifier
+	   (save-excursion
+	     (mouse-set-point event)
+	     (xref-backend-identifier-at-point (xref-find-backend)))))
+      (if identifier
+	  (xref-find-definitions identifier)
+	(user-error "No identifier here"))))
 
   (unless (fboundp 'xref-find-definitions-at-mouse)
-	(defalias 'xref-find-definitions-at-mouse 'my/xref-find-definitions-at-mouse))
+    (defalias 'xref-find-definitions-at-mouse 'my/xref-find-definitions-at-mouse))
 
   ;;; misc stuff
 
@@ -1288,68 +1303,68 @@ Elpy currently has problems with upstream ~jedi~.
 
 
   (defconst openjdk-cc-style
-	`((c-recognize-knr-p . nil)
-	  (c-enable-xemacs-performance-kludge-p . t) ; speed up indentation in XEmacs
-	  (c-basic-offset . 2)
-	  (indent-tabs-mode . nil)
-	  (c-comment-only-line-offset . 0)
-	  (c-hanging-braces-alist . ((defun-open after)
-								 (defun-close before after)
-								 (class-open after)
-								 (class-close before after)
-								 (inexpr-class-open after)
-								 (inexpr-class-close before)
-								 (namespace-open after)
-								 (inline-open after)
-								 (inline-close before after)
-								 (block-open after)
-								 (block-close . c-snug-do-while)
-								 (extern-lang-open after)
-								 (extern-lang-close after)
-								 (statement-case-open after)
-								 (substatement-open after)))
-	  (c-hanging-colons-alist . ((case-label)
-								 (label after)
-								 (access-label after)
-								 (member-init-intro before)
-								 (inher-intro)))
-	  (c-hanging-semi&comma-criteria
-	   . (c-semi&comma-no-newlines-for-oneline-inliners
-		  c-semi&comma-inside-parenlist
-		  c-semi&comma-no-newlines-before-nonblanks))
-	  (c-indent-comments-syntactically-p . t)
-	  (comment-column . 40)
-	  (c-indent-comment-alist . ((other . (space . 2))))
-	  (c-cleanup-list . (brace-else-brace
-						 brace-elseif-brace
-						 brace-catch-brace
-						 empty-defun-braces
-						 defun-close-semi
-						 list-close-comma
-						 scope-operator))
-	  (c-offsets-alist . ((arglist-intro google-c-lineup-expression-plus-4)
-						  (func-decl-cont . ++)
-						  (member-init-intro . ++)
-						  (inher-intro . ++)
-						  (comment-intro . 0)
-						  (arglist-close . c-lineup-arglist)
-						  (topmost-intro . 0)
-						  (block-open . 0)
-						  (inline-open . 0)
-						  (substatement-open . 0)
-						  (statement-cont
-						   .
-						   (,(when (fboundp 'c-no-indent-after-java-annotations)
-							   'c-no-indent-after-java-annotations)
-							,(when (fboundp 'c-lineup-assignments)
-							   'c-lineup-assignments)
-							++))
-						  (label . /)
-						  (case-label . +)
-						  (statement-case-open . +)
-						  (statement-case-intro . +) ; case w/o {
-						  (access-label . /)
-						  (innamespace . 0))))
-	"OpenJDK C/C++ Programming Style.")
+    `((c-recognize-knr-p . nil)
+      (c-enable-xemacs-performance-kludge-p . t) ; speed up indentation in XEmacs
+      (c-basic-offset . 2)
+      (indent-tabs-mode . nil)
+      (c-comment-only-line-offset . 0)
+      (c-hanging-braces-alist . ((defun-open after)
+				 (defun-close before after)
+				 (class-open after)
+				 (class-close before after)
+				 (inexpr-class-open after)
+				 (inexpr-class-close before)
+				 (namespace-open after)
+				 (inline-open after)
+				 (inline-close before after)
+				 (block-open after)
+				 (block-close . c-snug-do-while)
+				 (extern-lang-open after)
+				 (extern-lang-close after)
+				 (statement-case-open after)
+				 (substatement-open after)))
+      (c-hanging-colons-alist . ((case-label)
+				 (label after)
+				 (access-label after)
+				 (member-init-intro before)
+				 (inher-intro)))
+      (c-hanging-semi&comma-criteria
+       . (c-semi&comma-no-newlines-for-oneline-inliners
+	  c-semi&comma-inside-parenlist
+	  c-semi&comma-no-newlines-before-nonblanks))
+      (c-indent-comments-syntactically-p . t)
+      (comment-column . 40)
+      (c-indent-comment-alist . ((other . (space . 2))))
+      (c-cleanup-list . (brace-else-brace
+			 brace-elseif-brace
+			 brace-catch-brace
+			 empty-defun-braces
+			 defun-close-semi
+			 list-close-comma
+			 scope-operator))
+      (c-offsets-alist . ((arglist-intro google-c-lineup-expression-plus-4)
+			  (func-decl-cont . ++)
+			  (member-init-intro . ++)
+			  (inher-intro . ++)
+			  (comment-intro . 0)
+			  (arglist-close . c-lineup-arglist)
+			  (topmost-intro . 0)
+			  (block-open . 0)
+			  (inline-open . 0)
+			  (substatement-open . 0)
+			  (statement-cont
+			   .
+			   (,(when (fboundp 'c-no-indent-after-java-annotations)
+			       'c-no-indent-after-java-annotations)
+			    ,(when (fboundp 'c-lineup-assignments)
+			       'c-lineup-assignments)
+			    ++))
+			  (label . /)
+			  (case-label . +)
+			  (statement-case-open . +)
+			  (statement-case-intro . +) ; case w/o {
+			  (access-label . /)
+			  (innamespace . 0))))
+    "OpenJDK C/C++ Programming Style.")
 
 #+end_src
