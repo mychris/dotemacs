@@ -886,7 +886,6 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 	:init
 	(setq-default projectile-cache-file (expand-file-name "projectile.cache" (getenv "EMACS_CACHE_DIR")))
 	(setq-default projectile-known-projects-file (expand-file-name "projectile-bookmarks.eld" (getenv "EMACS_CACHE_DIR")))
-	(setq-default projectile-tags-file-name "GTAGS")
 	(setq-default projectile-tags-backend 'ggtags)
 	(setq-default projectile-switch-project-action 'projectile-dired)
 	:config
