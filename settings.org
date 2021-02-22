@@ -822,6 +822,8 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   (if window-system
       (let ((font-list (font-family-list)))
 	(cond
+	 ((member "Victor Mono" font-list)
+	  (set-face-attribute 'default nil :font "Victor Mono:size=14:hintstyel=hintfull:autohint=true:antialise=true:rgba=rgb"))
 	 ((member "Fira Code" font-list)
 	  (set-face-attribute 'default nil :font "Fira Code:size=14:hintstyle=hintfull:autohint=true:antialise=true:rgba=rgb"))
 	 ((member "Source Code Pro" font-list)
