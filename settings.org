@@ -946,6 +946,15 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   (use-package abbrev
     :diminish)
 #+end_src
+** paren [built-in] - highlight matching paren
+#+begin_src emacs-lisp
+  (use-package paren
+    :config
+    (setq show-paren-delay 0.25)
+    (setq show-paren-style 'parenthesis)
+    :hook
+    (prog-mode-hook . show-paren-mode))
+#+end_src
 ** yasnippet - A template system for Emacs
 #+begin_src emacs-lisp
   (use-package yasnippet
