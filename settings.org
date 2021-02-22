@@ -972,15 +972,26 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 ** lsp - Language Server Protocol support for Emacs
 #+begin_src emacs-lisp
   (use-package lsp-mode
-    :ensure t)
+    :ensure t
+    :commands (lsp)
+    :config
+    ;; company is enbaled globally
+    (setq lsp-completion-enable nil))
 
   (use-package lsp-ui
     :ensure t
     :after lsp-mode
     :hook (lsp-mode-hook . lsp-ui-mode)
     :config
-    (setq-default lsp-ui-peek-enable t)
-    (setq-default lsp-ui-sideline-enable nil)
+    (setq lsp-ui-peek-enable t)
+    (setq lsp-ui-sideline-enable t)
+    (setq lsp-ui-sideline-show-hover t)
+    (setq lsp-ui-sideline-update-mode 'line)
+    (setq lsp-ui-sideline-delay 1)
+    (setq lsp-ui-doc-enable t)
+    (setq lsp-ui-doc-show-with-cursor t)
+    (setq lsp-ui-doc-show-with-mouse t)
+    (setq lsp-ui-doc-position 'at-point)
     (define-key lsp-ui-mode-map [C-down-mouse-1] 'xref-find-definitions-at-mouse))
 #+end_src
 ** ggtags - emacs frontend to GNU Global source code tagging system
@@ -999,8 +1010,10 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   (use-package company
     :ensure t
     :diminish
-    :custom
-    (tab-always-indent 'complete)
+    :config
+    (setq tab-always-indent 'complete)
+    (setq company-tooltip-align-annotations t)
+    (setq company-minimum-prefix-length 1)
     :bind (([remap c-indent-line-or-region] . company-indent-or-complete-common)
 	   ([remap indent-for-tab-command] . company-indent-or-complete-common)
 	   :map company-active-map
@@ -1014,12 +1027,6 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :after company
     :init
     :hook (company-mode-hook . company-quickhelp-mode))
-
-  (use-package company-lsp
-    :ensure t
-    :after (company lsp-mode)
-    :init
-    (push 'company-lsp company-backends))
 #+end_src
 ** flycheck - On-the-fly syntax checking
 #+begin_src emacs-lisp
@@ -1027,6 +1034,65 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :ensure t
     :defer 1
     :diminish
+    :config
+    (define-fringe-bitmap 'flycheck-fringe-bitmap-one-excl
+      (vector #b00000000
+	      #b00000000
+	      #b00000000
+	      #b00110000
+	      #b00110000
+	      #b00110000
+	      #b00110000
+	      #b00110000
+	      #b00110000
+	      #b00110000
+	      #b00110000
+	      #b00000000
+	      #b00110000
+	      #b00110000
+	      #b00000000
+	      #b00000000
+	      #b00000000))
+    (define-fringe-bitmap 'flycheck-fringe-bitmap-two-excl
+      (vector #b00000000
+	      #b00000000
+	      #b00000000
+	      #b01100110
+	      #b01100110
+	      #b01100110
+	      #b01100110
+	      #b01100110
+	      #b01100110
+	      #b01100110
+	      #b01100110
+	      #b00000000
+	      #b01100110
+	      #b01100110
+	      #b00000000
+	      #b00000000
+	      #b00000000))
+
+    (flycheck-define-error-level 'error
+      :severity 100
+      :compilation-level 2
+      :overlay-category 'flycheck-error-overlay
+      :fringe-bitmap 'flycheck-fringe-bitmap-two-excl
+      :fringe-face 'flycheck-fringe-error
+      :error-list-face 'flycheck-error-list-error)
+    (flycheck-define-error-level 'warning
+      :severity 10
+      :compilation-level 1
+      :overlay-category 'flycheck-warning-overlay
+      :fringe-bitmap 'flycheck-fringe-bitmap-one-excl
+      :fringe-face 'flycheck-fringe-warning
+      :error-list-face 'flycheck-error-list-warning)
+    (flycheck-define-error-level 'info
+      :severity -10
+      :compilation-level 0
+      :overlay-category 'flycheck-info-overlay
+      :fringe-bitmap 'flycheck-fringe-bitmap-one-excl
+      :fringe-face 'flycheck-fringe-info
+      :error-list-face 'flycheck-error-list-info)
     :hook
     (lsp-mode-hook . flycheck-mode)
     (emacs-lisp-mode-hook . flycheck-mode))
@@ -1113,26 +1179,12 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 ** Rust
 #+begin_src emacs-lisp
   (use-package rust-mode
-    :ensure t)
-
-  (use-package cargo
     :ensure t
-    :init
-    (add-hook 'rust-mode-hook 'cargo-minor-mode))
-
-  (use-package racer
-    :ensure t
-    :init
-    (add-hook 'rust-mode-hook 'racer-mode)
-    (add-hook 'racer-mode-hook 'eldoc-mode)
-    (add-hook 'racer-mode-hook 'company-mode))
+    :hook (rust-mode-hook . lsp))
 
   (use-package flycheck-rust
     :ensure t
-    :after (flycheck rust-mode)
-    :init
-    (with-eval-after-load 'rust-mode
-      (add-hook 'flycheck-mode-hook #'flycheck-rust-setup)))
+    :config (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
 
   (setq mouse-wheel-scroll-amount '(3 ((shift) . 1) ((control) . nil)))
   (setq mouse-wheel-progressive-speed nil)
