@@ -579,7 +579,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (evil-collection-define-key 'normal 'dired-mode-map
       "gf" 'fzf))
 #+end_src
-** neotree - A tree plugin like NerdTree for Vim
+** COMMENT neotree - A tree plugin like NerdTree for Vim
 #+begin_src emacs-lisp
   (use-package neotree
     :ensure t
@@ -599,6 +599,33 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 	   ("<delete>" . neotree-delete-node)
 	   ("C-h" . neotree-hidden-file-toggle)
 	   ("r" . neotree-rename-node)))
+#+end_src
+** treemacs - A tree style file explorer package
+#+begin_src emacs-lisp
+  (use-package treemacs
+    :ensure t
+    :defer 1
+    :config
+    (treemacs-follow-mode)
+    :bind (([f8] . treemacs)))
+
+  (use-package treemacs-evil
+    :ensure t
+    :after (treemacs evil))
+
+  (use-package treemacs-projectile
+    :ensure t
+    :after (treemacs projectile))
+
+  (use-package treemacs-magit
+    :ensure t
+    :after (treemacs magit))
+
+  (use-package treemacs-persp
+    :ensure t
+    :after (treemacs pers-mode)
+    :config
+    (treemacs-set-scope-type 'Perspectives))
 #+end_src
 ** Quick file opening shortcuts
 #+begin_src emacs-lisp	(use-package emacs
