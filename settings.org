@@ -524,6 +524,26 @@
     (eyebrowse-pre-window-switch-hook . zed-eyebrowse-monocle-window-config-switch)
     (window-configuration-change-hook . zed-eyebrowse-monocle-window-config-change))
 #+end_src
+** golden-ratio - Automatic resizing of Emacs windows to the golden ratio
+#+begin_src emacs-lisp
+  (use-package golden-ratio
+    :ensure t
+    :diminish
+    :commands (golden-ratio-mode)
+    :config
+    (golden-ratio-mode 1)
+    (setq golden-ratio-adjust-factor 0.8)
+    (setq golden-ratio-wide-adjust-factor 0.8)
+    (setq golden-ratio-max-width nil)
+    (setq golden-ratio-auto-scale nil)
+    (setq golden-ratio-extra-commands
+	  '(windmove-left
+	    windmove-right
+	    windmove-down
+	    windmove-up
+	    ace-window
+	    )))
+#+end_src
 * Help / Discovery / Cheat sheets
 ** which-key - Display available key bindings in popup
 #+begin_src emacs-lisp
