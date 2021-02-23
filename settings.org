@@ -536,6 +536,7 @@
     (setq golden-ratio-wide-adjust-factor 0.8)
     (setq golden-ratio-max-width nil)
     (setq golden-ratio-auto-scale nil)
+    (setq golden-ratio-recenter t)
     (setq golden-ratio-extra-commands
 	  '(windmove-left
 	    windmove-right
