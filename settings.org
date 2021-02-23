@@ -954,8 +954,8 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :config
     (helm-projectile-on)
     :bind (:map evil-normal-state-map
-		(",ps" . helm-projectile-switch-project))
-    )
+		(",ps" . helm-projectile-switch-project)
+		("g/" . helm-projectile-rg)))
 #+end_src
 ** fzf - A front-end for fzf.
 #+begin_src emacs-lisp
