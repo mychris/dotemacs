@@ -27,9 +27,7 @@
 				  (format "%.2f seconds"
 					  (float-time (time-subtract after-init-time before-init-time)))
 				  gcs-done)
-			 (setq gc-cons-threshold 800000)))
-    (prog-mode-hook . (lambda ()
-			(setq show-trailing-whitespace t))))
+			 (setq gc-cons-threshold 800000))))
 #+end_src
 ** Emacs server and desktop
 #+begin_src emacs-lisp
@@ -536,7 +534,7 @@
     (setq golden-ratio-wide-adjust-factor 0.8)
     (setq golden-ratio-max-width nil)
     (setq golden-ratio-auto-scale nil)
-    (setq golden-ratio-recenter t)
+    (setq golden-ratio-recenter nil)
     (setq golden-ratio-extra-commands
 	  '(windmove-left
 	    windmove-right
@@ -627,7 +625,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :ensure t
     :defer 1
     :config
-    (treemacs-follow-mode)
+    (setq-default treemacs-follow-mode t)
     :bind (([f8] . treemacs)))
 
   (use-package treemacs-evil
@@ -644,9 +642,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 
   (use-package treemacs-persp
     :ensure t
-    :after (treemacs pers-mode)
-    :config
-    (treemacs-set-scope-type 'Perspectives))
+    :after (treemacs pers-mode))
 #+end_src
 ** Quick file opening shortcuts
 #+begin_src emacs-lisp	(use-package emacs
@@ -662,6 +658,17 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 	   (",o" . quick-file-access-open-file)))
 #+end_src
 * Visual
+** whitespace [built-in]
+#+begin_src emacs-lisp
+  (use-package whitespace
+    :config
+    (setq-default whitespace-style
+		  '(face tab-mark))
+
+    :hook
+    (prog-mode-hook . whitespace-mode)
+    )
+#+end_src
 ** highlight-thing - Minimalistic minor mode to highlight current thing under point
 #+begin_src emacs-lisp
   (use-package highlight-thing
@@ -684,6 +691,9 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :ensure t
     :diminish
     :defer 1
+    :bind (:map evil-normal-state-map
+	   ("u" . undo-tree-undo)
+	   ("C-r" . undo-tree-redo))
     :init
     (let
 	((undo-dir (file-name-as-directory (expand-file-name "undo" (getenv "EMACS_CACHE_DIR")))))
@@ -1021,7 +1031,10 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package lsp-mode
     :ensure t
+    :after (evil)
     :commands (lsp)
+    :init
+    (setq lsp-keymap-prefix "s-g")
     :config
     (setq lsp-session-file (expand-file-name "lsp-session-v1" (getenv "EMACS_CACHE_DIR")))
     ;; company is enbaled globally
@@ -1038,8 +1051,8 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (setq lsp-ui-sideline-update-mode 'line)
     (setq lsp-ui-sideline-delay 1)
     (setq lsp-ui-doc-enable t)
-    (setq lsp-ui-doc-show-with-cursor t)
-    (setq lsp-ui-doc-show-with-mouse t)
+    (setq lsp-ui-doc-show-with-cursor nil)
+    (setq lsp-ui-doc-show-with-mouse nil)
     (setq lsp-ui-doc-position 'at-point)
     (define-key lsp-ui-mode-map [C-down-mouse-1] 'xref-find-definitions-at-mouse))
 #+end_src
@@ -1233,7 +1246,9 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package rust-mode
     :ensure t
-    :hook (rust-mode-hook . lsp))
+    :hook
+    (rust-mode-hook . lsp)
+    (rust-mode-hook . (lambda () (setq indent-tabs-mode nil))))
 
   (use-package flycheck-rust
     :ensure t
