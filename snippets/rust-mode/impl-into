@@ -1,0 +1,8 @@
+# key: implinto
+# name: impl-into
+# --
+impl Into<${1:into}> for ${2:from} {
+  fn into(self) -> $1 {
+    $0
+  }
+}
