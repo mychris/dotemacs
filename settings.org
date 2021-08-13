@@ -1377,6 +1377,23 @@ Elpy currently has problems with upstream ~jedi~.
     (setq-default org-bullets-bullet-list '("◉" "○" "✸" "✿" "☼" "⚬"))
     :hook
     (org-mode-hook . org-superstar-mode))
+
+  (use-package evil-org
+    :ensure t
+    :after (org evil)
+    :diminish
+    :commands evil-org-set-key-theme
+    :hook
+    (org-mode-hook . evil-org-mode)
+    :config
+    (evil-org-set-key-theme '(navigation insert textobjects additional calendar)))
+
+  (use-package evil-org-agenda
+    ;; part of evil-org
+    :after (org evil evil-org)
+    :commands evil-org-agenda-set-keys
+    :config
+    (evil-org-agenda-set-keys))
 #+end_src
 ** Markdown
 #+begin_src emacs-lisp
