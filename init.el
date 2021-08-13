@@ -80,13 +80,17 @@
 ;;;; Make sure some environment variables are set
 
 (unless (getenv "XDG_CACHE_HOME")
-	(setenv "XDG_CACHE_HOME" (expand-file-name "~/.cache")))
+  (setenv "XDG_CACHE_HOME" (expand-file-name "~/.cache")))
 
 (unless (getenv "EMACS_CACHE_DIR")
-	(setenv "EMACS_CACHE_DIR" (expand-file-name "emacs" (getenv "XDG_CACHE_HOME"))))
+  (setenv "EMACS_CACHE_DIR" (expand-file-name "emacs" (getenv "XDG_CACHE_HOME"))))
 
-(unless (file-exists-p (getenv "EMACS_CACHE_DIR"))
-  (make-directory (getenv "EMACS_CACHE_DIR")))
+(defvar user-emacs-cache-directory
+  (getenv "EMACS_CACHE_DIR")
+  "Directory for user specific Emacs cache files.")
+
+(unless (file-exists-p user-emacs-cache-directory)
+  (make-directory user-emacs-cache-directory))
 
 ;;;; Load settings
 

@@ -39,7 +39,7 @@
   (use-package desktop
     :init
     (setq-default desktop-auto-save-timeout 300)
-    (setq-default desktop-dirname (file-name-as-directory (getenv "EMACS_CACHE_DIR")))
+    (setq-default desktop-dirname (file-name-as-directory user-emacs-cache-directory))
     (setq-default desktop-path `(,desktop-dirname))
     (setq-default desktop-base-file-name "desktop")
     (setq-default desktop-files-not-to-save nil)
@@ -76,7 +76,7 @@
   (use-package savehist
     :diminish
     :init
-    (setq-default savehist-file (expand-file-name "savehist" (getenv "EMACS_CACHE_DIR")))
+    (setq-default savehist-file (expand-file-name "savehist" user-emacs-cache-directory))
     (setq-default history-length 1000)
     (setq-default history-delete-duplicates t)
     (setq-default savehist-save-minibuffer-history t)
@@ -88,7 +88,7 @@
   (use-package saveplace
     :diminish
     :init
-    (setq-default save-place-file (expand-file-name "saveplace" (getenv "EMACS_CACHE_DIR")))
+    (setq-default save-place-file (expand-file-name "saveplace" user-emacs-cache-directory))
     (setq-default save-place-forget-unreadable-files t)
     :config
     (save-place-mode 1))
@@ -98,7 +98,7 @@
   (use-package emacs
     :init
     (let
-	((backup-dir (file-name-as-directory (expand-file-name "backups" (getenv "EMACS_CACHE_DIR")))))
+	((backup-dir (file-name-as-directory (expand-file-name "backups" user-emacs-cache-directory))))
       (unless (file-exists-p backup-dir) (make-directory backup-dir t))
       (setq-default backup-directory-alist `(("." . ,backup-dir)))
       (setq-default backup-by-copying t)
@@ -112,8 +112,8 @@
   (use-package emacs
     :init
     (let
-	((auto-save-dir (file-name-as-directory (expand-file-name "auto-save" (getenv "EMACS_CACHE_DIR"))))
-	 (auto-save-list-dir (file-name-as-directory(expand-file-name "auto-save-list" (getenv "EMACS_CACHE_DIR")))))
+	((auto-save-dir (file-name-as-directory (expand-file-name "auto-save" user-emacs-cache-directory)))
+	 (auto-save-list-dir (file-name-as-directory(expand-file-name "auto-save-list" user-emacs-cache-directory))))
       (unless (file-exists-p auto-save-dir) (make-directory auto-save-dir t))
       (unless (file-exists-p auto-save-list-dir) (make-directory auto-save-list-dir t))
       (setq-default auto-save-file-name-transforms `((".*" ,auto-save-dir t)))
@@ -128,7 +128,7 @@
     :diminish
     :defer 1
     :init
-    (setq-default recentf-save-file (expand-file-name "recentf" (getenv "EMACS_CACHE_DIR")))
+    (setq-default recentf-save-file (expand-file-name "recentf" user-emacs-cache-directory))
     (setq-default recentf-max-saved-items 200)
     (setq-default recentf-exclude '("\\.gz" "\\.xz" "\\.zip" "/elpa/" "/ssh:" "/sudo:"))
     :config
@@ -273,7 +273,7 @@
     :defer 1
     :init
     (setq-default
-     ido-save-directory-list-file (expand-file-name "ido.last" (getenv "EMACS_CACHE_DIR"))
+     ido-save-directory-list-file (expand-file-name "ido.last" user-emacs-cache-directory)
      ido-enable-flex-matching t
      ido-everywhere t)
     :config
@@ -574,8 +574,8 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :ensure t
     :config
     (setq-default keyfreq-buffer "*keyfreq-show*")
-    (setq-default keyfreq-file (expand-file-name "keyfreq.hist" (getenv "EMACS_CACHE_DIR")))
-    (setq-default keyfreq-file-lock (expand-file-name "keyfreq.hist.lock" (getenv "EMACS_CACHE_DIR")))
+    (setq-default keyfreq-file (expand-file-name "keyfreq.hist" user-emacs-cache-directory))
+    (setq-default keyfreq-file-lock (expand-file-name "keyfreq.hist.lock" user-emacs-cache-directory))
     (setq-default keyfreq-excluded-commands
 		  '(self-insert-command
 		    org-self-insert-command
@@ -704,7 +704,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 	     ("C-x u" . undo-tree-visualize-quit))
       :init
       (let
-	  ((undo-dir (file-name-as-directory (expand-file-name "undo" (getenv "EMACS_CACHE_DIR")))))
+	  ((undo-dir (file-name-as-directory (expand-file-name "undo" user-emacs-cache-directory))))
 	(unless (file-exists-p undo-dir) (make-directory undo-dir t))
 	(setq-default undo-tree-auto-save-history t) ;; Automatically save the undo history
 	(setq-default undo-tree-history-directory-alist `(("." . ,undo-dir))) ;; Save history to folder
@@ -954,7 +954,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   (use-package em-hist
     :after esh-mode
     :config
-    (setq-default eshell-history-file-name (expand-file-name "eshell-history" (getenv "EMACS_CACHE_DIR")))
+    (setq-default eshell-history-file-name (expand-file-name "eshell-history" user-emacs-cache-directory))
     (setq-default eshell-hist-ignoredups t)
     (setq-default eshell-save-history-on-exit t))
 #+end_src
@@ -982,8 +982,8 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :ensure t
     :diminish
     :init
-    (setq-default projectile-cache-file (expand-file-name "projectile.cache" (getenv "EMACS_CACHE_DIR")))
-    (setq-default projectile-known-projects-file (expand-file-name "projectile-bookmarks.eld" (getenv "EMACS_CACHE_DIR")))
+    (setq-default projectile-cache-file (expand-file-name "projectile.cache" user-emacs-cache-directory))
+    (setq-default projectile-known-projects-file (expand-file-name "projectile-bookmarks.eld" user-emacs-cache-directory))
     (setq-default projectile-tags-backend 'ggtags)
     (setq-default projectile-switch-project-action 'projectile-dired)
     :config
@@ -1049,7 +1049,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :init
     (setq lsp-keymap-prefix "s-g")
     :config
-    (setq lsp-session-file (expand-file-name "lsp-session-v1" (getenv "EMACS_CACHE_DIR")))
+    (setq lsp-session-file (expand-file-name "lsp-session-v1" user-emacs-cache-directory))
     ;; company is enbaled globally
     (setq lsp-completion-enable nil))
 
