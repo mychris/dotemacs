@@ -102,17 +102,17 @@
        (settings-el (concat (file-name-sans-extension settings-org) ".el")))
   (if (file-exists-p settings-org)
       (if (and (file-exists-p settings-el)
-               (time-less-p
-				(file-attribute-modification-time (file-attributes settings-org))
-				(file-attribute-modification-time (file-attributes settings-el))))
-		  ;; found that one somewhere, shaves off another 200ms during startup.
-		  ;; no idea if this has any negative side effects, nothing emerged yet.
-		  (let ((file-name-handler-alist nil))
-			(load-file settings-el))
-		(progn
-		  (require 'org)
-          (org-babel-load-file settings-org)
-		  (byte-compile-file settings-el)))
+	       (time-less-p
+		(file-attribute-modification-time (file-attributes settings-org))
+		(file-attribute-modification-time (file-attributes settings-el))))
+	  ;; found that one somewhere, shaves off another 200ms during startup.
+	  ;; no idea if this has any negative side effects, nothing emerged yet.
+	  (let ((file-name-handler-alist nil))
+	    (load-file settings-el))
+	(progn
+	  (require 'org)
+	  (org-babel-load-file settings-org)
+	  (byte-compile-file settings-el)))
     (error "Init org file '%s' missing" settings-org)))
 
 ;;; init.el ends here
