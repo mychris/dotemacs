@@ -522,7 +522,7 @@
     (eyebrowse-pre-window-switch-hook . zed-eyebrowse-monocle-window-config-switch)
     (window-configuration-change-hook . zed-eyebrowse-monocle-window-config-change))
 #+end_src
-** golden-ratio - Automatic resizing of Emacs windows to the golden ratio
+** COMMENT golden-ratio - Automatic resizing of Emacs windows to the golden ratio
 #+begin_src emacs-lisp
   (use-package golden-ratio
     :ensure t
