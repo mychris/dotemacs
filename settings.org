@@ -9,11 +9,10 @@
   (use-package emacs
     :init
     (global-hl-line-mode 1) ;; highlight the line in all windows
-    (setq-default
-     large-file-warning-threshold (* 100 1000 1000)
-     frame-title-name '("%b")                        ;; set frame title to buffer name
-     echo-keystrokes 0                               ;; use the which-key package
-     visible-bell t)
+    (setq-default large-file-warning-threshold (* 100 1000 1000))
+    (setq-default frame-title-name '("%b")) ;; set frame title to buffer name
+    (setq-default echo-keystrokes 0)        ;; use the which-key package
+    (setq-default visible-bell t)
     (defalias 'yes-or-no-p 'y-or-n-p)
     (put 'narrow-to-region 'disabled nil)
     (put 'upcase-region 'disabled nil)
@@ -272,10 +271,9 @@
     :diminish
     :defer 1
     :init
-    (setq-default
-     ido-save-directory-list-file (expand-file-name "ido.last" user-emacs-cache-directory)
-     ido-enable-flex-matching t
-     ido-everywhere t)
+    (setq-default ido-save-directory-list-file (expand-file-name "ido.last" user-emacs-cache-directory))
+    (setq-default ido-enable-flex-matching t)
+    (setq-default ido-everywhere t)
     :config
     (ido-mode 1))
 #+end_src
@@ -288,7 +286,7 @@
     :config
     (setq-default ivy-use-virtual-buffers t)
     (setq-default ivy-display-style 'fancy)
-					  ;(setq-default ivy-re-builders-alist '((t . ivy--regex-fuzzy)))
+    ;;(setq-default ivy-re-builders-alist '((t . ivy--regex-fuzzy)))
     :bind (("C-c C-r" . ivy-resume))
     :init
     (ivy-mode 1))
@@ -662,12 +660,9 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package whitespace
     :config
-    (setq-default whitespace-style
-		  '(face tab-mark))
-
+    (setq-default whitespace-style '(face tab-mark))
     :hook
-    (prog-mode-hook . whitespace-mode)
-    )
+    (prog-mode-hook . whitespace-mode))
 #+end_src
 ** highlight-thing - Minimalistic minor mode to highlight current thing under point
 #+begin_src emacs-lisp
@@ -908,28 +903,27 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package emacs
     :init
-    (setq-default
-     line-number-mode t
-     column-number-mode t
-     mode-line-percent-position '(-3 "%p")
-     ;; mode-line-position-column-line-format '(" %l,%c") ; Emacs 28
-     mode-line-format
-     '("%e"
-       mode-line-front-space
-       mode-line-mule-info
-       mode-line-client
-       mode-line-modified
-       mode-line-remote
-       mode-line-frame-identification
-       mode-line-buffer-identification
-       "  "
-       mode-line-position
-       (vc-mode vc-mode)
-       "  "
-       mode-line-modes
-       " "
-       mode-line-misc-info
-       mode-line-end-spaces)))
+    (setq-default line-number-mode t)
+    (setq-default column-number-mode t)
+    (setq-default mode-line-percent-position '(-3 "%p"))
+    ;; mode-line-position-column-line-format '(" %l,%c") ; Emacs 28
+    (setq-default mode-line-format
+		  '("%e"
+		    mode-line-front-space
+		    mode-line-mule-info
+		    mode-line-client
+		    mode-line-modified
+		    mode-line-remote
+		    mode-line-frame-identification
+		    mode-line-buffer-identification
+		    "  "
+		    mode-line-position
+		    (vc-mode vc-mode)
+		    "  "
+		    mode-line-modes
+		    " "
+		    mode-line-misc-info
+		    mode-line-end-spaces)))
 
   (use-package keycast
     :ensure t
@@ -1454,8 +1448,7 @@ Elpy currently has problems with upstream ~jedi~.
     :ensure t
     :commands monky-status
     :config
-    (setq-default monky-process-type 'cmdserver)
-    )
+    (setq-default monky-process-type 'cmdserver))
 #+end_src
 * OTHER
 #+begin_src emacs-lisp

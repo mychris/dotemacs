@@ -51,24 +51,22 @@
   (package-install 'delight))
 
 (eval-when-compile
-  (setq-default
-   ;; If non-nil, assume ':demand t' unless ':defer' is used.
-   use-package-always-demand nil
-   ;; If non-nil, assume ':defer t' unless ':demand' is used.
-   use-package-always-defer nil
-   ;; Treat every package as though it had specified using ':pin SYM'
-   use-package-always-pin nil
-   ;; Treat every package as though it had specified using ':ensure SEXP'
-   use-package-always-ensure nil
-   ;; If non-nil, compute statistics concerned use-package declarations.
-   use-package-compute-statistics nil
-   ;; If non-nil, make the expanded code as minimal as possible.
-   use-package-expand-minimally nil
-   ;; If non-nil, cause imenu to see 'use-package' declarations.
-   use-package-enable-imenu-support t
-   ;; Text append to the name of hooks mentioned by :hook.
-   use-package-hook-name-suffix nil
-   )
+  ;; If non-nil, assume ':demand t' unless ':defer' is used.
+  (setq-default use-package-always-demand nil)
+  ;; If non-nil, assume ':defer t' unless ':demand' is used.
+  (setq-default use-package-always-defer nil)
+  ;; Treat every package as though it had specified using ':pin SYM'
+  (setq-default use-package-always-pin nil)
+  ;; Treat every package as though it had specified using ':ensure SEXP'
+  (setq-default use-package-always-ensure nil)
+  ;; If non-nil, compute statistics concerned use-package declarations.
+  (setq-default use-package-compute-statistics nil)
+  ;; If non-nil, make the expanded code as minimal as possible.
+  (setq-default use-package-expand-minimally nil)
+  ;; If non-nil, cause imenu to see 'use-package' declarations.
+  (setq-default use-package-enable-imenu-support t)
+  ;; Text append to the name of hooks mentioned by :hook.
+  (setq-default use-package-hook-name-suffix nil)
   (require 'use-package))
 
 (eval-when-compile
