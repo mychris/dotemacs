@@ -687,23 +687,31 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+end_src
 ** undo-tree - Treat undo history as a tree
 #+begin_src emacs-lisp
-  (use-package undo-tree
-    :ensure t
-    :diminish
-    :defer 1
-    :bind (:map evil-normal-state-map
-	   ("u" . undo-tree-undo)
-	   ("C-r" . undo-tree-redo))
-    :init
-    (let
-	((undo-dir (file-name-as-directory (expand-file-name "undo" (getenv "EMACS_CACHE_DIR")))))
-      (unless (file-exists-p undo-dir) (make-directory undo-dir t))
-      (setq-default undo-tree-auto-save-history t) ;; Automatically save the undo history
-      (setq-default undo-tree-history-directory-alist `(("." . ,undo-dir))) ;; Save history to folder
-      (setq-default undo-tree-visualizer-diff t) ;; Display diff in undo-tree visualizer by default
-      )
-    :config
-    (global-undo-tree-mode 1))
+    (use-package undo-tree
+      :ensure t
+      :diminish
+      :defer 1
+      :functions undo-tree-visualize
+      :bind (("C-x u" . undo-tree-visualize-with-diff)
+	     :map evil-normal-state-map
+	     ("u" . undo-tree-undo)
+	     ("C-r" . undo-tree-redo)
+	     :map undo-tree-visualizer-mode-map
+	     ("l" . undo-tree-visualize-switch-branch-right)
+	     ("h" . undo-tree-visualize-switch-branch-left))
+      :init
+      (let
+	  ((undo-dir (file-name-as-directory (expand-file-name "undo" (getenv "EMACS_CACHE_DIR")))))
+	(unless (file-exists-p undo-dir) (make-directory undo-dir t))
+	(setq-default undo-tree-auto-save-history t) ;; Automatically save the undo history
+	(setq-default undo-tree-history-directory-alist `(("." . ,undo-dir))) ;; Save history to folder
+	)
+      :config
+      (global-undo-tree-mode 1)
+      (defun undo-tree-visualize-with-diff ()
+	(interactive "*")
+	(setq undo-tree-visualizer-diff t)
+	(call-interactively 'undo-tree-visualize)))
 #+end_src
 * Editing
 ** expand-region - Increas the selected region by semantic units
