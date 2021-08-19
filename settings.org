@@ -1269,15 +1269,11 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+end_src
 ** Rust
 #+begin_src emacs-lisp
-  (use-package rust-mode
+  (use-package rustic
     :ensure t
-    :hook ((rust-mode-hook . lsp)
-	   (rust-mode-hook . company-mode)))
-
-  (use-package flycheck-rust
-    :ensure t
-    :config (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
-
+    :hook ((rustic-mode-hook . lsp)
+	   (rustic-mode-hook . company-mode)))
+  
   (setq mouse-wheel-scroll-amount '(3 ((shift) . 1) ((control) . nil)))
   (setq mouse-wheel-progressive-speed nil)
 #+end_src
