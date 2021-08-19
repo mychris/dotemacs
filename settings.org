@@ -687,36 +687,36 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+end_src
 ** undo-tree - Treat undo history as a tree
 #+begin_src emacs-lisp
-    (use-package undo-tree
-      :ensure t
-      :diminish
-      :defer 1
-      :after (evil)
-      :bind (([remap evil-undo] . undo-tree-undo)
-	     ([remap evil-redo] . undo-tree-redo)
-	     :map undo-tree-map
-	     ("C-x u" . undo-tree-visualize-with-diff)
-	     :map undo-tree-visualizer-mode-map
-	     ("k" . undo-tree-visualize-undo)
-	     ("j" . undo-tree-visualize-redo)
-	     ("l" . undo-tree-visualize-switch-branch-right)
-	     ("h" . undo-tree-visualize-switch-branch-left)
-	     ("C-x u" . undo-tree-visualize-quit))
-      :init
-      (let
-	  ((undo-dir (file-name-as-directory (expand-file-name "undo" (getenv "EMACS_CACHE_DIR")))))
-	(unless (file-exists-p undo-dir) (make-directory undo-dir t))
-	(setq-default undo-tree-auto-save-history t) ;; Automatically save the undo history
-	(setq-default undo-tree-history-directory-alist `(("." . ,undo-dir))) ;; Save history to folder
-	)
-      :config
-      (global-undo-tree-mode 1)
-      (evil-set-initial-state 'undo-tree-visualizer-mode 'emacs)
-      (defun undo-tree-visualize-with-diff ()
-	"Visualize the current buffer's undo tree with diff displayed."
-	(interactive "*")
-	(setq undo-tree-visualizer-diff t)
-	(call-interactively 'undo-tree-visualize)))
+  (use-package undo-tree
+    :ensure t
+    :diminish
+    :defer 1
+    :after (evil)
+    :bind (([remap evil-undo] . undo-tree-undo)
+	   ([remap evil-redo] . undo-tree-redo)
+	   :map undo-tree-map
+	   ("C-x u" . undo-tree-visualize-with-diff)
+	   :map undo-tree-visualizer-mode-map
+	   ("k" . undo-tree-visualize-undo)
+	   ("j" . undo-tree-visualize-redo)
+	   ("l" . undo-tree-visualize-switch-branch-right)
+	   ("h" . undo-tree-visualize-switch-branch-left)
+	   ("C-x u" . undo-tree-visualize-quit))
+    :init
+    (let
+	((undo-dir (file-name-as-directory (expand-file-name "undo" (getenv "EMACS_CACHE_DIR")))))
+      (unless (file-exists-p undo-dir) (make-directory undo-dir t))
+      (setq-default undo-tree-auto-save-history t) ;; Automatically save the undo history
+      (setq-default undo-tree-history-directory-alist `(("." . ,undo-dir))) ;; Save history to folder
+      )
+    :config
+    (global-undo-tree-mode 1)
+    (evil-set-initial-state 'undo-tree-visualizer-mode 'emacs)
+    (defun undo-tree-visualize-with-diff ()
+      "Visualize the current buffer's undo tree with diff displayed."
+      (interactive "*")
+      (setq undo-tree-visualizer-diff t)
+      (call-interactively 'undo-tree-visualize)))
 #+end_src
 * Editing
 ** expand-region - Increas the selected region by semantic units
@@ -963,16 +963,16 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   (use-package term
     :config
     :bind (:map term-raw-map
-	   ("M-1" . nil)
-	   ("M-2" . nil)
-	   ("M-3" . nil)
-	   ("M-4" . nil)
-	   ("M-5" . nil)
-	   ("M-6" . nil)
-	   ("M-7" . nil)
-	   ("M-8" . nil)
-	   ("M-9" . nil)
-	   ("M-0" . nil)))
+		("M-1" . nil)
+		("M-2" . nil)
+		("M-3" . nil)
+		("M-4" . nil)
+		("M-5" . nil)
+		("M-6" . nil)
+		("M-7" . nil)
+		("M-8" . nil)
+		("M-9" . nil)
+		("M-0" . nil)))
 
 #+end_src
 * Project management
@@ -1259,9 +1259,8 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package rust-mode
     :ensure t
-    :hook
-    (rust-mode-hook . lsp)
-    (rust-mode-hook . (lambda () (setq indent-tabs-mode nil))))
+    :hook ((rust-mode-hook . lsp)
+	   (rust-mode-hook . company-mode)))
 
   (use-package flycheck-rust
     :ensure t
