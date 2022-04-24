@@ -967,15 +967,22 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+end_src
 ** eshell
 #+begin_src emacs-lisp
-  (use-package eshell)
-  (use-package esh-mode)
+    (use-package eshell
+      :config
+      (evil-define-key 'insert eshell-mode-map
+        (kbd "<up>") 'eshell-previous-input
+        (kbd "<down>") 'eshell-next-input
+        (kbd "C-k") 'eshell-previous-input
+        (kbd "C-j") 'eshell-next-input))
 
-  (use-package em-hist
-    :after esh-mode
-    :config
-    (setq-default eshell-history-file-name (expand-file-name "eshell-history" user-emacs-cache-directory))
-    (setq-default eshell-hist-ignoredups t)
-    (setq-default eshell-save-history-on-exit t))
+    (use-package esh-mode)
+
+    (use-package em-hist
+      :after esh-mode
+      :config
+      (setq-default eshell-history-file-name (expand-file-name "eshell-history" user-emacs-cache-directory))
+      (setq-default eshell-hist-ignoredups t)
+      (setq-default eshell-save-history-on-exit t))
 #+end_src
 ** ansi-term
 #+begin_src emacs-lisp
