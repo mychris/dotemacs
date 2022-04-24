@@ -643,6 +643,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :defer 1
     :config
     (setq-default treemacs-follow-mode t)
+    (setq-default treemacs-persist-file (expand-file-name "treemacs-persist" user-emacs-cache-directory))
     :bind (([f8] . treemacs)))
 
   (use-package treemacs-evil
@@ -988,6 +989,12 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 	   ("M-8" . nil)
 	   ("M-9" . nil)
 	   ("M-0" . nil)))
+#+end_src
+* TRAMP
+#+begin_src emacs-lisp
+  (use-package tramp
+    :init
+    (setq-default tramp-persistency-file-name (expand-file-name "tramp" user-emacs-cache-directory)))
 #+end_src
 * Project management
 ** projectile - Manage and navigate projects in Emacs easily

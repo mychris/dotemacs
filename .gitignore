@@ -9,5 +9,7 @@ auto-save-list/
 elpy/
 eshell/history
 package-quickstart.el
+tramp
+projects
 transient/
 games/
