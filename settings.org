@@ -719,7 +719,9 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   (use-package expand-region
     :ensure t
     :defer 1
-    :bind (("C-=" . er/expand-region)))
+    :bind (("C-=" . er/expand-region)
+	   ("C-+" . er/contract-region)))
+  
 #+end_src
 ** string-inflection - underscore -> UPCASE -> CamelCase -> lowerCamelCase conversion of names
 #+begin_src emacs-lisp
