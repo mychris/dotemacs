@@ -476,6 +476,8 @@
     :ensure t
     :commands (persp-switch persp-kill persp-current-name)
     :init
+    ;; TODO: look into the new behaviour
+    (setq persp-suppress-no-prefix-key-warning t)
     (setq persp-initial-frame-name "001")
     (defun persp-switch-to-frame-1 ()
       (interactive)
