@@ -14,9 +14,9 @@
    '("bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "ec5f697561eaf87b1d3b087dd28e61a2fc9860e4c862ea8e6b0b77bd4967d0ba" "57fe2bf84d81baecc6d89ed97bdb19936a3052fc2551ca178667fc45feef2381" "e11569fd7e31321a33358ee4b232c2d3cf05caccd90f896e1df6cab228191109" default))
  '(golden-ratio-scroll-highlight-flag nil nil nil "Do not highlight current line before/after scroll")
  '(helm-minibuffer-history-key "M-p")
- '(highlight-thing-delay-seconds 2)
- '(highlight-thing-exclude-thing-under-point t)
- '(highlight-thing-prefer-active-region t)
+ '(highlight-thing-delay-seconds 2 t)
+ '(highlight-thing-exclude-thing-under-point t t)
+ '(highlight-thing-prefer-active-region t t)
  '(ivy-display-style 'fancy)
  '(ivy-use-virtual-buffers t)
  '(lsp-ui-peek-enable t)
@@ -35,7 +35,7 @@
  '(sml/no-confirm-load-theme t)
  '(sml/shorten-modes t)
  '(sml/theme 'dark)
- '(undo-tree-auto-save-history t)
+ '(undo-tree-auto-save-history t t)
  '(undo-tree-visualizer-diff t))
 
 ;;; custom.el ends here
