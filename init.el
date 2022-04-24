@@ -24,6 +24,21 @@
 
 (add-to-list 'load-path (file-name-as-directory (expand-file-name "elisp" user-emacs-directory)))
 
+;;;; Make sure some environment variables are set
+
+(unless (getenv "XDG_CACHE_HOME")
+  (setenv "XDG_CACHE_HOME" (expand-file-name "~/.cache")))
+
+(unless (getenv "EMACS_CACHE_DIR")
+  (setenv "EMACS_CACHE_DIR" (expand-file-name "emacs" (getenv "XDG_CACHE_HOME"))))
+
+(defvar user-emacs-cache-directory
+  (getenv "EMACS_CACHE_DIR")
+  "Directory for user specific Emacs cache files.")
+
+(unless (file-exists-p user-emacs-cache-directory)
+  (make-directory user-emacs-cache-directory))
+
 ;;;; Bootstrap use-package
 
 ;; this should already be loaded, but I got an error in emacs-27.1 for some reason.
@@ -33,6 +48,7 @@
 (setq-default gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
 (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/"))
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
+(setq-default package-quickstart-file (expand-file-name "package-quickstart.el" user-emacs-cache-directory))
 (package-initialize)
 (when (not package-archive-contents)
   (package-refresh-contents)
@@ -74,21 +90,6 @@
 (require 'diminish)
 (require 'delight)
 (require 'bind-key)
-
-;;;; Make sure some environment variables are set
-
-(unless (getenv "XDG_CACHE_HOME")
-  (setenv "XDG_CACHE_HOME" (expand-file-name "~/.cache")))
-
-(unless (getenv "EMACS_CACHE_DIR")
-  (setenv "EMACS_CACHE_DIR" (expand-file-name "emacs" (getenv "XDG_CACHE_HOME"))))
-
-(defvar user-emacs-cache-directory
-  (getenv "EMACS_CACHE_DIR")
-  "Directory for user specific Emacs cache files.")
-
-(unless (file-exists-p user-emacs-cache-directory)
-  (make-directory user-emacs-cache-directory))
 
 ;;;; Load settings
 
