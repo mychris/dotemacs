@@ -164,7 +164,24 @@
     (setq evil-want-C-u-scroll t)
     (setq evil-search-module 'evil-search)
     :config
-    (evil-mode 1))
+    (evil-mode 1)
+    (evil-define-command my/evil-exit-jk ()
+      :repeat change
+      (interactive)
+      (let ((modified (buffer-modified-p))
+	    (entry-key ?j)
+	    (exit-key ?k))
+	(insert entry-key)
+	(let ((evt (read-event (format "Insert %c to exit insert state" exit-key) nil 0.5)))
+	  (cond
+	   ((null evt) (message ""))
+	   ((and (integerp evt) (char-equal evt exit-key))
+	    (delete-char -1)
+	    (set-buffer-modified-p modified)
+	    (push 'escape unread-command-events))
+	   (t (push evt unread-command-events))))))
+    :bind (:map evil-insert-state-map
+		("j" . my/evil-exit-jk)))
 #+end_src
 ** org-evil - Evil extensions for Org.
 #+begin_src emacs-lisp
