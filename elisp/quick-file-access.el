@@ -42,21 +42,21 @@
 (defmacro quick-file-access--historicize (file)
   "Put the FILE into the quick-file-access completion history."
   `(or
-	(called-interactively-p 'interactive)
-	(setq quick-file-access--history
-		  (if (seq-position file quick-file-access-file-list)
-			  (cons ,file (delete ,file quick-file-access--history))
-			(cons ,file quick-file-access--history)))))
+    (called-interactively-p 'interactive)
+    (setq quick-file-access--history
+          (if (seq-position file quick-file-access-file-list)
+              (cons ,file (delete ,file quick-file-access--history))
+            (cons ,file quick-file-access--history)))))
 
 (defun quick-file-access-completing-read ()
   "Completing-read the 'quick-file-access-file-list'."
   (completing-read
    "quick-file-access: "
    (lambda (string pred action)
-	 (if (eq action 'metadata)
-		 '(metadata (category . file))
-	   (complete-with-action
-		action quick-file-access-file-list string pred)))
+     (if (eq action 'metadata)
+         '(metadata (category . file))
+       (complete-with-action
+        action quick-file-access-file-list string pred)))
    nil 0 nil 'quick-file-access--history nil))
 
 (defun quick-file-access-open-file (file)
@@ -64,7 +64,7 @@
   (interactive
    (list (quick-file-access-completing-read)))
   (unless file
-	(error "No file specified"))
+    (error "No file specified"))
   (quick-file-access--historicize file)
   (find-file file))
 
