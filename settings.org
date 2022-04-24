@@ -658,7 +658,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :after (treemacs pers-mode))
 #+end_src
 ** Quick file opening shortcuts
-#+begin_src emacs-lisp	(use-package emacs
+#+begin_src emacs-lisp
   (use-package quick-file-access
     :load-path "elisp"
     :config
