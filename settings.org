@@ -962,6 +962,13 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       (add-to-list 'keycast-substitute-alist `(,event nil))))
 #+end_src
 * Shells
+** shell
+#+begin_src emacs-lisp
+  (use-package shell
+    :hook
+    (shell-mode-hook . (lambda ()
+	  (face-remap-set-base 'comint-highlight-prompt :inherit nil))))
+#+end_src
 ** eshell
 #+begin_src emacs-lisp
   (use-package eshell)
