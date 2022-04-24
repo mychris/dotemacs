@@ -5,6 +5,7 @@ settings.el
 
 # those directories should be somewhere else, but keep them here in case
 # emacs is loaded without the configuration.
+eln-cache/
 auto-save-list/
 elpy/
 eshell/history
