@@ -670,7 +670,8 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (setq-default quick-file-access-file-list
 		  '("~/.emacs.d/settings.org"
 		    "~/.emacs.d/init.el"
-		    "~/.emacs.d/early-init.el"))
+		    "~/.emacs.d/early-init.el"
+		    "~/.Xresources"))
     :bind (("<escape> <escape> o" . quick-file-access-open-file)
 	   :map evil-normal-state-map
 	   (",o" . quick-file-access-open-file)))
