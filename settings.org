@@ -1310,6 +1310,39 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :config
     (global-eldoc-mode 1))
 #+end_src
+** Ocaml
+#+begin_src emacs-lisp
+  (use-package tuareg
+    :ensure t
+    :init
+    (add-to-list 'safe-local-variable-values '(eval projectile-project-compilation-cmd))
+    :config
+    (add-hook 'tuareg-mode-hook #'electric-pair-local-mode)
+    (setq auto-mode-alist
+	  (append '(("\\.ml[ily]?$" . tuareg-mode)
+		    ("\\.topml$" . tuareg-mode))
+		  auto-mode-alist)))
+
+  (use-package merlin
+    :ensure t
+    :after tuareg
+    :config
+    (add-hook 'tuareg-mode-hook 'merlin-mode)
+    (add-hook 'merlin-mode-hook #'company-mode)
+    (setq merlin-error-after-save nil))
+
+  (use-package utop
+    :ensure t
+    :after tuareg
+    :config
+    (autoload 'utop-minor-mode "utop" "Minor mode for utop" t)
+    (add-hook 'tuareg-mode-hook 'utop-minor-mode)
+    (setq utop-command "opam config exec -- dune utop . -- -emacs"))
+
+  (use-package dune
+    :ensure t
+    :after tuareg)
+#+end_src
 ** Shell
 The shell mode is built-in.
 Flycheck can use ~shellcheck~ out of the box.
