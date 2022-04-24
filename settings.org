@@ -1082,9 +1082,8 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (setq lsp-keymap-prefix "s-g")
     :config
     (setq lsp-session-file (expand-file-name "lsp-session-v1" user-emacs-cache-directory))
-    ;; company is enbaled globally
-    (setq lsp-completion-enable nil))
-
+    (setq lsp-enable-snippet t))
+  
   (use-package lsp-ui
     :ensure t
     :after lsp-mode
@@ -1121,14 +1120,27 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (setq tab-always-indent 'complete)
     (setq company-tooltip-align-annotations t)
     (setq company-minimum-prefix-length 1)
+    :hook (company-completion-started-hook . (lambda (_)
+					       (when evil-mode
+						 (when (evil-insert-state-p)
+						   (define-key evil-insert-state-map (kbd "C-n") nil)
+						   (define-key evil-insert-state-map (kbd "C-p") nil)
+						   (define-key evil-insert-state-map (kbd "C-j") nil)
+						   (define-key evil-insert-state-map (kbd "C-k") nil)))))
     :bind (([remap c-indent-line-or-region] . company-indent-or-complete-common)
 	   ([remap indent-for-tab-command] . company-indent-or-complete-common)
 	   :map company-active-map
 	   ("C-n" . company-select-next-or-abort)
+	   ("C-j" . company-select-next-or-abort)
 	   ("<tab>" . company-complete-common-or-cycle)
-	   ("C-p" . company-select-previous-or-abort))
-    :hook (after-init-hook . global-company-mode))
-
+	   ("C-p" . company-select-previous-or-abort)
+	   ("C-k" . company-select-previous-or-abort)
+	   :map company-search-map
+	   ("C-n" . company-select-next-or-abort)
+	   ("C-j" . company-select-next-or-abort)
+	   ("C-p" . company-select-previous-or-abort)
+	   ("C-k" . company-select-previous-or-abort)))
+  
   (use-package company-quickhelp
     :ensure t
     :after company
@@ -1289,16 +1301,11 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+end_src
 ** Rust
 #+begin_src emacs-lisp
-  (use-package rust-mode
+  (use-package rustic
     :ensure t
-    :hook
-    (rust-mode-hook . lsp)
-    (rust-mode-hook . (lambda () (setq indent-tabs-mode nil))))
-
-  (use-package flycheck-rust
-    :ensure t
-    :config (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
-
+    :hook ((rustic-mode-hook . lsp)
+	   (rustic-mode-hook . company-mode)))
+  
   (setq mouse-wheel-scroll-amount '(3 ((shift) . 1) ((control) . nil)))
   (setq mouse-wheel-progressive-speed nil)
 #+end_src
