@@ -558,6 +558,14 @@
             )))
 #+end_src
 * Help / Discovery / Cheat sheets
+** help [built-in]
+#+begin_src emacs-lisp
+  (use-package help
+    :bind
+    (:map help-mode-map
+          ([mouse-8] . help-go-back)
+          ([mouse-9] . help-go-forward)))
+#+end_src
 ** which-key - Display available key bindings in popup
 #+begin_src emacs-lisp
   (use-package which-key
