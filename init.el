@@ -107,7 +107,7 @@
           ;; found that one somewhere, shaves off another 200ms during startup.
           ;; no idea if this has any negative side effects, nothing emerged yet.
           (let ((file-name-handler-alist nil))
-            (load-file settings-el))
+            (load (file-name-sans-extension settings-el)))
         (progn
           (require 'org)
           (org-babel-load-file settings-org)
