@@ -68,7 +68,9 @@
     (set-selection-coding-system 'utf-8)
     (prefer-coding-system 'utf-8)
     (set-input-method nil)
-    (setq-default locale-coding-system 'utf-8))
+    (setq-default locale-coding-system 'utf-8)
+    (add-to-list 'process-coding-system-alist '("python" . (utf-8 . utf-8)))
+    (add-to-list 'process-coding-system-alist '("elpy" . (utf-8 . utf-8))))
 #+end_src
 ** Savehist (minibuffer history)
 #+begin_src emacs-lisp
