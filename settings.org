@@ -3,6 +3,17 @@
 #+EMAIL: just.mychris@googlemail.com
 #+STARTUP: showeverything
 
+* Building emacs
+#+begin_src sh
+  $ git clean -xnf
+  $ git pull
+  $ bash autogen.sh
+  $ bash configure $(emacs -nw -q --batch --eval "(message system-configuration-options)")
+  # --with-cairo --with-harfbuzz --with-modules --with-wide-int --with-x-toolkit=gtk3 --with-xft --with-sound=alsa --with-mailutils --enable-link-time-optimization --prefix=/opt/emacs 'CFLAGS=-march=native -O2 -pipe -fstack-protector-strong --param=ssp-buffer-size=4 -fno-plt' CPPFLAGS=-D_FORTIFY_SOURCE=2 LDFLAGS=-Wl,-O1,--sort-common,--as-needed,-z,relro,-z,now
+
+  $ make -j16
+  $ sudo make install
+#+end_src
 * Miscellaneous settings
 ** General Emacs configuration
 #+begin_src emacs-lisp
