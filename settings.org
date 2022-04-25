@@ -176,6 +176,13 @@
   (use-package dash
     :ensure t)
 #+end_src
+** utils - Personal utilities
+#+begin_src emacs-lisp
+  (use-package utils
+    :load-path "elisp"
+    :bind
+    (("C-x 9" . my/delete-most-recent-window)))
+#+end_src
 * Evil
 ** evil - Extensible Vi layer for Emacs.
 #+begin_src emacs-lisp
@@ -1600,7 +1607,6 @@ Elpy currently has problems with upstream ~jedi~.
   ;;; misc stuff
 
   (add-hook 'term-mode-hook (lambda () (display-line-numbers-mode 0)))
-
 
   (defconst openjdk-cc-style
     `((c-recognize-knr-p . nil)
