@@ -325,13 +325,13 @@
     :ensure t
     :diminish
     :defer 1
+    :init
+    (ivy-mode 1)
     :config
     (setq-default ivy-use-virtual-buffers t)
     (setq-default ivy-display-style 'fancy)
     ;;(setq-default ivy-re-builders-alist '((t . ivy--regex-fuzzy)))
-    :bind (("C-c C-r" . ivy-resume))
-    :init
-    (ivy-mode 1))
+    :bind (("C-c C-r" . ivy-resume)))
 #+end_src
 ** COMMENT Counsel - Various completion functions using Ivy
 #+begin_src emacs-lisp
@@ -608,11 +608,11 @@
   (use-package which-key
     :ensure t
     :defer 1
-    :diminish
-    :config
-    (setq-default which-key-idle-delay 0.75)
+    :diminish which-key-mode
     :init
-    (which-key-mode 1))
+    (which-key-mode 1)
+    :config
+    (setq-default which-key-idle-delay 0.4))
 #+end_src
 ** free-keys - Show free keybindings for modkeys or prefixes
 I found the ~free-keys~ documentation a bit confusing in the beginning.
