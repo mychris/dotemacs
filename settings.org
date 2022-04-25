@@ -566,6 +566,15 @@
           ([mouse-8] . help-go-back)
           ([mouse-9] . help-go-forward)))
 #+end_src
+** man [built-in]
+#+begin_src emacs-lisp
+  (use-package man
+    :config
+    (setq Man-notify-method 'aggressive)
+    :bind
+    (:map Man-mode-map
+          ([remap Man-next-section] . (lambda () (interactive) (progn (Man-next-section 1) (recenter))))))
+#+end_src
 ** which-key - Display available key bindings in popup
 #+begin_src emacs-lisp
   (use-package which-key
