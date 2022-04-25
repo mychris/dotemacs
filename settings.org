@@ -155,6 +155,16 @@
   (use-package s
     :ensure t)
 #+end_src
+** f - Modern API for working with files and directories
+#+begin_src emacs-lisp
+  (use-package f
+    :ensure t)
+#+end_src
+** dash - A modern list API for Emacs.
+#+begin_src emacs-lisp
+  (use-package dash
+    :ensure t)
+#+end_src
 * Evil
 ** evil - Extensible Vi layer for Emacs.
 #+begin_src emacs-lisp
