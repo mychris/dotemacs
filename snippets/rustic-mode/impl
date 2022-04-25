@@ -1,0 +1,6 @@
+# key: impl
+# name: impl
+# --
+impl $1 for $2 {
+  $3
+}

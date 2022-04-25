@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: impl-from
+# key: implfrom
+# --
+
+impl From<${1:from}> for ${2:into} {
+  fn from(o: $1) -> $2 {
+    $0
+  }
+}
