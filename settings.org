@@ -1350,7 +1350,10 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :config
     (autoload 'utop-minor-mode "utop" "Minor mode for utop" t)
     (add-hook 'tuareg-mode-hook 'utop-minor-mode)
-    (setq utop-command "opam config exec -- dune utop . -- -emacs"))
+    (setq utop-command "opam config exec -- dune utop . -- -emacs")
+    :bind ((([remap tuareg-eval-phrase] . utop-eval-phrase)
+            ([remap tuareg-eval-buffer] . utop-eval-buffer)
+            ([remap tuareg-eval-region] . utop-eval-region))))
 
   (use-package dune
     :ensure t
