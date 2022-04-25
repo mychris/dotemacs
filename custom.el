@@ -14,9 +14,9 @@
    '("bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" "ec5f697561eaf87b1d3b087dd28e61a2fc9860e4c862ea8e6b0b77bd4967d0ba" "57fe2bf84d81baecc6d89ed97bdb19936a3052fc2551ca178667fc45feef2381" "e11569fd7e31321a33358ee4b232c2d3cf05caccd90f896e1df6cab228191109" default))
  '(golden-ratio-scroll-highlight-flag nil nil nil "Do not highlight current line before/after scroll")
  '(helm-minibuffer-history-key "M-p")
- '(highlight-thing-delay-seconds 2 t)
- '(highlight-thing-exclude-thing-under-point t t)
- '(highlight-thing-prefer-active-region t t)
+ '(highlight-thing-delay-seconds 2)
+ '(highlight-thing-exclude-thing-under-point t)
+ '(highlight-thing-prefer-active-region t)
  '(ivy-display-style 'fancy)
  '(ivy-use-virtual-buffers t)
  '(lsp-ui-peek-enable t)
@@ -29,13 +29,13 @@
  '(neo-window-fixed-size nil)
  '(org-bullets-bullet-list '("◉" "○" "✸" "✿" "☼" "⚬") t)
  '(package-selected-packages
-   '(rustic dune utop merlin tuareg evil-org-agenda evil-org golden-ration treemacs-persp treemacs-magit treemacs-projectile treemacs-evil treemacs string-inflection string-infliction helm-gtags helm-projectile projectile jenkinsfile-mode groovy-mode fzf monky gitignore-mode magit org-superstar elpy python-mode company-shell company keycast help xah-fly-keys embark-consult all-the-icons spinner ggtags spacemacs-theme lsp-ui company-lsp cquery lsp-mode flycheck-pos-tip json-mode yaml-mode markdown-mode delight company-quickhelp toml-mode racer smart-mode-line sexy-monochrome org-bullets expand-region yasnippet counsel ace-window which-key zenburn-theme flycheck-rust flycheck cargo undo-tree rust-mode neotree))
+   '(use-package rustic dune utop merlin tuareg evil-org-agenda evil-org golden-ration treemacs-persp treemacs-magit treemacs-projectile treemacs-evil treemacs string-inflection string-infliction helm-gtags helm-projectile projectile jenkinsfile-mode groovy-mode fzf monky gitignore-mode magit org-superstar elpy python-mode company-shell company keycast help xah-fly-keys embark-consult all-the-icons spinner ggtags spacemacs-theme lsp-ui company-lsp cquery lsp-mode flycheck-pos-tip json-mode yaml-mode markdown-mode delight company-quickhelp toml-mode racer smart-mode-line sexy-monochrome org-bullets expand-region yasnippet counsel ace-window which-key zenburn-theme flycheck-rust flycheck cargo undo-tree rust-mode neotree))
  '(sml/mode-width 'full)
  '(sml/name-width 30)
  '(sml/no-confirm-load-theme t)
  '(sml/shorten-modes t)
  '(sml/theme 'dark)
- '(undo-tree-auto-save-history t t)
+ '(undo-tree-auto-save-history t)
  '(undo-tree-visualizer-diff t))
 
 ;;; custom.el ends here
