@@ -183,7 +183,7 @@
     :bind
     (("C-x 9" . my/delete-most-recent-window)))
 #+end_src
-* Evil
+* COMMENT Evil
 ** evil - Extensible Vi layer for Emacs.
 #+begin_src emacs-lisp
   (use-package evil
@@ -651,11 +651,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 * File manager
 ** dired [built-in] - directory editor
 #+begin_src emacs-lisp
-  (use-package dired
-    :after (evil evil-collection)
-    :init
-    (evil-collection-define-key 'normal 'dired-mode-map
-      "gf" 'fzf))
+  (use-package dired)
 #+end_src
 ** COMMENT neotree - A tree plugin like NerdTree for Vim
 #+begin_src emacs-lisp
@@ -688,10 +684,6 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (setq-default treemacs-persist-file (expand-file-name "treemacs-persist" user-emacs-cache-directory))
     :bind (([f8] . treemacs)))
 
-  (use-package treemacs-evil
-    :ensure t
-    :after (treemacs evil))
-
   (use-package treemacs-projectile
     :ensure t
     :after (treemacs projectile))
@@ -714,9 +706,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
                     "~/.emacs.d/init.el"
                     "~/.emacs.d/early-init.el"
                     "~/.Xresources"))
-    :bind (("<escape> <escape> o" . quick-file-access-open-file)
-           :map evil-normal-state-map
-           (",o" . quick-file-access-open-file)))
+    :bind (("<escape> <escape> o" . quick-file-access-open-file)))
 #+end_src
 * Visual
 ** whitespace [built-in]
@@ -749,17 +739,14 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :ensure t
     :diminish
     :defer 1
-    :after (evil)
-    :bind (([remap evil-undo] . undo-tree-undo)
-	   ([remap evil-redo] . undo-tree-redo)
-	   :map undo-tree-map
-	   ("C-x u" . undo-tree-visualize-with-diff)
-	   :map undo-tree-visualizer-mode-map
-	   ("k" . undo-tree-visualize-undo)
-	   ("j" . undo-tree-visualize-redo)
-	   ("l" . undo-tree-visualize-switch-branch-right)
-	   ("h" . undo-tree-visualize-switch-branch-left)
-	   ("C-x u" . undo-tree-visualize-quit))
+    :bind (:map undo-tree-map
+                ("C-x u" . undo-tree-undo)
+                :map undo-tree-visualizer-mode-map
+                ("k" . undo-tree-visualize-undo)
+                ("j" . undo-tree-visualize-redo)
+                ("l" . undo-tree-visualize-switch-branch-right)
+                ("h" . undo-tree-visualize-switch-branch-left)
+                ("C-x u" . undo-tree-visualize-quit))
     :init
     (let
 	((undo-dir (file-name-as-directory (expand-file-name "undo" user-emacs-cache-directory))))
@@ -769,7 +756,6 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       )
     :config
     (global-undo-tree-mode 1)
-    (evil-set-initial-state 'undo-tree-visualizer-mode 'emacs)
     (defun undo-tree-visualize-with-diff ()
       "Visualize the current buffer's undo tree with diff displayed."
       (interactive "*")
@@ -808,46 +794,9 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
         (string-inflection-ruby-style-cycle))
        (t
         (string-inflection-all-cycle))))
-    (evil-define-operator evil-string-inflection-upcase (beg end _type)
-      "Change text to ALL_UPPERCASE."
-      :move-point nil
-      (interactive "<R>")
-      (let ((str (buffer-substring-no-properties beg end)))
-        (save-excursion
-          (delete-region beg end)
-          (insert (string-inflection-upcase-function str)))))
-    (evil-define-operator evil-string-inflection-underscore (beg end _type)
-      "Change text to all_lowercase_with_underscores."
-      :move-point nil
-      (interactive "<R>")
-      (let ((str (buffer-substring-no-properties beg end)))
-        (save-excursion
-          (delete-region beg end)
-          (insert (string-inflection-underscore-function str)))))
-    (evil-define-operator evil-string-inflection (beg end _type)
-      "Change the text by cycling through the string inflection functions."
-      :move-point nil
-      (interactive "<R>")
-      (let ((str (buffer-substring-no-properties beg end)))
-        (save-excursion
-          (delete-region beg end)
-          (insert
-           (cond
-            ((eq major-mode 'java-mode)
-             (string-inflection-java-style-cycle-function str))
-            ((eq major-mode 'python-mode)
-             (string-inflection-python-style-cycle-function str))
-            ((eq major-mode 'ruby-mode)
-             (string-inflection-ruby-style-cycle-function str))
-            (t
-             (string-inflection-all-cycle-function str)))))))
     :bind (("M-u" . string-inflection-upcase)
            ("M-l" . string-inflection-cycle-auto-detection)
-           :map evil-normal-state-map
-           ("gu" . evil-string-inflection-underscore)
-           ("gU" . evil-string-inflection-upcase)
-           ("g~" . evil-string-inflection))
-    )
+    ))
 #+end_src
 * Kill-ring
 ** System clipboard integration
@@ -907,10 +856,10 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package avy
     :ensure t
-    :bind (("M-g g" . evil-avy-goto-line)
-	   ("M-g M-g" . evil-avy-goto-line)
-	   ("M-g c" . evil-avy-goto-char)
-	   ("M-g w" . evil-avy-goto-word-0)))
+    :bind (("M-g g" . avy-goto-line)
+	   ("M-g M-g" . avy-goto-line)
+	   ("M-g c" . avy-goto-char)
+	   ("M-g w" . avy-goto-word-0)))
 #+end_src
 ** ace-window - Quickly switch windows
 #+begin_src emacs-lisp
@@ -1014,22 +963,16 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+end_src
 ** eshell
 #+begin_src emacs-lisp
-    (use-package eshell
-      :config
-      (evil-define-key 'insert eshell-mode-map
-        (kbd "<up>") 'eshell-previous-input
-        (kbd "<down>") 'eshell-next-input
-        (kbd "C-k") 'eshell-previous-input
-        (kbd "C-j") 'eshell-next-input))
+  (use-package eshell)
 
-    (use-package esh-mode)
+  (use-package esh-mode)
 
-    (use-package em-hist
-      :after esh-mode
-      :config
-      (setq-default eshell-history-file-name (expand-file-name "eshell-history" user-emacs-cache-directory))
-      (setq-default eshell-hist-ignoredups t)
-      (setq-default eshell-save-history-on-exit t))
+  (use-package em-hist
+    :after esh-mode
+    :config
+    (setq-default eshell-history-file-name (expand-file-name "eshell-history" user-emacs-cache-directory))
+    (setq-default eshell-hist-ignoredups t)
+    (setq-default eshell-save-history-on-exit t))
 #+end_src
 ** ansi-term
 #+begin_src emacs-lisp
@@ -1077,20 +1020,13 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :ensure t
     :after (helm projectile)
     :config
-    (helm-projectile-on)
-    :bind (:map evil-normal-state-map
-                (",ps" . helm-projectile-switch-project)
-                ("g/" . helm-projectile-rg)))
+    (helm-projectile-on))
 #+end_src
 ** fzf - A front-end for fzf.
 #+begin_src emacs-lisp
   (use-package fzf
     :ensure t
-    :after (projectile ggtags evil-collection)
-    :init
-    (evil-collection-define-key 'normal 'ggtags-mode-map
-      "gf" 'fzf-projectile)
-    (define-key evil-normal-state-map "gf" 'fzf))
+    :after (projectile ggtags))
 #+end_src
 * Programming generic
 ** abbrev [built-in]
@@ -1125,7 +1061,6 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package lsp-mode
     :ensure t
-    :after (evil)
     :commands (lsp)
     :init
     (setq lsp-keymap-prefix "s-g")
@@ -1169,13 +1104,6 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (setq tab-always-indent 'complete)
     (setq company-tooltip-align-annotations t)
     (setq company-minimum-prefix-length 1)
-    :hook (company-completion-started-hook . (lambda (_)
-                                               (when evil-mode
-                                                 (when (evil-insert-state-p)
-                                                   (define-key evil-insert-state-map (kbd "C-n") nil)
-                                                   (define-key evil-insert-state-map (kbd "C-p") nil)
-                                                   (define-key evil-insert-state-map (kbd "C-j") nil)
-                                                   (define-key evil-insert-state-map (kbd "C-k") nil)))))
     :bind (([remap c-indent-line-or-region] . company-indent-or-complete-common)
            ([remap indent-for-tab-command] . company-indent-or-complete-common)
            :map company-active-map
@@ -1507,23 +1435,6 @@ Elpy currently has problems with upstream ~jedi~.
     (setq-default org-bullets-bullet-list '("◉" "○" "✸" "✿" "☼" "⚬"))
     :hook
     (org-mode-hook . org-superstar-mode))
-
-  (use-package evil-org
-    :ensure t
-    :after (org evil)
-    :diminish
-    :commands evil-org-set-key-theme
-    :hook
-    (org-mode-hook . evil-org-mode)
-    :config
-    (evil-org-set-key-theme '(navigation insert textobjects additional calendar)))
-
-  (use-package evil-org-agenda
-    ;; part of evil-org
-    :after (org evil evil-org)
-    :commands evil-org-agenda-set-keys
-    :config
-    (evil-org-agenda-set-keys))
 #+end_src
 ** Markdown
 #+begin_src emacs-lisp
