@@ -3,17 +3,6 @@
 #+EMAIL: just.mychris@googlemail.com
 #+STARTUP: showeverything
 
-* Building emacs
-#+begin_src sh
-  $ git clean -xnf
-  $ git pull
-  $ bash autogen.sh
-  $ bash configure $(emacs -nw -q --batch --eval "(message system-configuration-options)")
-  # --with-cairo --with-harfbuzz --with-modules --with-wide-int --with-x-toolkit=gtk3 --with-xft --with-sound=alsa --with-mailutils --enable-link-time-optimization --prefix=/opt/emacs 'CFLAGS=-march=native -O2 -pipe -fstack-protector-strong --param=ssp-buffer-size=4 -fno-plt' CPPFLAGS=-D_FORTIFY_SOURCE=2 LDFLAGS=-Wl,-O1,--sort-common,--as-needed,-z,relro,-z,now
-
-  $ make -j16
-  $ sudo make install
-#+end_src
 * Miscellaneous settings
 ** General Emacs configuration
 #+begin_src emacs-lisp
@@ -1534,5 +1523,19 @@ Elpy currently has problems with upstream ~jedi~.
   ;;; misc stuff
 
   (add-hook 'term-mode-hook (lambda () (display-line-numbers-mode 0)))
-
+#+end_src
+* Using local build of Emacs
+Install dependencies:
+#+begin_src sh
+  # pacman -Syu $(pacman -Si emacs-nativecomp |grep 'Depends On' |awk '{for(i=4;i<=NF;++i)print $i}')
+#+end_src
+Build with a prefix of /opt/emacs. Need to create a .desktop file in ~/.local/share/applications.
+#+begin_src sh
+  $ git clean -xdf
+  $ git pull
+  $ bash autogen.sh
+  $ bash configure $(emacs -nw -q --batch --eval "(message system-configuration-options)")
+  # --with-cairo --with-harfbuzz --with-modules --with-wide-int --with-x-toolkit=gtk3 --with-xft --with-sound=alsa --with-mailutils --enable-link-time-optimization --with-native-compilation --prefix=/opt/emacs 'CFLAGS=-march=native -O2 -pipe -fstack-protector-strong --param=ssp-buffer-size=4 -fno-plt' CPPFLAGS=-D_FORTIFY_SOURCE=2 LDFLAGS=-Wl,-O1,--sort-common,--as-needed,-z,relro,-z,now
+  $ make NATIVE_FULL_AOT=1 -j16
+  $ sudo make install
 #+end_src
