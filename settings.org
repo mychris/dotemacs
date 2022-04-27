@@ -875,6 +875,19 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (aw-leading-char-face ((t (:inherit ace-jump-face-foreground :height 3.0))))
     :bind (([remap other-window] . ace-window)))
 #+end_src
+* Searching
+** isearch [builtin]
+#+begin_src emacs-lisp
+  (use-package isearch
+    :config
+    (setq-default isearch-lazy-count t)
+    (setq-default isearch-lazy-highlight t)
+    (defun my/isearch-and-regex (search-input &optional lax)
+      (message search-input)
+      search-input)
+    (isearch-define-mode-toggle and "S-6" my/isearch-and-regex
+      "Turning on and search turns off regexp mode."))
+#+end_src
 * Coloring / themes / fonts
 #+begin_src emacs-lisp
   (use-package all-the-icons
