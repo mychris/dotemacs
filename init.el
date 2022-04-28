@@ -91,6 +91,11 @@
 (require 'delight)
 (require 'bind-key)
 
+;;;; Setup native compilation
+
+(when (version<= "28" emacs-version)
+  (setq package-native-compile t))
+
 ;;;; Load settings
 
 (add-to-list 'load-path (file-name-as-directory (expand-file-name "contrib" user-emacs-directory)))
