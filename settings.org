@@ -7,7 +7,7 @@
 To please the compiler, we need to require all the dependencies the settings have, which are not loaded using use-package, or are needed by use-package.
 This is mostly use-package and local utilities which are used throught the configuration or are configured to be used interactively.0
 #+begin_src emacs-lisp
-  (eval-when 'compile
+  (cl-eval-when 'compile
     (require 'use-package)
     (require 'utils))
 #+end_src
@@ -224,7 +224,6 @@ This is mostly use-package and local utilities which are used throught the confi
 ** Minibuffer [built-in]
 #+begin_src emacs-lisp
   (use-package minibuffer
-    :demand
     :config
     (defun kill-other-buffers ()
       "Kill all other buffers."
@@ -256,9 +255,9 @@ This is mostly use-package and local utilities which are used throught the confi
                (select-window mini nil))
               ((and completions (not (eq (selected-window) completions)))
                (select-window completions nil)))))
-                                          ;  (setq completion-styles '(orderless partial-completion))
+    (setq completion-styles '(basic orderless))
+    (setq completion-category-defaults nil)
     (setq completion-cycle-threshold 5)
-                                          ;  (setq completion-category-overrides '((file (styles . (basic partial-completion)))))
     (setq completion-ignore-case t)
     (setq completion-category-defaults nil)
     (setq completion-auto-help nil)
@@ -354,7 +353,27 @@ This is mostly use-package and local utilities which are used throught the confi
     :config
     (advice-add 'swiper :after #'swiper-advice-recenter))
 #+end_src
-** COMMENT Consult - Consulting completing-read
+** vertico - VERTical Interactive COmpletion
+#+begin_src emacs-lisp
+  (use-package vertico
+    :ensure t
+    :init
+    ;; Those are the default values, but check the user option
+    ;; `vertico-multiform-categories' for per-category tweaks.
+    (setq vertico-scroll-margin 0)
+    (setq vertico-count 10)
+    (setq vertico-resize nil)
+    (setq vertico-cycle t)
+
+    (vertico-mode 1)
+    :bind (:map vertico-map
+                ("M-," . vertico-quick-insert)
+                ("M-." . vertico-quick-exit))
+
+    :hook
+    (rfn-eshadow-update-overlay-hook . vertico-directory-tidy))
+#+end_src
+** Consult - Consulting completing-read
 #+begin_src emacs-lisp
   (use-package consult
     :ensure t
@@ -380,7 +399,7 @@ This is mostly use-package and local utilities which are used throught the confi
            ("?" . consult-narrow-help)))
 
 #+end_src
-** COMMENT Marginalia - Enrich existing commands with completion annotations
+** Marginalia - Enrich existing commands with completion annotations
 #+begin_src emacs-lisp
   (use-package marginalia
     :ensure t
@@ -390,42 +409,20 @@ This is mostly use-package and local utilities which are used throught the confi
                     marginalia-annotators-light))
     (marginalia-mode))
 #+end_src
-** COMMENT Embark - Conveniently act on minibuffer completions
+** Embark - Conveniently act on minibuffer completions
 #+begin_src emacs-lisp
   (use-package embark
     :ensure t
+    :bind (("C-S-a" . embark-act)
+           :map minibuffer-local-map
+           ("C-d" . embark-act))
     :config
-    (setq-default embark-collect-initial-view-alist
-                  '((file . list)
-                    (buffer . list)
-                    (symbol . list)
-                    (line . list)
-                    (xref-location . list)
-                    (kill-ring . zebra)
-                    (t . list)))
-    (setq-default embark-collect-live-update-delay 0.5)
-    (setq-default embark-collect-live-initial-delay 0.8)
-    (setq-default embark-action-indicator
-                  (lambda (map)
-                    (which-key--show-keymap "Embark" map nil nil 'no-paging)
-                    #'which-key--hide-popup-ignore-command)
-                  embark-become-indicator embark-action-indicator)
-    :bind (("H-e" . embark-act)
-           :map embark-collect-mode-map
-           ("C-g" . (lambda ()
-                      (interactive)
-                      (if (derived-mode-p 'embark-collect-mode)
-                          (abort-recursive-edit)
-                        (keyboard-quit))))
-           :map minibuffer-local-completion-map
-           ("H-e a" . embark-act)
-           ("H-e n" . embark-act-noexit)
-           ("H-e b" . embark-become)
-           ("H-e c" . embark-collect-toggle-view))
-    :hook
-    (minibuffer-setup-hook . embark-collect-completions-after-input)
-    (embark-collect-mode-hook . (lambda ()
-                                  (setq show-trailing-whitespace nil))))
+    ;; Show Embark actions via which-key
+    (setq embark-action-indicator
+          (lambda (map)
+            (which-key--show-keymap "Embark" map nil nil 'no-paging)
+            #'which-key--hide-popup-ignore-command)
+          embark-become-indicator embark-action-indicator))
 
   (use-package embark-consult
     :ensure t
@@ -441,11 +438,18 @@ This is mostly use-package and local utilities which are used throught the confi
                 ("C-n" . zed-embark-switch-to-completion-buffer-top)))
 
 #+end_src
-** COMMENT Orderless - Use space-separated search terms in any order when completing with Icomplete or the default interface
+** Orderless - Use space-separated search terms in any order when completing with Icomplete or the default interface
 #+begin_src emacs-lisp
   (use-package orderless
     :ensure t
-    :demand
+    :custom
+    (completion-styles '(basic orderless))
+    (completion-category-overrides
+     '((file (styles . (basic partial-completion orderless)))
+            (project-file (styles . (basic substring partial-completion orderless)))
+            (imenu (styles . (basic substring orderless)))
+            (kill-ring (styles . (basic substring orderless)))
+            (consult-location (styles . (basic substring orderless)))))
     :config
     (defun myext-orderless-literal-style-dispatcher (pattern _index _total)
       "Style dispatcher which recognizes patterns which have an ';' as suffix and
@@ -470,7 +474,7 @@ This is mostly use-package and local utilities which are used throught the confi
     :bind (:map minibuffer-local-completion-map
                 ("SPC" . nil)))
 #+end_src
-** helm - Helm is an Emacs incremental and narrowing framework
+** COMMENT helm - Helm is an Emacs incremental and narrowing framework
 #+begin_src emacs-lisp
   (use-package helm
     :ensure t
@@ -486,7 +490,7 @@ This is mostly use-package and local utilities which are used throught the confi
            ("M-s l" . helm-occur)
            ("M-s g" . helm-do-grep-ag)))
 #+end_src
-** helm-rg - a helm interface to ripgrep
+** COMMENT helm-rg - a helm interface to ripgrep
 #+begin_src emacs-lisp
   (use-package helm-rg
     :ensure t
@@ -643,7 +647,9 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+end_src
 ** help-fns+.el - Extensions to `help-fns.el'
 #+begin_src emacs-lisp
-  (use-package help-fns+)
+  (use-package help-fns+
+    :load-path "elisp"
+    :bind (("C-h K" . describe-keymap)))
 #+end_src
 * File manager
 ** dired [built-in] - directory editor
@@ -1050,7 +1056,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (("C-x p t" . projectile-test-project))
     )
 #+end_src
-** helm-projectile - Helm integration for Projectile
+** COMMENT helm-projectile - Helm integration for Projectile
 #+begin_src emacs-lisp
   (use-package helm-projectile
     :ensure t
@@ -1126,7 +1132,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :ensure t
     :diminish)
 #+end_src
-** helm-gtags - GNU Global helm interface
+** COMMENT helm-gtags - GNU Global helm interface
 #+begin_src emacs-lisp
   (use-package helm-gtags
     :ensure t)

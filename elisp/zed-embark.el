@@ -1,4 +1,3 @@
-
 ;;; zed-embark.el --- Extensions to embark -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2020-2021 Christoph Göttschkes
