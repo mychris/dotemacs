@@ -3,6 +3,14 @@
 #+EMAIL: just.mychris@googlemail.com
 #+STARTUP: showeverything
 
+* Configuration dependencies
+To please the compiler, we need to require all the dependencies the settings have, which are not loaded using use-package, or are needed by use-package.
+This is mostly use-package and local utilities which are used throught the configuration or are configured to be used interactively.0
+#+begin_src emacs-lisp
+  (eval-when 'compile
+    (require 'use-package)
+    (require 'utils))
+#+end_src
 * Miscellaneous settings
 ** General Emacs configuration
 #+begin_src emacs-lisp
