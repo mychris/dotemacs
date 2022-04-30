@@ -403,8 +403,8 @@ This is mostly use-package and local utilities which are used throught the confi
     :demand
     :config
     (setq consult-line-numbers-widen t)
-    (setq completion-in-region-function 'consult-completion-in-region)
-    (setq register-preview-function 'consult-register-preview)
+    (setq completion-in-region-function #'consult-completion-in-region)
+    (setq register-preview-function #'consult-register-preview)
     (setq consult-async-min-input 3)
     (setq consult-async-input-debounce 0.5)
     (setq consult-async-input-throttle 0.8)
@@ -467,35 +467,42 @@ This is mostly use-package and local utilities which are used throught the confi
     :ensure t
     :custom
     (completion-styles '(basic orderless))
+    (completion-category-defaults nil)
     (completion-category-overrides
      '((file (styles . (basic partial-completion orderless)))
-            (project-file (styles . (basic substring partial-completion orderless)))
-            (imenu (styles . (basic substring orderless)))
-            (kill-ring (styles . (basic substring orderless)))
-            (consult-location (styles . (basic substring orderless)))))
+       (project-file (styles . (basic substring partial-completion orderless)))
+       (imenu (styles . (basic substring orderless)))
+       (kill-ring (styles . (basic substring orderless)))
+       (consult-location (styles . (basic substring orderless)))))
     :config
-    (defun myext-orderless-literal-style-dispatcher (pattern _index _total)
-      "Style dispatcher which recognizes patterns which have an ';' as suffix and
+    (defun my/orderless-literal-style-dispatcher (pattern _index _total)
+      "Style dispatcher which recognizes patterns which have an '=' as suffix and
+  dispatches those to the orderless-literal style"
+      (when (string-suffix-p "=" pattern)
+        `(orderless-literal . ,(substring pattern 0 -1))))
+    (defun my/orderless-initialism-style-dispatcher (pattern _index _total)
+      "Style dispatchter which recognizes patterns which have an ';' as suffix and
   dispatches those to the orderless-literal style"
       (when (string-suffix-p ";" pattern)
         `(orderless-literal . ,(substring pattern 0 -1))))
-    (defun myext-orderless-strict-initialism-style-disptacher (pattern _index _total)
-      "style dispatcher which recognizes patterns which have a ';' as prefix and
-  dispatches those to the orderless-strict-initialism style"
-      (when (string-prefix-p ";" pattern)
-        `(orderless-strict-initialism . ,(substring pattern 1))))
+    (defun my/orderless-flex-style-dispatcher (pattern _index _total)
+      "Style dispatcher which recognizes patterns which have an ',' as suffix and
+  dispatches those to the orderless-flex style"
+      (when (string-suffix-p "," pattern)
+        `(orderless-literal . ,(substring pattern 0 -1))))
     (setq orderless-component-separator " +")
     (setq orderless-matching-styles
           '(orderless-prefixes
-            orderless-literal
-            orderless-strict-leading-initialism
+            orderless-initialism
             orderless-regexp
             orderless-flex))
     (setq orderless-style-dispatchers
-          '(myext-orderless-literal-style-dispatcher
-            myext-orderless-strict-initialism-style-disptacher))
+          '(my/orderless-literal-style-dispatcher
+            my/orderless-initialism-style-disptacher\
+            my/oderless-flex-style-dispatcher))
     :bind (:map minibuffer-local-completion-map
-                ("SPC" . nil)))
+                ("SPC" . nil)
+                ("?" . nil)))
 #+end_src
 ** COMMENT helm - Helm is an Emacs incremental and narrowing framework
 #+begin_src emacs-lisp
