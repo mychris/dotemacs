@@ -498,7 +498,7 @@ This is mostly use-package and local utilities which are used throught the confi
             orderless-flex))
     (setq orderless-style-dispatchers
           '(my/orderless-literal-style-dispatcher
-            my/orderless-initialism-style-disptacher\
+            my/orderless-initialism-style-disptacher
             my/oderless-flex-style-dispatcher))
     :bind (:map minibuffer-local-completion-map
                 ("SPC" . nil)
