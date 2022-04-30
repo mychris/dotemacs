@@ -7,7 +7,6 @@
 ;;; Code:
 
 ;; increase this early, decrease later on again
-;; define it in init and early-init for compatibility
 (setq gc-cons-threshold most-positive-fixnum)
 (setq gc-cons-percentage 0.6)
 

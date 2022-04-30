@@ -96,7 +96,8 @@
 ;;;; Setup native compilation
 
 (when (version<= "28" emacs-version)
-  (setq package-native-compile t))
+  (setq package-native-compile t)
+  (setq native-comp-async-report-warnings-errors 'silent))
 
 ;;;; Load settings
 
