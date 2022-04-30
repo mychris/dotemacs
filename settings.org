@@ -484,12 +484,12 @@ This is mostly use-package and local utilities which are used throught the confi
       "Style dispatchter which recognizes patterns which have an ';' as suffix and
   dispatches those to the orderless-literal style"
       (when (string-suffix-p ";" pattern)
-        `(orderless-literal . ,(substring pattern 0 -1))))
+        `(orderless-initialism . ,(substring pattern 0 -1))))
     (defun my/orderless-flex-style-dispatcher (pattern _index _total)
       "Style dispatcher which recognizes patterns which have an ',' as suffix and
   dispatches those to the orderless-flex style"
       (when (string-suffix-p "," pattern)
-        `(orderless-literal . ,(substring pattern 0 -1))))
+        `(orderless-flex . ,(substring pattern 0 -1))))
     (setq orderless-component-separator " +")
     (setq orderless-matching-styles
           '(orderless-prefixes
@@ -498,8 +498,8 @@ This is mostly use-package and local utilities which are used throught the confi
             orderless-flex))
     (setq orderless-style-dispatchers
           '(my/orderless-literal-style-dispatcher
-            my/orderless-initialism-style-disptacher
-            my/oderless-flex-style-dispatcher))
+            my/orderless-initialism-style-dispatcher
+            my/orderless-flex-style-dispatcher))
     :bind (:map minibuffer-local-completion-map
                 ("SPC" . nil)
                 ("?" . nil)))
