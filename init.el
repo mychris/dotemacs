@@ -90,6 +90,7 @@
 (require 'diminish)
 (require 'delight)
 (require 'bind-key)
+(require 'my-utils)
 
 ;;;; Setup native compilation
 
