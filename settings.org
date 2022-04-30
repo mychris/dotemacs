@@ -15,7 +15,8 @@ This is mostly use-package and local utilities which are used throught the confi
 ** General Emacs configuration
 #+begin_src emacs-lisp
   (use-package emacs
-    :init
+    :demand
+    :config
     (global-hl-line-mode 1) ;; highlight the line in all windows
     (setq-default large-file-warning-threshold (* 100 1000 1000))
     (setq-default frame-title-name '("%b")) ;; set frame title to buffer name
@@ -28,10 +29,23 @@ This is mostly use-package and local utilities which are used throught the confi
     (put 'dired-find-alternate-file 'disabled nil)
     (put 'overwrite-mode 'disabled t)
     (global-unset-key (kbd "C-z")) ;; Use C-z as a prefix key.
-    :hook
-    (emacs-startup-hook . (lambda ()
-			    (setq gc-cons-threshold 16777216)
-			    (setq gc-cons-percentage 0.1))))
+    (global-unset-key (kbd "<help>"))
+    (global-unset-key (kbd "C-h <help>"))
+    (global-unset-key (kbd "<f1> <help>"))
+    (global-unset-key (kbd "<find>"))
+    (global-unset-key (kbd "<open>"))
+    (global-unset-key (kbd "<clear>"))
+    (global-unset-key (kbd "<f16>"))
+    (global-unset-key (kbd "<f18>"))
+    (global-unset-key (kbd "<f20>"))
+    (global-unset-key (kbd "C-x C-z"))
+    (global-unset-key (kbd "C-h g")) ;; Who needs that?
+    (global-unset-key (kbd "<f1> g"))
+    (global-unset-key (kbd "C-h n"))
+    (global-unset-key (kbd "C-h C-n"))
+    (global-unset-key (kbd "<f1> n"))
+    (global-unset-key (kbd "<f1> C-n"))
+    )
 #+end_src
 ** Emacs server and desktop
 #+begin_src emacs-lisp
