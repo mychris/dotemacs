@@ -8,7 +8,8 @@
 
 ;; increase this early, decrease later on again
 ;; define it in init and early-init for compatibility
-(setq gc-cons-threshold (* 200 1000 1000))
+(setq gc-cons-threshold most-positive-fixnum)
+(setq gc-cons-percentage 0.6)
 
 ;; Initialise installed packages
 (setq package-enable-at-startup t)

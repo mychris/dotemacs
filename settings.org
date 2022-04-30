@@ -29,12 +29,9 @@ This is mostly use-package and local utilities which are used throught the confi
     (put 'overwrite-mode 'disabled t)
     (global-unset-key (kbd "C-z")) ;; Use C-z as a prefix key.
     :hook
-    (after-init-hook . (lambda ()
-                         (message "Emacs ready in %s with %d GC's."
-                                  (format "%.2f seconds"
-                                          (float-time (time-subtract after-init-time before-init-time)))
-                                  gcs-done)
-                         (setq gc-cons-threshold 800000))))
+    (emacs-startup-hook . (lambda ()
+			    (setq gc-cons-threshold 16777216)
+			    (setq gc-cons-percentage 0.1))))
 #+end_src
 ** Emacs server and desktop
 #+begin_src emacs-lisp

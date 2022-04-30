@@ -12,9 +12,10 @@
 
 ;;;; Customization information
 
-;; increase this early, decrease later on again
-;; define it in init and early-init for compatibility
-(setq gc-cons-threshold (* 200 1000 1000))
+;; No need for older versions anymore
+
+(when (version< emacs-version "27")
+  (error "Emacs version < 27 no supported"))
 
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (when (file-exists-p custom-file)
