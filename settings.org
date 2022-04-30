@@ -175,7 +175,7 @@ This is mostly use-package and local utilities which are used throught the confi
 #+end_src
 ** utils - Personal utilities
 #+begin_src emacs-lisp
-  (use-package utils
+  (use-package my-utils
     :load-path "elisp"
     :bind
     (("C-x 9" . my/delete-most-recent-window)))
