@@ -897,6 +897,32 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 	   ("M-g c" . avy-goto-char)
 	   ("M-g w" . avy-goto-word-0)))
 #+end_src
+** smartparens - Automatic insertion, wrapping and paredit-like navigation with user defined pairs.
+#+begin_src emacs-lisp
+  (use-package smartparens
+    :ensure t
+    :hook (prog-mode-hook . smartparens-mode)
+    :config
+    (defun my/sp-beginning-of-sexp (&optional ARG)
+      "Like `sp-beginning-of-sexp` but a bit better.
+  Falls back to `backward-sexp` if point does not move."
+      (interactive "^P")
+      (let ((current-point (point)))
+        (sp-beginning-of-sexp ARG)
+        (when (= (point) current-point)
+          (backward-sexp ARG))))
+    (defun my/sp-end-of-sexp (&optional ARG)
+      "Like `sp-beginning-of-sexp` but a bit better.
+  Falls back to `forward-sexp` if point does not move."
+      (interactive "^P")
+      (let ((current-point (point)))
+        (sp-end-of-sexp ARG)
+        (when (= (point) current-point)
+          (forward-sexp ARG))))
+    :bind (([remap backward-sexp] . my/sp-beginning-of-sexp)
+           ([remap forward-sexp] . my/sp-end-of-sexp))
+    )
+#+end_src
 ** ace-window - Quickly switch windows
 #+begin_src emacs-lisp
   (use-package ace-window
