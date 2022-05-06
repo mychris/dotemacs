@@ -385,24 +385,34 @@ This is mostly use-package and local utilities which are used throught the confi
     :ensure t
     :after imenu
     :hook
-    (prog-mode-hook . imenu-list-minor-mode)
     (imenu-list-major-mode-hook . (lambda () (display-line-numbers-mode 0)))
     :config
     (setq imenu-list-idle-update-delay-time 0.5)
     (setq imenu-list-porition 'right)
     (setq imenu-list-buffer-name "*Ilist*")
     (defun my/imenu-list-toggle ()
+      "Open the imenu-list buffer."
       (interactive)
       (if (string= (buffer-name) "*Ilist*")
-          (kill-this-buffer)
+          (imenu-list-quit-window)
         (progn
-          (imenu-list)
+          (imenu-list-minor-mode 1)
+          (if (get-buffer "*Ilist*")
+              (imenu-list-show)
+            (imenu-list))
+          (imenu-list-update)
           (imenu-list-resize-window)
-          (enlarge-window-horizontally 2))))
+          (enlarge-window-horizontally 2)
+          )))
+    (defun my/imenu-list-ret-dwim ()
+      "Jump to the entry at `point' and close the imenu-list window."
+      (interactive)
+      (call-interactively #'imenu-list-ret-dwim)
+      (kill-buffer "*Ilist*"))
     :bind (("<f7>" . my/imenu-list-toggle)
            :map imenu-list-major-mode-map
-           ("RET" . imenu-list-ret-dwim)
-           ("<return>" . imenu-list-ret-dwim)
+           ("RET" . imenu-list-display-dwim)
+           ("<return>" . imenu-list-display-dwim)
            ("TAB" . hs-toggle-hiding)
            ("<tab>" . hs-toggle-hiding)))
 #+end_src
@@ -752,6 +762,8 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :config
     (setq-default treemacs-follow-mode t)
     (setq-default treemacs-persist-file (expand-file-name "treemacs-persist" user-emacs-cache-directory))
+    :hook
+    (treemacs-mode-hook . (lambda () (display-line-numbers-mode 0)))
     :bind (([f8] . treemacs)))
 
   (use-package treemacs-projectile
