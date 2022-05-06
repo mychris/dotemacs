@@ -976,17 +976,18 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 
   (if window-system
       (let ((font-list (font-family-list)))
-        (cond
-         ((member "Victor Mono" font-list)
-          (set-face-attribute 'default nil :font "Victor Mono:size=12:hintstyel=hintfull:autohint=true:antialise=true:rgba=rgb"))
-         ((member "Fira Code" font-list)
-          (set-face-attribute 'default nil :font "Fira Code:size=12:hintstyle=hintfull:autohint=true:antialise=true:rgba=rgb"))
-         ((member "Source Code Pro" font-list)
-          (set-face-attribute 'default nil :font "Source Code Pro:size=12:hintstyle=hintfull:autohint=true:antialise=true:rgba=rgb"))
-         ((member "Hack" font-list)
-          (set-face-attribute 'default nil :font "Hack:size=12:hintstyle=hintfull:autohint=true:antialise=true:rgba=rgb"))
-         (t (error "Failed to load custom fonts"))
-         )))
+	(cond
+	 ((member "Victor Mono" font-list)
+	  (set-face-attribute 'default nil :font "Victor Mono:size=12:hintstyel=hintfull:autohint=true:antialise=true:rgba=rgb"))
+	 ((member "Fira Code" font-list)
+	  (set-face-attribute 'default nil :font "Fira Code:size=12:hintstyle=hintfull:autohint=true:antialise=true:rgba=rgb"))
+	 ((member "Source Code Pro" font-list)
+	  (set-face-attribute 'default nil :font "Source Code Pro:size=12:hintstyle=hintfull:autohint=true:antialise=true:rgba=rgb"))
+	 ((member "Hack" font-list)
+	  (set-face-attribute 'default nil :font "Hack:size=12:hintstyle=hintfull:autohint=true:antialise=true:rgba=rgb"))
+	 (t (error "Failed to load custom fonts"))
+	 )))
+  (set-face-background 'glyphless-char "red")
 #+end_src
 * Modeline
 #+begin_src emacs-lisp
@@ -1206,9 +1207,12 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
            :map company-active-map
            ("C-n" . company-select-next-or-abort)
            ("C-j" . company-select-next-or-abort)
-           ("<tab>" . company-complete-common-or-cycle)
            ("C-p" . company-select-previous-or-abort)
            ("C-k" . company-select-previous-or-abort)
+           ("<return>" . company-complete-selection)
+           ("RET" . company-complete-selection)
+           ("<tab>" . company-complete-selection)
+           ("TAB" . company-complete-selection)
            :map company-search-map
            ("C-n" . company-select-next-or-abort)
            ("C-j" . company-select-next-or-abort)
@@ -1302,8 +1306,9 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   (use-package cc-mode
     ;; built-in
     :hook
-    (c++-mode-hook . lsp)
+    (c-mode-common-hook . lsp)
     (c-mode-hook . lsp)
+    (c++-mode-hook . lsp)
     )
 
   (defconst openjdk-cc-style
@@ -1313,62 +1318,62 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       (indent-tabs-mode . nil)
       (c-comment-only-line-offset . 0)
       (c-hanging-braces-alist . ((defun-open after)
-                                 (defun-close before after)
-                                 (class-open after)
-                                 (class-close before after)
-                                 (inexpr-class-open after)
-                                 (inexpr-class-close before)
-                                 (namespace-open after)
-                                 (inline-open after)
-                                 (inline-close before after)
-                                 (block-open after)
-                                 (block-close . c-snug-do-while)
-                                 (extern-lang-open after)
-                                 (extern-lang-close after)
-                                 (statement-case-open after)
-                                 (substatement-open after)))
+				 (defun-close before after)
+				 (class-open after)
+				 (class-close before after)
+				 (inexpr-class-open after)
+				 (inexpr-class-close before)
+				 (namespace-open after)
+				 (inline-open after)
+				 (inline-close before after)
+				 (block-open after)
+				 (block-close . c-snug-do-while)
+				 (extern-lang-open after)
+				 (extern-lang-close after)
+				 (statement-case-open after)
+				 (substatement-open after)))
       (c-hanging-colons-alist . ((case-label)
-                                 (label after)
-                                 (access-label after)
-                                 (member-init-intro before)
-                                 (inher-intro)))
+				 (label after)
+				 (access-label after)
+				 (member-init-intro before)
+				 (inher-intro)))
       (c-hanging-semi&comma-criteria
        . (c-semi&comma-no-newlines-for-oneline-inliners
-          c-semi&comma-inside-parenlist
-          c-semi&comma-no-newlines-before-nonblanks))
+	  c-semi&comma-inside-parenlist
+	  c-semi&comma-no-newlines-before-nonblanks))
       (c-indent-comments-syntactically-p . t)
       (comment-column . 40)
       (c-indent-comment-alist . ((other . (space . 2))))
       (c-cleanup-list . (brace-else-brace
-                         brace-elseif-brace
-                         brace-catch-brace
-                         empty-defun-braces
-                         defun-close-semi
-                         list-close-comma
-                         scope-operator))
+			 brace-elseif-brace
+			 brace-catch-brace
+			 empty-defun-braces
+			 defun-close-semi
+			 list-close-comma
+			 scope-operator))
       (c-offsets-alist . ((arglist-intro google-c-lineup-expression-plus-4)
-                          (func-decl-cont . ++)
-                          (member-init-intro . ++)
-                          (inher-intro . ++)
-                          (comment-intro . 0)
-                          (arglist-close . c-lineup-arglist)
-                          (topmost-intro . 0)
-                          (block-open . 0)
-                          (inline-open . 0)
-                          (substatement-open . 0)
-                          (statement-cont
-                           .
-                           (,(when (fboundp 'c-no-indent-after-java-annotations)
-                               'c-no-indent-after-java-annotations)
-                            ,(when (fboundp 'c-lineup-assignments)
-                               'c-lineup-assignments)
-                            ++))
-                          (label . /)
-                          (case-label . +)
-                          (statement-case-open . +)
-                          (statement-case-intro . +) ; case w/o {
-                          (access-label . /)
-                          (innamespace . 0))))
+			  (func-decl-cont . ++)
+			  (member-init-intro . ++)
+			  (inher-intro . ++)
+			  (comment-intro . 0)
+			  (arglist-close . c-lineup-arglist)
+			  (topmost-intro . 0)
+			  (block-open . 0)
+			  (inline-open . 0)
+			  (substatement-open . 0)
+			  (statement-cont
+			   .
+			   (,(when (fboundp 'c-no-indent-after-java-annotations)
+			       'c-no-indent-after-java-annotations)
+			    ,(when (fboundp 'c-lineup-assignments)
+			       'c-lineup-assignments)
+			    ++))
+			  (label . /)
+			  (case-label . +)
+			  (statement-case-open . +)
+			  (statement-case-intro . +) ; case w/o {
+			  (access-label . /)
+			  (innamespace . 0))))
     "OpenJDK C/C++ Programming Style.")
 
   (c-add-style "OpenJDK" openjdk-cc-style nil)
