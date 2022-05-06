@@ -376,6 +376,36 @@ This is mostly use-package and local utilities which are used throught the confi
     :config
     (advice-add 'swiper :after #'swiper-advice-recenter))
 #+end_src
+** imenu - find major definitions in a file by name
+#+begin_src emacs-lisp
+  (use-package imenu ;; built-in
+    )
+
+  (use-package imenu-list
+    :ensure t
+    :after imenu
+    :hook
+    (prog-mode-hook . imenu-list-minor-mode)
+    (imenu-list-major-mode-hook . (lambda () (display-line-numbers-mode 0)))
+    :config
+    (setq imenu-list-idle-update-delay-time 0.5)
+    (setq imenu-list-porition 'right)
+    (setq imenu-list-buffer-name "*Ilist*")
+    (defun my/imenu-list-toggle ()
+      (interactive)
+      (if (string= (buffer-name) "*Ilist*")
+          (kill-this-buffer)
+        (progn
+          (imenu-list)
+          (imenu-list-resize-window)
+          (enlarge-window-horizontally 2))))
+    :bind (("<f7>" . my/imenu-list-toggle)
+           :map imenu-list-major-mode-map
+           ("RET" . imenu-list-ret-dwim)
+           ("<return>" . imenu-list-ret-dwim)
+           ("TAB" . hs-toggle-hiding)
+           ("<tab>" . hs-toggle-hiding)))
+#+end_src
 ** vertico - VERTical Interactive COmpletion
 #+begin_src emacs-lisp
   (use-package vertico
@@ -387,7 +417,6 @@ This is mostly use-package and local utilities which are used throught the confi
     (setq vertico-count 10)
     (setq vertico-resize nil)
     (setq vertico-cycle t)
-
     (vertico-mode 1)
     :bind (:map vertico-map
                 ("M-," . vertico-quick-insert)
@@ -417,9 +446,16 @@ This is mostly use-package and local utilities which are used throught the confi
            ("M-s y" . consult-yank)
            ("M-s l" . consult-line)
            ("M-s g" . consult-ripgrep)
+           ([remap switch-to-buffer] . consult-buffer)
            :map consult-narrow-map
            ("?" . consult-narrow-help)))
 
+  (use-package consult-lsp
+    :ensure t
+    :after (lsp consult)
+    :bind (:map lsp-mode-map
+                ("M-s s" . consult-lsp-file-symbols))
+    )
 #+end_src
 ** Marginalia - Enrich existing commands with completion annotations
 #+begin_src emacs-lisp
@@ -438,7 +474,8 @@ This is mostly use-package and local utilities which are used throught the confi
     :ensure t
     :bind (("C-S-a" . embark-act)
            :map minibuffer-local-map
-           ("C-d" . embark-act))
+           ("C-a" . embark-act)
+           ("C-e" . embark-export))
     :config
     ;; Show Embark actions via which-key
     (setq embark-action-indicator
@@ -920,6 +957,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
         (when (= (point) current-point)
           (forward-sexp ARG))))
     :bind (([remap backward-sexp] . my/sp-beginning-of-sexp)
+           ([remap forward-sexp] . my/sp-end-of-sexp)
            ([remap forward-sexp] . my/sp-end-of-sexp))
     )
 #+end_src
@@ -930,6 +968,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :config
     (setq aw-keys '(?1 ?2 ?3 ?4 ?5 ?6 ?7 ?8 ?9))
     (setq aw-background nil)
+    (add-to-list 'aw-ignored-buffers "*Ilist*")
     :custom-face
     (aw-leading-char-face ((t (:inherit ace-jump-face-foreground :height 3.0))))
     :bind (([remap other-window] . ace-window)))
@@ -1159,12 +1198,22 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package lsp-mode
     :ensure t
+    :after xref
     :commands (lsp)
     :init
     (setq lsp-keymap-prefix "s-g")
     :config
     (setq lsp-session-file (expand-file-name "lsp-session-v1" user-emacs-cache-directory))
-    (setq lsp-enable-snippet t))
+    (setq lsp-enable-snippet t)
+    (defun my/lsp-find-definition-at-mouse (click)
+      "Click to start `xref-find-definitions-at-mouse' at clicked point."
+      (interactive "e")
+      (call-interactively #'mouse-set-point)
+      (call-interactively #'xref-find-definitions-at-mouse))
+    :bind (:map lsp-mode-map
+                ("C-<down-mouse-1>" . my/lsp-find-definition-at-mouse)
+                ("<wheel-left>" . xref-go-back)
+                ("<wheel-right>" . xref-go-use)))
 
   (use-package lsp-ui
     :ensure t
@@ -1179,8 +1228,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (setq lsp-ui-doc-enable t)
     (setq lsp-ui-doc-show-with-cursor nil)
     (setq lsp-ui-doc-show-with-mouse nil)
-    (setq lsp-ui-doc-position 'at-point)
-    (define-key lsp-ui-mode-map [C-down-mouse-1] 'xref-find-definitions-at-mouse))
+    (setq lsp-ui-doc-position 'at-point))
 #+end_src
 ** ggtags - emacs frontend to GNU Global source code tagging system
 #+begin_src emacs-lisp
@@ -1309,6 +1357,10 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (c-mode-common-hook . lsp)
     (c-mode-hook . lsp)
     (c++-mode-hook . lsp)
+    )
+
+  (use-package lsp-clangd ;; part of the lsp package
+    :after lsp
     )
 
   (defconst openjdk-cc-style
