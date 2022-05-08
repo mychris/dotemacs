@@ -216,8 +216,7 @@ This is mostly use-package and local utilities which are used throught the confi
   (use-package my-utils
     :ensure nil
     :load-path "elisp"
-    :bind
-    (("C-x 9" . my/delete-most-recent-window)))
+    :bind (("C-x 9" . my/delete-most-recent-window)))
 #+end_src
 * COMMENT Evil
 ** evil - Extensible Vi layer for Emacs.
@@ -691,10 +690,11 @@ This is mostly use-package and local utilities which are used throught the confi
 #+begin_src emacs-lisp
   (use-package help
     :ensure nil
-    :bind
-    (:map help-mode-map
-          ([mouse-8] . help-go-back)
-          ([mouse-9] . help-go-forward)))
+    :bind (:map help-mode-map
+                ("<mouse-8>" . help-go-back)
+                ("<wheel-left>" . help-go-back)
+                ("<mouse-9>" . help-go-forward)
+                ("<wheel-right>" . help-go-forward)))
 #+end_src
 ** man [built-in]
 #+begin_src emacs-lisp
@@ -702,9 +702,8 @@ This is mostly use-package and local utilities which are used throught the confi
     :ensure nil
     :config
     (setq Man-notify-method 'aggressive)
-    :bind
-    (:map Man-mode-map
-          ([remap Man-next-section] . (lambda () (interactive) (progn (Man-next-section 1) (recenter))))))
+    :bind (:map Man-mode-map
+                ([remap Man-next-section] . (lambda () (interactive) (progn (Man-next-section 1) (recenter))))))
 #+end_src
 ** which-key - Display available key bindings in popup
 #+begin_src emacs-lisp
@@ -773,7 +772,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (setq-default neo-window-fixed-size nil)
     (setq-default neo-window-width 55)
     (setq-default neo-theme (if (display-graphic-p) 'icons 'arrow))
-    :bind (([f8] . neotree-toggle)
+    :bind (("<f8>" . neotree-toggle)
            :map neotree-mode-map
            ("<C-return>" . neotree-change-root)
            ("d" . neotree-delete-node)
@@ -791,7 +790,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (setq-default treemacs-persist-file (expand-file-name "treemacs-persist" user-emacs-cache-directory))
     :hook
     (treemacs-mode-hook . (lambda () (display-line-numbers-mode 0)))
-    :bind (([f8] . treemacs)))
+    :bind (("<f8>" . treemacs)))
 
   (use-package treemacs-projectile
     :ensure t
@@ -965,9 +964,8 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package move-text
     :ensure t
-    :bind
-    (([M-up] . move-text-up)
-     ([M-down] . move-text-down)))
+    :bind (("M-<up>" . move-text-up)
+           ("M-<down>" . move-text-down)))
 #+end_src
 ** Avy - Jump to arbitrary positions in visible text and select text quickly
 #+begin_src emacs-lisp
