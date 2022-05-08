@@ -15,6 +15,7 @@ This is mostly use-package and local utilities which are used throught the confi
 ** General Emacs configuration
 #+begin_src emacs-lisp
   (use-package emacs
+    :ensure nil
     :demand
     :config
     (global-hl-line-mode 1) ;; highlight the line in all windows
@@ -50,11 +51,13 @@ This is mostly use-package and local utilities which are used throught the confi
 ** Emacs server and desktop
 #+begin_src emacs-lisp
   (use-package server
+    :ensure nil
     :defer 1
     :config
     (server-start))
 
   (use-package desktop
+    :ensure nil
     :init
     (setq-default desktop-auto-save-timeout 300)
     (setq-default desktop-dirname (file-name-as-directory user-emacs-cache-directory))
@@ -70,6 +73,7 @@ This is mostly use-package and local utilities which are used throught the confi
     (desktop-save-mode 0))
 
   (use-package emacs
+    :ensure nil
     :init
     (setq-default initial-buffer-choice t)
     (setq-default inhibit-startup-message t)
@@ -80,6 +84,7 @@ This is mostly use-package and local utilities which are used throught the confi
 ** Make sure that UTF-8 is used everywhere.
 #+begin_src emacs-lisp
   (use-package emacs
+    :ensure nil
     :init
     (set-terminal-coding-system 'utf-8)
     (set-keyboard-coding-system 'utf-8)
@@ -94,6 +99,7 @@ This is mostly use-package and local utilities which are used throught the confi
 ** Savehist (minibuffer history)
 #+begin_src emacs-lisp
   (use-package savehist
+    :ensure nil
     :diminish
     :init
     (setq-default savehist-file (expand-file-name "savehist" user-emacs-cache-directory))
@@ -106,6 +112,7 @@ This is mostly use-package and local utilities which are used throught the confi
 ** Saveplace (cursor position)
 #+begin_src emacs-lisp
   (use-package saveplace
+    :ensure nil
     :diminish
     :init
     (setq-default save-place-file (expand-file-name "saveplace" user-emacs-cache-directory))
@@ -116,6 +123,7 @@ This is mostly use-package and local utilities which are used throught the confi
 ** Backups
 #+begin_src emacs-lisp
   (use-package emacs
+    :ensure nil
     :init
     (let
         ((backup-dir (file-name-as-directory (expand-file-name "backups" user-emacs-cache-directory))))
@@ -130,6 +138,7 @@ This is mostly use-package and local utilities which are used throught the confi
 ** Auto-save
 #+begin_src emacs-lisp
   (use-package emacs
+    :ensure nil
     :init
     (let
         ((auto-save-dir (file-name-as-directory (expand-file-name "auto-save" user-emacs-cache-directory)))
@@ -145,6 +154,7 @@ This is mostly use-package and local utilities which are used throught the confi
 ** Completion for recent files and directories
 #+begin_src emacs-lisp
   (use-package recentf
+    :ensure nil
     :diminish
     :defer 1
     :init
@@ -157,6 +167,7 @@ This is mostly use-package and local utilities which are used throught the confi
 ** Line numbers
 #+begin_src emacs-lisp
   (use-package display-line-numbers
+    :ensure nil
     :diminish
     :init
     (setq-default display-line-numbers-type t)
@@ -199,6 +210,7 @@ This is mostly use-package and local utilities which are used throught the confi
 ** utils - Personal utilities
 #+begin_src emacs-lisp
   (use-package my-utils
+    :ensure nil
     :load-path "elisp"
     :bind
     (("C-x 9" . my/delete-most-recent-window)))
@@ -247,6 +259,7 @@ This is mostly use-package and local utilities which are used throught the confi
 ** Minibuffer [built-in]
 #+begin_src emacs-lisp
   (use-package minibuffer
+    :ensure nil
     :config
     (defun kill-other-buffers ()
       "Kill all other buffers."
@@ -308,6 +321,7 @@ This is mostly use-package and local utilities which are used throught the confi
 ** isearch [built-in]
 #+begin_src emacs-lisp
   (use-package isearch
+    :ensure nil
     :diminish
     :config
     (setq search-highlight t)
@@ -321,6 +335,7 @@ This is mostly use-package and local utilities which are used throught the confi
 ** autorevert [built-in]
 #+begin_src emacs-lisp
   (use-package autorevert
+    :ensure nil
     :diminish auto-revert-mode
     :config
     (setq auto-revert-verbose t)
@@ -329,6 +344,7 @@ This is mostly use-package and local utilities which are used throught the confi
 ** COMMENT Ido [built-in] - Interactively do things with buffers and files
 #+begin_src emacs-lisp
   (use-package ido
+    :ensure nil
     :diminish
     :defer 1
     :init
@@ -379,6 +395,7 @@ This is mostly use-package and local utilities which are used throught the confi
 ** imenu - find major definitions in a file by name
 #+begin_src emacs-lisp
   (use-package imenu ;; built-in
+    :ensure nil
     )
 
   (use-package imenu-list
@@ -501,6 +518,7 @@ This is mostly use-package and local utilities which are used throught the confi
     :hook (embark-collect-mode-hook . embark-consult-preview-minor-mode))
 
   (use-package zed-embark
+    :ensure nil
     :after (embark consult)
     :hook
     (prot-embark-clear-live-buffers . zed-embark-clear-all-collection-buffers)
@@ -636,6 +654,7 @@ This is mostly use-package and local utilities which are used throught the confi
            ("M-0" . eyebrowse-close-window-config)))
 
   (use-package zed-eyebrowse
+    :ensure nil
     :after (eyebrowse)
     :bind (("M-~" . zed-eyebrowse-toggle-monocle))
     :hook
@@ -667,6 +686,7 @@ This is mostly use-package and local utilities which are used throught the confi
 ** help [built-in]
 #+begin_src emacs-lisp
   (use-package help
+    :ensure nil
     :bind
     (:map help-mode-map
           ([mouse-8] . help-go-back)
@@ -675,6 +695,7 @@ This is mostly use-package and local utilities which are used throught the confi
 ** man [built-in]
 #+begin_src emacs-lisp
   (use-package man
+    :ensure nil
     :config
     (setq Man-notify-method 'aggressive)
     :bind
@@ -725,13 +746,15 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 ** help-fns+.el - Extensions to `help-fns.el'
 #+begin_src emacs-lisp
   (use-package help-fns+
+    :ensure nil
     :load-path "elisp"
     :bind (("C-h K" . describe-keymap)))
 #+end_src
 * File manager
 ** dired [built-in] - directory editor
 #+begin_src emacs-lisp
-  (use-package dired)
+  (use-package dired
+    :ensure nil)
 #+end_src
 ** COMMENT neotree - A tree plugin like NerdTree for Vim
 #+begin_src emacs-lisp
@@ -781,6 +804,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 ** Quick file opening shortcuts
 #+begin_src emacs-lisp
   (use-package quick-file-access
+    :ensure nil
     :load-path "elisp"
     :config
     (setq-default quick-file-access-file-list
@@ -794,6 +818,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 ** whitespace [built-in]
 #+begin_src emacs-lisp
   (use-package whitespace
+    :ensure nil
     :config
     (setq-default whitespace-style '(face tab-mark))
     :hook
@@ -813,6 +838,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (global-highlight-thing-mode 1))
 
   (use-package hi-lock
+    :ensure nil
     :diminish)
 #+end_src
 ** undo-tree - Treat undo history as a tree
@@ -887,7 +913,8 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 ** System clipboard integration
 #+begin_src emacs-lisp
   (use-package emacs
-    :config
+    :ensure nil
+    :init
     (setq-default save-interprogram-paste-before-kill t))
 #+end_src
 * Movement / Navigation
@@ -990,6 +1017,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 ** isearch [builtin]
 #+begin_src emacs-lisp
   (use-package isearch
+    :ensure nil
     :config
     (setq-default isearch-lazy-count t)
     (setq-default isearch-lazy-highlight t)
@@ -1044,6 +1072,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 * Modeline
 #+begin_src emacs-lisp
   (use-package emacs
+    :ensure nil
     :init
     (setq-default line-number-mode t)
     (setq-default column-number-mode t)
@@ -1109,17 +1138,21 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 ** shell
 #+begin_src emacs-lisp
   (use-package shell
+    :ensure nil
     :hook
     (shell-mode-hook . (lambda ()
                          (face-remap-set-base 'comint-highlight-prompt :inherit nil))))
 #+end_src
 ** eshell
 #+begin_src emacs-lisp
-  (use-package eshell)
+  (use-package eshell
+    :ensure nil)
 
-  (use-package esh-mode)
+  (use-package esh-mode
+    :ensure nil)
 
   (use-package em-hist
+    :ensure nil
     :after esh-mode
     :config
     (setq-default eshell-history-file-name (expand-file-name "eshell-history" user-emacs-cache-directory))
@@ -1129,6 +1162,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 ** ansi-term
 #+begin_src emacs-lisp
   (use-package term
+    :ensure nil
     :config
     :bind (:map term-raw-map
                 ("M-1" . nil)
@@ -1145,6 +1179,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 * TRAMP
 #+begin_src emacs-lisp
   (use-package tramp
+    :ensure nil
     :init
     (setq-default tramp-persistency-file-name (expand-file-name "tramp" user-emacs-cache-directory)))
 #+end_src
@@ -1183,11 +1218,13 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 ** abbrev [built-in]
 #+begin_src emacs-lisp
   (use-package abbrev
+    :ensure nil
     :diminish)
 #+end_src
 ** paren [built-in] - highlight matching paren
 #+begin_src emacs-lisp
   (use-package paren
+    :ensure nil
     :config
     (setq show-paren-delay 0.25)
     (setq show-paren-style 'parenthesis)
@@ -1383,12 +1420,14 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 ** C/C++
 #+begin_src emacs-lisp
   (use-package cc-mode ;; built-in
+    :ensure nil
     :hook
     (c-mode-common-hook . lsp)
     (c-mode-hook . lsp)
     (c++-mode-hook . lsp))
 
   (use-package lsp-clangd ;; part of the lsp package
+    :ensure nil
     :after lsp
     )
 
@@ -1473,14 +1512,17 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 ** Emacs-lisp
 #+begin_src emacs-lisp
   (use-package elisp-mode
+    :ensure nil
     :hook
     (elisp-mode-hook . (lambda () (setq indent-tabs-mode nil)))
     (emacs-lisp-mode-hook . (lambda () (setq indent-tabs-mode nil))))
 
   (use-package pp
+    :ensure nil
     :bind (([remap eval-last-sexp] . pp-eval-last-sexp)))
 
   (use-package eldoc
+    :ensure nil
     :diminish
     :config
     (global-eldoc-mode 1))
@@ -1507,6 +1549,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   ;  (setq merlin-error-after-save nil))
 
   (use-package lsp-ocaml ;; Part of lsp-package
+    :ensure nil
     :after (tuareg lsp)
     :hook
     (tuareg-mode-hook . lsp)
@@ -1538,12 +1581,14 @@ This is missing completion for functions and variables defined in other files wh
 Also, it looks like parameter substitution inside strings are not to be completed.
 #+begin_src emacs-lisp
   (use-package sh-script
+    :ensure nil
     :config
     (setq-default sh-basic-offset 2)
     :hook
     (sh-mode-hook . flycheck-mode))
 
   (use-package shell
+    :ensure nil
     :config
     (setq-default sh-basic-offset 2)
     :hook
@@ -1596,6 +1641,7 @@ Elpy currently has problems with upstream ~jedi~.
 ** Org Mode
 #+begin_src emacs-lisp
   (use-package org
+    :ensure nil
     :config
     (setq-default org-directory "~/Documents/org")
     (setq-default org-imenu-depth 7)
@@ -1662,6 +1708,7 @@ Elpy currently has problems with upstream ~jedi~.
 ** xmodmap
 #+begin_src emacs-lisp
   (use-package xmodmap-mode
+    :ensure nil
     :mode (("\\.Xmodmap\\'" . xmodmap-mode)))
 #+end_src
 * Version control
