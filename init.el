@@ -21,6 +21,10 @@
 (when (file-exists-p custom-file)
   (load custom-file))
 
+;; This is a weird one, see
+;; https://emacshorrors.com/posts/advertising-your-freedom.html
+(fset 'display-startup-echo-area-message 'ignore)
+
 ;;;; Custom load-path
 
 (add-to-list 'load-path (file-name-as-directory (expand-file-name "elisp" user-emacs-directory)))
