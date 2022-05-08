@@ -968,6 +968,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
         (sp-end-of-sexp ARG)
         (when (= (point) current-point)
           (forward-sexp ARG))))
+    (setq sp-autoinsert-pair nil)
     :bind (([remap backward-sexp] . my/sp-beginning-of-sexp)
            ([remap forward-sexp] . my/sp-end-of-sexp)
            ([remap forward-sexp] . my/sp-end-of-sexp))
@@ -1210,18 +1211,21 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package lsp-mode
     :ensure t
-    :after xref
+    :after (company xref)
     :commands (lsp)
     :init
     (setq lsp-keymap-prefix "s-g")
     :config
     (setq lsp-session-file (expand-file-name "lsp-session-v1" user-emacs-cache-directory))
-    (setq lsp-enable-snippet t)
+    (setq lsp-enable-snippet nil)
+    (setq lsp-completion-provider :none)
     (defun my/lsp-find-definition-at-mouse (click)
       "Click to start `xref-find-definitions-at-mouse' at clicked point."
       (interactive "e")
       (call-interactively #'mouse-set-point)
       (call-interactively #'xref-find-definitions-at-mouse))
+    :hook
+    (lsp-mode-hook . company-mode)
     :bind (:map lsp-mode-map
                 ("C-<down-mouse-1>" . my/lsp-find-definition-at-mouse)
                 ("<wheel-left>" . xref-go-back)
@@ -1262,6 +1266,20 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (setq tab-always-indent 'complete)
     (setq company-tooltip-align-annotations t)
     (setq company-minimum-prefix-length 1)
+    (defun my/company-backend-with-yas (backends)
+      "Add :with company-yasnippet to company BACKENDS.
+  Taken from https://github.com/syl20bnr/spacemacs/pull/179."
+      (if (and (listp backends) (memq 'company-yasnippet backends))
+          backends
+        (append (if (consp backends)
+                    backends
+                  (list backends))
+                '(:with company-yasnippet))))
+    (setq company-backends (delete 'company-dabbrev company-backends))
+    (setq company-backends (delete 'company-bbdb company-backends))
+    (setq company-backends (mapcar #'my/company-backend-with-yas company-backends))
+    (setq company-transformers '(delete-consecutive-dups
+                                 company-sort-by-occurrence))
     :bind (([remap c-indent-line-or-region] . company-indent-or-complete-common)
            ([remap indent-for-tab-command] . company-indent-or-complete-common)
            :map company-active-map
@@ -1363,13 +1381,11 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 * Programming languages
 ** C/C++
 #+begin_src emacs-lisp
-  (use-package cc-mode
-    ;; built-in
+  (use-package cc-mode ;; built-in
     :hook
     (c-mode-common-hook . lsp)
     (c-mode-hook . lsp)
-    (c++-mode-hook . lsp)
-    )
+    (c++-mode-hook . lsp))
 
   (use-package lsp-clangd ;; part of the lsp package
     :after lsp
@@ -1382,62 +1398,62 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       (indent-tabs-mode . nil)
       (c-comment-only-line-offset . 0)
       (c-hanging-braces-alist . ((defun-open after)
-				 (defun-close before after)
-				 (class-open after)
-				 (class-close before after)
-				 (inexpr-class-open after)
-				 (inexpr-class-close before)
-				 (namespace-open after)
-				 (inline-open after)
-				 (inline-close before after)
-				 (block-open after)
-				 (block-close . c-snug-do-while)
-				 (extern-lang-open after)
-				 (extern-lang-close after)
-				 (statement-case-open after)
-				 (substatement-open after)))
+                                 (defun-close before after)
+                                 (class-open after)
+                                 (class-close before after)
+                                 (inexpr-class-open after)
+                                 (inexpr-class-close before)
+                                 (namespace-open after)
+                                 (inline-open after)
+                                 (inline-close before after)
+                                 (block-open after)
+                                 (block-close . c-snug-do-while)
+                                 (extern-lang-open after)
+                                 (extern-lang-close after)
+                                 (statement-case-open after)
+                                 (substatement-open after)))
       (c-hanging-colons-alist . ((case-label)
-				 (label after)
-				 (access-label after)
-				 (member-init-intro before)
-				 (inher-intro)))
+                                 (label after)
+                                 (access-label after)
+                                 (member-init-intro before)
+                                 (inher-intro)))
       (c-hanging-semi&comma-criteria
        . (c-semi&comma-no-newlines-for-oneline-inliners
-	  c-semi&comma-inside-parenlist
-	  c-semi&comma-no-newlines-before-nonblanks))
+          c-semi&comma-inside-parenlist
+          c-semi&comma-no-newlines-before-nonblanks))
       (c-indent-comments-syntactically-p . t)
       (comment-column . 40)
       (c-indent-comment-alist . ((other . (space . 2))))
       (c-cleanup-list . (brace-else-brace
-			 brace-elseif-brace
-			 brace-catch-brace
-			 empty-defun-braces
-			 defun-close-semi
-			 list-close-comma
-			 scope-operator))
+                         brace-elseif-brace
+                         brace-catch-brace
+                         empty-defun-braces
+                         defun-close-semi
+                         list-close-comma
+                         scope-operator))
       (c-offsets-alist . ((arglist-intro google-c-lineup-expression-plus-4)
-			  (func-decl-cont . ++)
-			  (member-init-intro . ++)
-			  (inher-intro . ++)
-			  (comment-intro . 0)
-			  (arglist-close . c-lineup-arglist)
-			  (topmost-intro . 0)
-			  (block-open . 0)
-			  (inline-open . 0)
-			  (substatement-open . 0)
-			  (statement-cont
-			   .
-			   (,(when (fboundp 'c-no-indent-after-java-annotations)
-			       'c-no-indent-after-java-annotations)
-			    ,(when (fboundp 'c-lineup-assignments)
-			       'c-lineup-assignments)
-			    ++))
-			  (label . /)
-			  (case-label . +)
-			  (statement-case-open . +)
-			  (statement-case-intro . +) ; case w/o {
-			  (access-label . /)
-			  (innamespace . 0))))
+                          (func-decl-cont . ++)
+                          (member-init-intro . ++)
+                          (inher-intro . ++)
+                          (comment-intro . 0)
+                          (arglist-close . c-lineup-arglist)
+                          (topmost-intro . 0)
+                          (block-open . 0)
+                          (inline-open . 0)
+                          (substatement-open . 0)
+                          (statement-cont
+                           .
+                           (,(when (fboundp 'c-no-indent-after-java-annotations)
+                               'c-no-indent-after-java-annotations)
+                            ,(when (fboundp 'c-lineup-assignments)
+                               'c-lineup-assignments)
+                            ++))
+                          (label . /)
+                          (case-label . +)
+                          (statement-case-open . +)
+                          (statement-case-intro . +) ; case w/o {
+                          (access-label . /)
+                          (innamespace . 0))))
     "OpenJDK C/C++ Programming Style.")
 
   (c-add-style "OpenJDK" openjdk-cc-style nil)
@@ -1446,8 +1462,9 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package rustic
     :ensure t
-    :hook ((rustic-mode-hook . lsp)
-           (rustic-mode-hook . company-mode)))
+    :hook
+    (rustic-mode-hook . lsp)
+    (rustic-mode-hook . company-mode))
 
   (setq mouse-wheel-scroll-amount '(3 ((shift) . 1) ((control) . nil)))
   (setq mouse-wheel-progressive-speed nil)
