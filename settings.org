@@ -1747,6 +1747,30 @@ Elpy currently has problems with upstream ~jedi~.
   (use-package git-modes
     :ensure t)
 #+end_src
+* Tools
+** spray - A speed reading mode for Emacs
+#+begin_src emacs-lisp
+  (use-package spray
+    :ensure t
+    :config
+    (setq spray-wpm 375) ;; Words per minute
+    (setq spray-height 400) ;; Height of characters
+    (setq spray-margin-top 1) ;; Character margin at top of buffer
+    (setq spray-margin-left 1) ;; Character margin at left of buffer
+    (setq spray-ramp 3) ;; Initial words before ramping up to full speed
+    :bind (("<f6>" . spray-mode)
+           :map spray-mode-map
+           ("SPC" . spray-start/stop)
+           ("h" . spray-backward-word)
+           ("<left>" . spray-backward-word)
+           ("l" . spray-forward-word)
+           ("<right>" . spray-forward-word)
+           ("f" . spray-faster)
+           ("s" . spray-slower)
+           ("q" . spray-quit)
+           ("RET" . spray-quit)
+           ("<return>" . spray-quit)))
+#+end_src
 * OTHER
 #+begin_src emacs-lisp
   (defun my/ref-find-definitions-at-mouse (event)
