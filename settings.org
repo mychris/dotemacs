@@ -1480,13 +1480,20 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
                     ("\\.topml$" . tuareg-mode))
                   auto-mode-alist)))
 
-  (use-package merlin
-    :ensure t
-    :after tuareg
-    :config
-    (add-hook 'tuareg-mode-hook 'merlin-mode)
-    (add-hook 'merlin-mode-hook #'company-mode)
-    (setq merlin-error-after-save nil))
+  ;(use-package merlin
+  ;  :ensure t
+  ;  :after tuareg
+  ;  :config
+  ;  (add-hook 'tuareg-mode-hook 'merlin-mode)
+  ;  (add-hook 'merlin-mode-hook #'company-mode)
+  ;  (setq merlin-error-after-save nil))
+
+  (use-package lsp-ocaml ;; Part of lsp-package
+    :after (tuareg lsp)
+    :hook
+    (tuareg-mode-hook . lsp)
+    (tuareg-mode-hook . company-mode)
+    )
 
   (use-package utop
     :ensure t
