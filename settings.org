@@ -1681,6 +1681,18 @@ Elpy currently has problems with upstream ~jedi~.
                 ("M-3" . nil)
                 ("M-4" . nil)))
 
+  (use-package git-commit ;; part of magit
+    :ensure nil
+    :config
+    (setq git-commit-summary-max-length 72)
+    :hook
+    (git-commit-mode-hook . (lambda ()
+                              (setq-local fill-column 72)
+                              (display-fill-column-indicator-mode 1)))
+    :bind (:map git-commit-mode-map
+                ("C-c c" . with-editor-finish)
+                ("C-c k" . with-editor-cancel)))
+
   (use-package git-modes
     :ensure t)
 #+end_src
