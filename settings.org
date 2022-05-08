@@ -1096,6 +1096,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :config
     (setq keycast-separator-width 1)
     (setq keycast-mode-line-remove-tail-elements nil)
+    (setq keycast-mode-line-insert-after 'mode-line-buffer-identification)
     (dolist (input '(self-insert-command
                      org-self-insert-command))
       (add-to-list 'keycast-substitute-alist `(,input "." "Typing…")))
