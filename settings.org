@@ -17,7 +17,7 @@ This is mostly use-package and local utilities which are used throught the confi
   (use-package emacs
     :ensure nil
     :demand
-    :config
+    :init
     (global-hl-line-mode 1) ;; highlight the line in all windows
     (setq-default large-file-warning-threshold (* 100 1000 1000))
     (setq-default frame-title-name '("%b")) ;; set frame title to buffer name
@@ -74,6 +74,7 @@ This is mostly use-package and local utilities which are used throught the confi
 
   (use-package emacs
     :ensure nil
+    :demand
     :init
     (setq-default initial-buffer-choice t)
     (setq-default inhibit-startup-message t)
@@ -85,6 +86,7 @@ This is mostly use-package and local utilities which are used throught the confi
 #+begin_src emacs-lisp
   (use-package emacs
     :ensure nil
+    :demand
     :init
     (set-terminal-coding-system 'utf-8)
     (set-keyboard-coding-system 'utf-8)
@@ -124,6 +126,7 @@ This is mostly use-package and local utilities which are used throught the confi
 #+begin_src emacs-lisp
   (use-package emacs
     :ensure nil
+    :demand
     :init
     (let
         ((backup-dir (file-name-as-directory (expand-file-name "backups" user-emacs-cache-directory))))
@@ -139,6 +142,7 @@ This is mostly use-package and local utilities which are used throught the confi
 #+begin_src emacs-lisp
   (use-package emacs
     :ensure nil
+    :demand
     :init
     (let
         ((auto-save-dir (file-name-as-directory (expand-file-name "auto-save" user-emacs-cache-directory)))
@@ -914,6 +918,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package emacs
     :ensure nil
+    :demand
     :init
     (setq-default save-interprogram-paste-before-kill t))
 #+end_src
@@ -1073,6 +1078,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package emacs
     :ensure nil
+    :demand
     :init
     (setq-default line-number-mode t)
     (setq-default column-number-mode t)
