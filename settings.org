@@ -1656,7 +1656,7 @@ Elpy currently has problems with upstream ~jedi~.
                 ("M-3" . nil)
                 ("M-4" . nil)))
 
-  (use-package gitignore-mode
+  (use-package git-modes
     :ensure t)
 #+end_src
 ** Monky  - Control Hg from Emacs
