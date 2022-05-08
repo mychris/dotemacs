@@ -1683,14 +1683,6 @@ Elpy currently has problems with upstream ~jedi~.
   (use-package git-modes
     :ensure t)
 #+end_src
-** Monky  - Control Hg from Emacs
-#+begin_src emacs-lisp
-  (use-package monky
-    :ensure t
-    :commands monky-status
-    :config
-    (setq-default monky-process-type 'cmdserver))
-#+end_src
 * OTHER
 #+begin_src emacs-lisp
   (defun my/ref-find-definitions-at-mouse (event)
