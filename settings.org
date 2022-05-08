@@ -193,7 +193,7 @@ This is mostly use-package and local utilities which are used throught the confi
     (setq gcmh-idle-delay 'auto)
     (setq gcmh-auto-idle-delay-factor 10)
     (setq gcmh-high-cons-threshold (* 16 1024 1024))
-    :hook (emac-start-hook . (lambda ()
+    :hook (emacs-startup-hook . (lambda ()
                                (gcmh-mode 1))))
 #+end_src
 ** utils - Personal utilities
