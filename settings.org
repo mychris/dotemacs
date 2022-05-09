@@ -1753,6 +1753,13 @@ Elpy currently has problems with upstream ~jedi~.
     :ensure t)
 #+end_src
 * Tools
+** GNU Hyperbole - The Everyday Hypertextual Information Manager
+#+begin_src emacs-lisp
+  (use-package hyperbole
+    :ensure t
+    :hook (emacs-startup-hook . hyperbole-mode)
+    )
+#+end_src
 ** spray - A speed reading mode for Emacs
 #+begin_src emacs-lisp
   (use-package spray
