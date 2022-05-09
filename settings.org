@@ -7,9 +7,8 @@
 To please the compiler, we need to require all the dependencies the settings have, which are not loaded using use-package, or are needed by use-package.
 This is mostly use-package and local utilities which are used throught the configuration or are configured to be used interactively.0
 #+begin_src emacs-lisp
-  (cl-eval-when 'compile
-    (require 'use-package)
-    (require 'my-utils))
+  (require 'use-package)
+  (require 'my-utils)
 #+end_src
 * Miscellaneous settings
 ** General Emacs configuration
@@ -52,8 +51,8 @@ This is mostly use-package and local utilities which are used throught the confi
 #+begin_src emacs-lisp
   (use-package server
     :ensure nil
-    :defer t
-    :config
+    :commands (server-start)
+    :init
     (run-with-idle-timer 5 nil (lambda ()
                                  (server-start))))
 
@@ -120,8 +119,7 @@ This is mostly use-package and local utilities which are used throught the confi
     :init
     (setq-default save-place-file (expand-file-name "saveplace" user-emacs-cache-directory))
     (setq-default save-place-forget-unreadable-files t)
-    :config
-    (save-place-mode 1))
+    :hook (emacs-startup-hook . save-place-mode))
 #+end_src
 ** Backups
 #+begin_src emacs-lisp
@@ -166,8 +164,7 @@ This is mostly use-package and local utilities which are used throught the confi
     (setq-default recentf-save-file (expand-file-name "recentf" user-emacs-cache-directory))
     (setq-default recentf-max-saved-items 200)
     (setq-default recentf-exclude '("\\.gz" "\\.xz" "\\.zip" "/elpa/" "/ssh:" "/sudo:"))
-    :config
-    (recentf-mode 1))
+    :hook (emacs-startup-hook . recentf-mode))
 #+end_src
 ** Line numbers
 #+begin_src emacs-lisp
@@ -205,12 +202,11 @@ This is mostly use-package and local utilities which are used throught the confi
   (use-package gcmh
     :ensure t
     :diminish gcmh-mode
-    :config
+    :init
     (setq gcmh-idle-delay 'auto)
     (setq gcmh-auto-idle-delay-factor 10)
     (setq gcmh-high-cons-threshold (* 16 1024 1024))
-    :hook (emacs-startup-hook . (lambda ()
-                               (gcmh-mode 1))))
+    :hook (emacs-startup-hook . gcmh-mode))
 #+end_src
 ** utils - Personal utilities
 #+begin_src emacs-lisp
@@ -405,8 +401,13 @@ This is mostly use-package and local utilities which are used throught the confi
   (use-package imenu-list
     :ensure t
     :after imenu
-    :hook
-    (imenu-list-major-mode-hook . (lambda () (display-line-numbers-mode 0)))
+    :defer t
+    :commands (imenu-list)
+    :functions (imenu-list-ret-dwim
+                imenu-list-resize-window
+                imenu-list-update
+                imenu-list-show
+                imenu-list-quit-window)
     :config
     (setq imenu-list-idle-update-delay-time 0.5)
     (setq imenu-list-porition 'right)
@@ -430,6 +431,8 @@ This is mostly use-package and local utilities which are used throught the confi
       (interactive)
       (call-interactively #'imenu-list-ret-dwim)
       (kill-buffer "*Ilist*"))
+    :hook
+    (imenu-list-major-mode-hook . (lambda () (display-line-numbers-mode 0)))
     :bind (("<f7>" . my/imenu-list-toggle)
            :map imenu-list-major-mode-map
            ("RET" . imenu-list-display-dwim)
@@ -1009,6 +1012,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package ace-window
     :ensure t
+    :defer t
     :config
     (setq aw-keys '(?1 ?2 ?3 ?4 ?5 ?6 ?7 ?8 ?9))
     (setq aw-background nil)
