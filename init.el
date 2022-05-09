@@ -58,9 +58,9 @@
   ;;  2 max optimization level fully adherent to the language semantic.
   ;;  3 max optimization level, to be used only when necessary.
   ;;    Warning: with 3, the compiler is free to perform dangerous optimizations.
-  (setq native-comp-speed -1)
+  (setq native-comp-speed 2)
   ;; Non-nil to prevent native-compiling of Emacs Lisp code.
-  (setq no-native-compile t)
+  (setq no-native-compile nil)
   ;; Non-nil means to natively compile packages as part of their installation.
   (setq package-native-compile t)
   ;; Whether to report warnings and errors from asynchronous native compilation.
