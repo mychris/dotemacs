@@ -103,12 +103,12 @@ This is mostly use-package and local utilities which are used throught the confi
   (use-package savehist
     :ensure nil
     :diminish
+    :commands (savehist-mode)
     :init
     (setq-default savehist-file (expand-file-name "savehist" user-emacs-cache-directory))
     (setq-default history-length 1000)
     (setq-default history-delete-duplicates t)
     (setq-default savehist-save-minibuffer-history t)
-    :config
     (savehist-mode 1))
 #+end_src
 ** Saveplace (cursor position)
@@ -171,12 +171,12 @@ This is mostly use-package and local utilities which are used throught the confi
   (use-package display-line-numbers
     :ensure nil
     :diminish
+    :commands (display-line-numbers-mode global-display-line-numbers-mode)
     :init
     (setq-default display-line-numbers-type t)
     (setq-default display-line-numbers-width-start t)
     (setq-default display-line-numbers-grow-only t)
     (set-face-attribute 'line-number-current-line nil :weight 'bold)
-    :config
     (global-display-line-numbers-mode)
     :hook
     (prog-mode-hook . (lambda ()
@@ -185,16 +185,19 @@ This is mostly use-package and local utilities which are used throught the confi
 ** S - The long lost Emacs string manipulation library
 #+begin_src emacs-lisp
   (use-package s
+    :demand
     :ensure t)
 #+end_src
 ** f - Modern API for working with files and directories
 #+begin_src emacs-lisp
   (use-package f
+    :demand
     :ensure t)
 #+end_src
 ** dash - A modern list API for Emacs.
 #+begin_src emacs-lisp
   (use-package dash
+    :demand
     :ensure t)
 #+end_src
 ** GCMH - the Garbage Collector Magic Hack
@@ -495,7 +498,8 @@ This is mostly use-package and local utilities which are used throught the confi
 #+begin_src emacs-lisp
   (use-package marginalia
     :ensure t
-    :config
+    :commands (marginalia-mode)
+    :init
     (setq-default marginalia-annotators
                   '(marginalia-annotators-heavy
                     marginalia-annotators-light))
@@ -704,6 +708,7 @@ This is mostly use-package and local utilities which are used throught the confi
 #+begin_src emacs-lisp
   (use-package man
     :ensure nil
+    :functions (Man-next-section)
     :config
     (setq Man-notify-method 'aggressive)
     :bind (:map Man-mode-map
@@ -806,7 +811,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 
   (use-package treemacs-persp
     :ensure t
-    :after (:all treemacs pers-mode))
+    :after (:all treemacs perspective))
 #+end_src
 ** Quick file opening shortcuts
 #+begin_src emacs-lisp
@@ -1598,7 +1603,8 @@ Also, it looks like parameter substitution inside strings are not to be complete
 #+begin_src emacs-lisp
   (use-package sh-script
     :ensure nil
-    :after (:all company-shell flycheck-mode)
+    :after (:all company-shell flycheck)
+    :commands (sh-mode)
     :init
     (defun my/configure-sh-mode ()
       (setq-local tab-width 4)
@@ -1617,6 +1623,7 @@ Also, it looks like parameter substitution inside strings are not to be complete
 
   (use-package shell
     :ensure nil
+    :commands (shell-mode)
     :config
     (setq-default sh-basic-offset 4)
     :hook
@@ -1627,7 +1634,6 @@ Also, it looks like parameter substitution inside strings are not to be complete
     :init
     (setq company-shell-delete-duplicates t)
     (setq company-shell-use-help-arg nil))
-
 #+end_src
 ** Python
 Elpy currently has problems with upstream ~jedi~.
