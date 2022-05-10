@@ -1309,6 +1309,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   (use-package company
     :ensure t
     :diminish
+    :after (yasnippet)
     :config
     (setq tab-always-indent 'complete)
     (setq company-tooltip-align-annotations t)
@@ -1591,28 +1592,36 @@ Also, it looks like parameter substitution inside strings are not to be complete
 #+begin_src emacs-lisp
   (use-package sh-script
     :ensure nil
-    :config
-    (setq-default sh-basic-offset 2)
+    :after (company-shell)
+    :init
+    (defun my/configure-sh-mode ()
+      (setq-local tab-width 4)
+      (setq-local indent-tabs-mode nil)
+      (setq-local fill-column 119)
+      (setq-local show-trailing-whitespace t)
+      (setq-local company-backends '((company-dabbrev-code :with company-yasnippet)
+                                     (company-shell :with company-yasnippet)
+                                     (company-shell-env :with company-yasnippet))))
+    (setq-default sh-basic-offset 4)
     :hook
-    (sh-mode-hook . flycheck-mode))
+    (sh-mode-hook . flycheck-mode)
+    (sh-mode-hook . company-mode)
+    (sh-mode-hook . display-fill-column-indicator-mode)
+    (sh-mode-hook . my/configure-sh-mode))
 
   (use-package shell
     :ensure nil
     :config
-    (setq-default sh-basic-offset 2)
+    (setq-default sh-basic-offset 4)
     :hook
-    (sh-mode-hook . flycheck-mode)
     (shell-mode-hook . (lambda () (display-line-numbers-mode 0))))
 
   (use-package company-shell
     :ensure t
-    :after (company sh-script)
-    :config
-    :hook
-    (sh-mode-hook . (lambda ()
-                      (set
-                       (make-local-variable 'company-backends)
-                       '((company-dabbrev-code company-shell company-shell-env))))))
+    :init
+    (setq company-shell-delete-duplicates t)
+    (setq company-shell-use-help-arg nil))
+
 #+end_src
 ** Python
 Elpy currently has problems with upstream ~jedi~.
