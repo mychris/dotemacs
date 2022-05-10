@@ -232,13 +232,13 @@ This is mostly use-package and local utilities which are used throught the confi
 #+begin_src emacs-lisp
   (use-package org-evil
     :ensure t
-    :after (evil org))
+    :after (:all evil org))
 #+end_src
 ** evil-collection - A set of keybindings for Evil mode
 #+begin_src emacs-lisp
   (use-package evil-collection
     :ensure t
-    :after evil
+    :after (:all evil)
     :diminish evil-collection-unimpaired-mode
     :config
     (evil-collection-init))
@@ -247,7 +247,7 @@ This is mostly use-package and local utilities which are used throught the confi
 #+begin_src emacs-lisp
   (use-package evil-escape
     :ensure t
-    :after evil
+    :after (:all evil)
     :diminish
     :config
     (evil-escape-mode)
@@ -372,7 +372,7 @@ This is mostly use-package and local utilities which are used throught the confi
 #+begin_src emacs-lisp
   (use-package counsel
     :ensure t
-    :after ivy
+    :after (:all ivy)
     :bind (("M-x" . counsel-M-x)
            ("C-x C-f" . counsel-find-file)
            :map minibuffer-local-map
@@ -382,7 +382,7 @@ This is mostly use-package and local utilities which are used throught the confi
 #+begin_src emacs-lisp
   (use-package swiper
     :ensure t
-    :after ivy
+    :after (:all ivy)
     :bind (("C-s" . swiper))
     :init
     (defun swiper-advice-recenter ()
@@ -400,7 +400,7 @@ This is mostly use-package and local utilities which are used throught the confi
 
   (use-package imenu-list
     :ensure t
-    :after imenu
+    :after (:all imenu)
     :defer t
     :commands (imenu-list)
     :functions (imenu-list-ret-dwim
@@ -486,7 +486,7 @@ This is mostly use-package and local utilities which are used throught the confi
 
   (use-package consult-lsp
     :ensure t
-    :after (lsp consult)
+    :after (:all lsp consult)
     :bind (:map lsp-mode-map
                 ("M-s s" . consult-lsp-file-symbols))
     )
@@ -520,13 +520,13 @@ This is mostly use-package and local utilities which are used throught the confi
 
   (use-package embark-consult
     :ensure t
-    :after (embark consult)
+    :after (:all embark consult)
     :demand t
     :hook (embark-collect-mode-hook . embark-consult-preview-minor-mode))
 
   (use-package zed-embark
     :ensure nil
-    :after (embark consult)
+    :after (:all embark consult)
     :hook
     (prot-embark-clear-live-buffers . zed-embark-clear-all-collection-buffers)
     :bind (:map minibuffer-local-completion-map
@@ -596,7 +596,7 @@ This is mostly use-package and local utilities which are used throught the confi
 #+begin_src emacs-lisp
   (use-package helm-rg
     :ensure t
-    :after helm)
+    :after (:all helm))
 #+end_src
 ** perspective - switch between named "perspectives" of the editor
 #+begin_src emacs-lisp
@@ -662,7 +662,7 @@ This is mostly use-package and local utilities which are used throught the confi
 
   (use-package zed-eyebrowse
     :ensure nil
-    :after (eyebrowse)
+    :after (:all eyebrowse)
     :bind (("M-~" . zed-eyebrowse-toggle-monocle))
     :hook
     (eyebrowse-pre-window-switch-hook . zed-eyebrowse-monocle-window-config-switch)
@@ -798,15 +798,15 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 
   (use-package treemacs-projectile
     :ensure t
-    :after (treemacs projectile))
+    :after (:all treemacs projectile))
 
   (use-package treemacs-magit
     :ensure t
-    :after (treemacs magit))
+    :after (:all treemacs magit))
 
   (use-package treemacs-persp
     :ensure t
-    :after (treemacs pers-mode))
+    :after (:all treemacs pers-mode))
 #+end_src
 ** Quick file opening shortcuts
 #+begin_src emacs-lisp
@@ -1162,7 +1162,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 
   (use-package em-hist
     :ensure nil
-    :after esh-mode
+    :after (:all esh-mode)
     :config
     (setq-default eshell-history-file-name (expand-file-name "eshell-history" user-emacs-cache-directory))
     (setq-default eshell-hist-ignoredups t)
@@ -1213,7 +1213,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package helm-projectile
     :ensure t
-    :after (helm projectile)
+    :after (:all helm projectile)
     :config
     (helm-projectile-on))
 #+end_src
@@ -1221,7 +1221,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package fzf
     :ensure t
-    :after (projectile ggtags))
+    :after (:all projectile ggtags))
 #+end_src
 * Programming generic
 ** abbrev [built-in]
@@ -1258,7 +1258,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package lsp-mode
     :ensure t
-    :after (company xref)
+    :after (:all company xref)
     :commands (lsp)
     :init
     (setq lsp-keymap-prefix "s-g")
@@ -1280,7 +1280,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 
   (use-package lsp-ui
     :ensure t
-    :after lsp-mode
+    :after (:all lsp-mode)
     :hook (lsp-mode-hook . lsp-ui-mode)
     :config
     (setq lsp-ui-peek-enable t)
@@ -1309,7 +1309,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   (use-package company
     :ensure t
     :diminish
-    :after (yasnippet)
+    :after (:all yasnippet)
     :config
     (setq tab-always-indent 'complete)
     (setq company-tooltip-align-annotations t)
@@ -1347,7 +1347,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 
   (use-package company-quickhelp
     :ensure t
-    :after company
+    :after (:all company)
     :init
     :hook (company-mode-hook . company-quickhelp-mode))
 #+end_src
@@ -1423,7 +1423,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 
   (use-package flycheck-pos-tip
     :ensure t
-    :after flycheck
+    :after (:all flycheck)
     :init
     (eval-after-load 'flycheck (flycheck-pos-tip-mode)))
 #+end_src
@@ -1439,7 +1439,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 
   (use-package lsp-clangd ;; part of the lsp package
     :ensure nil
-    :after lsp
+    :after (:all lsp)
     )
 
   (defconst openjdk-cc-style
@@ -1553,7 +1553,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 
   ;(use-package merlin
   ;  :ensure t
-  ;  :after tuareg
+  ;  :after (:all tuareg)
   ;  :config
   ;  (add-hook 'tuareg-mode-hook 'merlin-mode)
   ;  (add-hook 'merlin-mode-hook #'company-mode)
@@ -1561,7 +1561,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 
   (use-package lsp-ocaml ;; Part of lsp-package
     :ensure nil
-    :after (tuareg lsp)
+    :after (:all tuareg lsp)
     :hook
     (tuareg-mode-hook . lsp)
     (tuareg-mode-hook . company-mode)
@@ -1569,7 +1569,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 
   (use-package utop
     :ensure t
-    :after tuareg
+    :after (:all tuareg)
     :config
     (autoload 'utop-minor-mode "utop" "Minor mode for utop" t)
     (add-hook 'tuareg-mode-hook 'utop-minor-mode)
@@ -1580,7 +1580,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 
   (use-package dune
     :ensure t
-    :after tuareg)
+    :after (:all tuareg))
 #+end_src
 ** Shell
 The shell mode is built-in.
@@ -1593,7 +1593,7 @@ Also, it looks like parameter substitution inside strings are not to be complete
 #+begin_src emacs-lisp
   (use-package sh-script
     :ensure nil
-    :after (company-shell flycheck-mode)
+    :after (:all company-shell flycheck-mode)
     :init
     (defun my/configure-sh-mode ()
       (setq-local tab-width 4)
@@ -1641,7 +1641,7 @@ Elpy currently has problems with upstream ~jedi~.
   (use-package elpy
     :ensure t
     :defer t
-    :after python-mode
+    :after (:all python-mode)
     :init
     (advice-add 'python-mode :before 'elpy-enable))
 #+end_src
@@ -1654,7 +1654,7 @@ Elpy currently has problems with upstream ~jedi~.
 #+begin_src emacs-lisp
   (use-package jenkinsfile-mode
     :ensure t
-    :after groovy-mode)
+    :after (:all groovy-mode))
 #+end_src
 * Markup languages
 ** Org Mode
@@ -1687,7 +1687,7 @@ Elpy currently has problems with upstream ~jedi~.
 
   (use-package org-superstar
     :ensure t
-    :after org
+    :after (:all org)
     :commands org-superstar-mode
     :config
     (setq-default org-superstar-remove-leading-stars t)
