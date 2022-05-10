@@ -826,6 +826,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package whitespace
     :ensure nil
+    :diminish
     :config
     (setq-default whitespace-style '(face tab-mark))
     :hook
@@ -984,6 +985,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package smartparens
     :ensure t
+    :diminish
     :hook (prog-mode-hook . smartparens-mode)
     :config
     (defun my/sp-beginning-of-sexp (&optional ARG)
@@ -1767,6 +1769,7 @@ Elpy currently has problems with upstream ~jedi~.
 #+begin_src emacs-lisp
   (use-package hyperbole
     :ensure t
+    :diminish
     :hook (emacs-startup-hook . hyperbole-mode)
     )
 #+end_src
