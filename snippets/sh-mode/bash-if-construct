@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: if [[ ... ]]; then ... ; fi
+# key: if
+# condition: (string= sh-shell "bash")
+# --
+if [[ ${1:-f file} ]]; then
+    $0
+fi

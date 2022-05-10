@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: for ... in ...; do ... done
+# key: for
+# --
+for ${1:name} in ${2:word}; do
+    $0
+done
