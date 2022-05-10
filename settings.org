@@ -22,6 +22,7 @@ This is mostly use-package and local utilities which are used throught the confi
     (setq-default frame-title-name '("%b")) ;; set frame title to buffer name
     (setq-default echo-keystrokes 0)        ;; use the which-key package
     (setq-default visible-bell t)
+    (setq-default initial-major-mode 'text-mode)
     (defalias 'yes-or-no-p 'y-or-n-p)
     (put 'narrow-to-region 'disabled nil)
     (put 'upcase-region 'disabled nil)
@@ -721,9 +722,8 @@ This is mostly use-package and local utilities which are used throught the confi
     :defer 1
     :diminish which-key-mode
     :init
-    (which-key-mode 1)
-    :config
-    (setq-default which-key-idle-delay 0.4))
+    (setq-default which-key-idle-delay 0.4)
+    (which-key-mode 1))
 #+end_src
 ** free-keys - Show free keybindings for modkeys or prefixes
 I found the ~free-keys~ documentation a bit confusing in the beginning.
@@ -832,7 +832,8 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   (use-package whitespace
     :ensure nil
     :diminish
-    :config
+    :commands (whitespace-mode)
+    :init
     (setq-default whitespace-style '(face tab-mark))
     :hook
     (prog-mode-hook . whitespace-mode))
@@ -1603,7 +1604,6 @@ Also, it looks like parameter substitution inside strings are not to be complete
 #+begin_src emacs-lisp
   (use-package sh-script
     :ensure nil
-    :after (:all company-shell flycheck)
     :commands (sh-mode)
     :init
     (defun my/configure-sh-mode ()
@@ -1786,7 +1786,8 @@ Elpy currently has problems with upstream ~jedi~.
 #+begin_src emacs-lisp
   (use-package spray
     :ensure t
-    :config
+    :commands (spray-mode)
+    :init
     (setq spray-wpm 375) ;; Words per minute
     (setq spray-height 400) ;; Height of characters
     (setq spray-margin-top 1) ;; Character margin at top of buffer

@@ -11,7 +11,7 @@
 (setq gc-cons-percentage 0.6)
 
 ;; Initialise installed packages
-(setq package-enable-at-startup t)
+(setq package-enable-at-startup nil)
 
 ;; Allow loading from the package cache.
 (setq package-quickstart t)
