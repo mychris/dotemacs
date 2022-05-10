@@ -1111,6 +1111,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   (use-package telephone-line
     :ensure t
     :diminish telephone-line-mode
+    :commands (telephone-line-mode)
     :init
     (setq telephone-line-height 24)
     (setq telephone-line-primary-left-separator 'telephone-line-cubed-left)
@@ -1129,11 +1130,12 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
                     telephone-line-misc-info-segment))
             (accent . (telephone-line-major-mode-segment))
             (nil . (telephone-line-airline-position-segment))))
-    (telephone-line-mode 1))
+    :hook
+    (emacs-startup-hook . telephone-line-mode))
 
   (use-package keycast
     :ensure t
-    :commands keycast-mode
+    :commands (keycast-mode)
     :config
     (setq keycast-separator-width 1)
     (setq keycast-mode-line-remove-tail-elements nil)
