@@ -1619,7 +1619,19 @@ Also, it looks like parameter substitution inside strings are not to be complete
     (sh-mode-hook . flycheck-mode)
     (sh-mode-hook . company-mode)
     (sh-mode-hook . display-fill-column-indicator-mode)
-    (sh-mode-hook . my/configure-sh-mode))
+    (sh-mode-hook . my/configure-sh-mode)
+    :bind (:map sh-mode-map
+                ("C-c C-c" . nil)
+                ("C-c C-f" . nil)
+                ("C-c TAB" . nil)
+                ("C-c C-n" . nil)
+                ("C-c C-o" . nil)
+                ("C-c C-s" . nil)
+                ("C-c C-t" . nil)
+                ("C-c C-u" . nil)
+                ("C-c C-w" . nil)
+                ("C-c C-x" . nil)
+                ("C-c C-z" . nil)))
 
   (use-package shell
     :ensure nil
@@ -1691,7 +1703,9 @@ Elpy currently has problems with upstream ~jedi~.
     :bind (:map org-mode-map
                 ("C-c a" . org-agenda)
                 ("C-c ." . org-time-stamp)
-                ("C-c C-." . org-time-stamp-inactive))
+                ("C-c C-." . org-time-stamp-inactive)
+                :map org-src-mode-map
+                ("C-c C-c" . org-edit-src-exit)))
     :hook
     (org-mode-hook . abbrev-mode)
     (org-mode-hook . (lambda () (setq indent-tabs-mode nil))))
