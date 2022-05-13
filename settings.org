@@ -5,7 +5,7 @@
 
 * Configuration dependencies
 To please the compiler, we need to require all the dependencies the settings have, which are not loaded using use-package, or are needed by use-package.
-This is mostly use-package and local utilities which are used throught the configuration or are configured to be used interactively.0
+This is mostly use-package and local utilities which are used throught the configuration or are configured to be used interactively.
 #+begin_src emacs-lisp
   (require 'use-package)
   (require 'my-utils)
@@ -1072,6 +1072,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (load-theme 'doom-one t))
 
   (use-package emacs
+    :ensure nil
     :init
     (defvar my/font-cycle-list nil
       "The list of fonts used by `my/font-cycle-step'")
@@ -1574,7 +1575,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (defun my/configure-elisp-mode ()
       (setq-local indent-tabs-mode nil)
       (setq-local fill-column 80)
-      (setq-local show-trailing-whitespace))
+      (setq-local show-trailing-whitespace t))
     :hook
     (elisp-mode-hook . (lambda ()
 			 (my/configure-elisp-mode)
