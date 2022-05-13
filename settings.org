@@ -1278,11 +1278,18 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package autoinsert
     :ensure nil
+    :diminish auto-insert-mode
+    :commands (auto-insert-mode define-auto-insert)
     :init
+    (defun my/auto-insert-using-yasnippet (mode name)
+      "Expand a yas snippet with the given NAME in MODE."
+      (yas-expand-snippet
+       (yas--template-content
+        (yas--get-template-by-uuid mode name))))
+    (setq auto-insert 'other)
     (setq auto-insert-query nil)
-    (setq auto-insert-directory (file-name-as-directory (expand-file-name "templates" user-emacs-directory)))
     (setq auto-insert-alist nil)
-    (add-to-list 'auto-insert-alist '(sh-mode . "template.sh"))
+    (define-auto-insert '(sh-mode . "Shell script") '(lambda () (my/auto-insert-using-yasnippet 'sh-mode "new-file-template")))
     :hook
     (find-file-hook . auto-insert)
     (emacs-startup-hook . auto-insert-mode))
@@ -1292,7 +1299,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   (use-package yasnippet
     :ensure t
     :diminish yas-minor-mode
-    :commands (yas-minor-mode yas-reload-all)
+    :commands (yas-minor-mode yas-reload-all yas-expand-snippet)
     :hook
     (prog-mode-hook . yas-minor-mode)
     (org-mode-hook . yas-minor-mode)
