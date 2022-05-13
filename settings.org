@@ -1548,9 +1548,18 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package elisp-mode
     :ensure nil
+    :init
+    (defun my/configure-elsip-mode ()
+      (setq-local indent-tabs-mode nil)
+      (setq-local fill-column 80)
+      (setq-local show-trailing-whitespace))
     :hook
-    (elisp-mode-hook . (lambda () (setq indent-tabs-mode nil)))
-    (emacs-lisp-mode-hook . (lambda () (setq indent-tabs-mode nil))))
+    (elisp-mode-hook . (lambda ()
+			 (my/configure-elsip-mode)
+			 (display-fill-column-indicator-mode)))
+    (emacs-lisp-mode-hook . (lambda ()
+			      (my/configure-elisp-mode)
+			      (display-fill-column-indicator-mode))))
 
   (use-package pp
     :ensure nil
