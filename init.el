@@ -125,23 +125,30 @@
 
 (add-to-list 'load-path (file-name-as-directory (expand-file-name "contrib" user-emacs-directory)))
 
-;; only load the org file if it is newer than the el file.
-;; Compile the el file after loading it from the org file.
-(let* ((settings-org (expand-file-name "settings.org" user-emacs-directory))
-       (settings-el (concat (file-name-sans-extension settings-org) ".el")))
-  (if (file-exists-p settings-org)
-      (if (and (file-exists-p settings-el)
-               (time-less-p
-                (file-attribute-modification-time (file-attributes settings-org))
-                (file-attribute-modification-time (file-attributes settings-el))))
-          ;; found that one somewhere, shaves off another 200ms during startup.
-          ;; no idea if this has any negative side effects, nothing emerged yet.
-          (let ((file-name-handler-alist nil))
-            (load (file-name-sans-extension settings-el)))
-        (progn
-          (require 'org)
-          (org-babel-load-file settings-org)
-          (byte-compile-file settings-el)))
-    (error "Init org file '%s' missing" settings-org)))
+(defun my/org-babel-load-file (file-org)
+  "Load the given `FILE-ORG' using `org-bable-load-file'.
+Also byte compiles the file and use the cached .elc, if there are no changes
+made to the original org file."
+  (let* ((file-el (concat (file-name-sans-extension file-org) ".el")))
+    (if (file-exists-p file-org)
+        (if (and (file-exists-p file-el)
+                 (time-less-p
+                  (file-attribute-modification-time (file-attributes file-org))
+                  (file-attribute-modification-time (file-attributes file-el))))
+            ;; found that one somewhere, shaves off another 200ms during startup.
+            ;; no idea if this has any negative side effects, nothing emerged yet.
+            (let ((file-name-handler-alist nil))
+              (load (file-name-sans-extension file-el)))
+          (progn
+            (require 'org)
+            (org-babel-load-file file-org)
+            (byte-compile-file file-el)))
+      (error "Init org file '%s' missing" file-org))))
+
+(let ((main-settings (expand-file-name "settings.org" user-emacs-directory))
+      (local-settings (expand-file-name "settings-local.org" user-emacs-directory)))
+  (my/org-babel-load-file main-settings)
+  (when (file-exists-p local-settings)
+    (my/org-babel-load-file local-settings)))
 
 ;;; init.el ends here

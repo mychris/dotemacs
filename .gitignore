@@ -2,6 +2,7 @@
 elpa/
 projectile-bookmarks.eld
 settings.el
+settings-local.*
 
 # those directories should be somewhere else, but keep them here in case
 # emacs is loaded without the configuration.
