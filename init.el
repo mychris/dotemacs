@@ -72,10 +72,13 @@
 ;; TODO: investigate
 (unless (boundp 'package-archives)
   (require 'package))
-(setq-default gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
+(require 'nsm)
+(require 'gnutls)
+(setq network-security-level 'high)
+(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
 (add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/"))
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
-(setq-default package-quickstart-file (expand-file-name "package-quickstart.el" user-emacs-cache-directory))
+(setq package-quickstart-file (expand-file-name "package-quickstart.el" user-emacs-cache-directory))
 (package-initialize)
 (when (not package-archive-contents)
   (package-refresh-contents)
@@ -125,6 +128,12 @@
 
 (add-to-list 'load-path (file-name-as-directory (expand-file-name "contrib" user-emacs-directory)))
 
+(defun my/file-time-less-p (a b)
+  "Return non-nil if the file modification time for `A' is less than `B'."
+  (time-less-p
+   (file-attribute-modification-time (file-attributes a))
+   (file-attribute-modification-time (file-attributes b))))
+
 (defun my/org-babel-load-file (file-org)
   "Load the given `FILE-ORG' using `org-bable-load-file'.
 Also byte compiles the file and use the cached .elc, if there are no changes
@@ -132,9 +141,7 @@ made to the original org file."
   (let* ((file-el (concat (file-name-sans-extension file-org) ".el")))
     (if (file-exists-p file-org)
         (if (and (file-exists-p file-el)
-                 (time-less-p
-                  (file-attribute-modification-time (file-attributes file-org))
-                  (file-attribute-modification-time (file-attributes file-el))))
+                 (my/file-time-less-p file-org file-el))
             ;; found that one somewhere, shaves off another 200ms during startup.
             ;; no idea if this has any negative side effects, nothing emerged yet.
             (let ((file-name-handler-alist nil))
