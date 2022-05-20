@@ -14,14 +14,14 @@
 (setq package-enable-at-startup nil)
 
 ;; Allow loading from the package cache.
-(setq package-quickstart t)
+(setq package-quickstart nil)
 
 ;; Do not resize the frame at this early stage.
 (setq frame-inhibit-implied-resize t)
 
 ;; Some early customizations
-(tool-bar-mode -1)   ;; this is too much
-(menu-bar-mode 1)    ;; for colleagues
-(scroll-bar-mode -1) ;; this is too much
+(tool-bar-mode 0)   ;; this is too much
+(menu-bar-mode 1)   ;; for colleagues
+(scroll-bar-mode 0) ;; this is too much
 
 ;;; early-init.el ends here
