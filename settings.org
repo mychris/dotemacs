@@ -82,7 +82,8 @@ This is mostly use-package and local utilities which are used throught the confi
     :commands (server-start)
     :init
     (run-with-idle-timer 5 nil (lambda ()
-                                 (server-start))))
+				 (when (not (display-graphic-p))
+				   (server-start)))))
 
   (use-package desktop
     :ensure nil
