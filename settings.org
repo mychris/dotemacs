@@ -1093,6 +1093,10 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :ensure t
     :defer 1)
 
+  (use-package gruber-darker-theme
+    :ensure t
+    :defer 1)
+
   (use-package doom-themes
     :ensure t
     :init
