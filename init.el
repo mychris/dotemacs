@@ -73,7 +73,7 @@
 (unless (boundp 'package-archives)
   (require 'package))
 (setq-default gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
-(add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/"))
+(add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/"))
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 (setq-default package-quickstart-file (expand-file-name "package-quickstart.el" user-emacs-cache-directory))
 (package-initialize)
