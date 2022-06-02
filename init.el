@@ -134,10 +134,10 @@
    (file-attribute-modification-time (file-attributes a))
    (file-attribute-modification-time (file-attributes b))))
 
-(defun my/org-babel-load-file (file-org)
+(defun my/org-babel-load-file (file-org &optional do-byte-compile)
   "Load the given `FILE-ORG' using `org-bable-load-file'.
-Also byte compiles the file and use the cached .elc, if there are no changes
-made to the original org file."
+Also byte compiles the file and use the cached .elc, if `DO-BYTE-COMPILE'
+evaluates to a non-nil value."
   (let* ((file-el (concat (file-name-sans-extension file-org) ".el")))
     (if (file-exists-p file-org)
         (if (and (file-exists-p file-el)
@@ -149,9 +149,12 @@ made to the original org file."
           (progn
             (require 'org)
             (org-babel-load-file file-org)
-            (byte-compile-file file-el)))
+            (when do-byte-compile
+              (byte-compile-file file-el))))
       (error "Init org file '%s' missing" file-org))))
 
+;; For now, do not byte compile the settings files. For some reason, this
+;; messes up some of the use-package declaration.
 (let ((main-settings (expand-file-name "settings.org" user-emacs-directory))
       (local-settings (expand-file-name "settings-local.org" user-emacs-directory)))
   (my/org-babel-load-file main-settings)
