@@ -1646,6 +1646,10 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :ensure t
     :init
     (add-to-list 'safe-local-variable-values '(eval projectile-project-compilation-cmd))
+    :hook
+    (tuareg-mode-hook . utop-minor-mode)
+    (tuareg-mode-hook . lsp)
+    (tuareg-mode-hook . company-mode)
     :config
     (add-hook 'tuareg-mode-hook #'electric-pair-local-mode)
     (setq auto-mode-alist
@@ -1661,28 +1665,18 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   ;  (add-hook 'merlin-mode-hook #'company-mode)
   ;  (setq merlin-error-after-save nil))
 
-  (use-package lsp-ocaml ;; Part of lsp-package
-    :ensure nil
-    :after (:all tuareg lsp)
-    :hook
-    (tuareg-mode-hook . lsp)
-    (tuareg-mode-hook . company-mode)
-    )
-
   (use-package utop
     :ensure t
-    :after (:all tuareg)
+    :commands (utop-minor-mode)
     :config
     (autoload 'utop-minor-mode "utop" "Minor mode for utop" t)
-    (add-hook 'tuareg-mode-hook 'utop-minor-mode)
     (setq utop-command "opam config exec -- dune utop . -- -emacs")
     :bind ((([remap tuareg-eval-phrase] . utop-eval-phrase)
             ([remap tuareg-eval-buffer] . utop-eval-buffer)
             ([remap tuareg-eval-region] . utop-eval-region))))
 
   (use-package dune
-    :ensure t
-    :after (:all tuareg))
+    :ensure t)
 #+end_src
 ** Shell
 The shell mode is built-in.
