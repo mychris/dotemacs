@@ -49,4 +49,5 @@
     (delete-window most-recent-window)))
 
 (provide 'my-utils)
-;;; utils.el ends here
+
+;;; my-utils.el ends here
