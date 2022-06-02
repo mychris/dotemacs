@@ -1530,11 +1530,6 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (c-mode-hook . lsp)
     (c++-mode-hook . lsp))
 
-  (use-package lsp-clangd ;; part of the lsp package
-    :ensure nil
-    :after (:all lsp)
-    )
-
   (defconst openjdk-cc-style
     `((c-recognize-knr-p . nil)
       (c-enable-xemacs-performance-kludge-p . t)
