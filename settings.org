@@ -922,7 +922,8 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :ensure t
     :defer 1
     :bind (("C-=" . er/expand-region)
-           ("C-+" . er/contract-region)))
+           ("C-+" . er/contract-region)
+           ("M-C-S-SPC" . er/mark-symbol)))
 
 #+end_src
 ** string-inflection - underscore -> UPCASE -> CamelCase -> lowerCamelCase conversion of names
@@ -1068,6 +1069,14 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :custom-face
     (aw-leading-char-face ((t (:inherit ace-jump-face-foreground :height 3.0))))
     :bind (([remap other-window] . ace-window)))
+#+end_src
+** multiple-cursors.el - Multiple cursors for Emacs.
+#+begin_src emacs-lisp
+  (use-package multiple-cursors
+    :ensure t
+    :bind (("M-C-SPC" . set-rectangular-region-anchor)
+           ("C->" . mc/mark-next-like-this)
+           ("C-<" . mc/mark-previous-like-this)))
 #+end_src
 * Searching
 ** isearch [builtin]
