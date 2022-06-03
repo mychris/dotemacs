@@ -1801,14 +1801,13 @@ Also, it looks like parameter substitution inside strings are not to be complete
     (setq company-shell-use-help-arg nil))
 #+end_src
 ** Python
-Elpy currently has problems with upstream ~jedi~.
 #+begin_src emacs-lisp
-  (use-package python-mode
-    :ensure t
+  (use-package python
+    :ensure nil
     :defer t
     :init
     (defun my/python-mode-hook ()
-      (setq fill-column 79))
+      (setq fill-column 88))
     :hook
     (python-mode-hook . my/python-mode-hook)
     (python-mode-hook . display-fill-column-indicator-mode)
@@ -1817,9 +1816,14 @@ Elpy currently has problems with upstream ~jedi~.
   (use-package elpy
     :ensure t
     :defer t
-    :after (:all python-mode)
+    :commands (elpy-enable elpy-config elpy-rpc-reinstall-virtualenv)
     :init
-    (advice-add 'python-mode :before 'elpy-enable))
+    (advice-add 'python-mode :before 'elpy-enable)
+    :config
+    (setq elpy-rpc-virtualenv-path 'default)
+    (setq elpy-rpc-python-command "python3")
+    (setq elpy-rpc-ignored-buffer-size (* 1024 1024)) ;; Some projects are nuts
+    (setq elpy-modules (delq 'elpy-module-yasnippet elpy-modules)))
 #+end_src
 ** Groovy
 #+begin_src emacs-lisp
