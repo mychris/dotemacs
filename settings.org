@@ -1088,6 +1088,15 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
            ("C->" . mc/mark-next-like-this)
            ("C-<" . mc/mark-previous-like-this)))
 #+end_src
+** view.el [built-in] - peruse file or buffer without editing
+#+begin_src emacs-lisp
+  (use-package view
+    :ensure nil
+    :bind (("C-`" . view-mode)
+           :map view-mode-map
+           ("n" . next-line)
+           ("p" . previous-line)))
+#+end_src
 * Searching
 ** isearch [builtin]
 #+begin_src emacs-lisp
