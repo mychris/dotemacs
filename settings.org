@@ -1014,6 +1014,25 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 
   (global-set-key [C-mouse-8] 'previous-buffer)
   (global-set-key [C-mouse-9] 'next-buffer)
+
+  (defun forward-paragraph-recenter (&optional arg)
+    "Move forward to end of paragraph and center point using `recenter'.
+  With argument `ARG', do it `ARG' times; a negative argument `ARG' = -N means
+  move backward N paragraphs."
+    (interactive "^p")
+    (call-interactively #'forward-paragraph)
+    (recenter nil t))
+
+  (defun backward-paragraph-recnter (&optional arg)
+    "Move backward to start of paragraph and center point using `recnter'.
+  With argument `ARG', do it `ARG' times;
+  a negative argument `ARG' = -N means move forward N paragraphs."
+    (interactive "^p")
+    (call-interactively #'backward-paragraph)
+    (recenter nil t))
+
+  (global-set-key (kbd "M-}") #'forward-paragraph-recenter)
+  (global-set-key (kbd "M-{") #'backward-paragraph-recenter)
 #+end_src
 ** golden-ratio-scroll-screen - Scroll half screen down or up, and highlight current line
 #+begin_src emacs-lisp
@@ -1021,6 +1040,9 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :ensure t
     :custom
     (golden-ratio-scroll-highlight-flag nil "Do not highlight current line before/after scroll")
+    :hook
+    (golden-ratio-scroll-screen-up-hook . (lambda () (recenter)))
+    (golden-ratio-scroll-screen-down-hook . (lambda () (recenter)))
     :bind (([remap scroll-down-command] . golden-ratio-scroll-screen-down)
            ([remap scroll-up-command] . golden-ratio-scroll-screen-up)))
 #+end_src
