@@ -12,10 +12,11 @@
 
 ;;;; Customization information
 
-;; No need for older versions anymore
-
 (when (version< emacs-version "27")
   (error "Emacs version < 27 no supported"))
+
+(when (not (member system-type '(gnu/linux)))
+  (error "Unsupported operating system %s" system-type))
 
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (when (file-exists-p custom-file)
