@@ -82,8 +82,8 @@ This is mostly use-package and local utilities which are used throught the confi
     :commands (server-start)
     :init
     (run-with-idle-timer 5 nil (lambda ()
-				 (when (not (display-graphic-p))
-				   (server-start)))))
+                                 (when (not (display-graphic-p))
+                                   (server-start)))))
 
   (use-package desktop
     :ensure nil
@@ -1008,7 +1008,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :custom
     (golden-ratio-scroll-highlight-flag nil "Do not highlight current line before/after scroll")
     :bind (([remap scroll-down-command] . golden-ratio-scroll-screen-down)
-	   ([remap scroll-up-command] . golden-ratio-scroll-screen-up)))
+           ([remap scroll-up-command] . golden-ratio-scroll-screen-up)))
 #+end_src
 ** move-text - Move current line or region with M-up or M-down.
 #+begin_src emacs-lisp
@@ -1486,40 +1486,40 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :config
     (define-fringe-bitmap 'flycheck-fringe-bitmap-one-excl
       (vector #b00000000
-	      #b00000000
-	      #b00000000
-	      #b00110000
-	      #b00110000
-	      #b00110000
-	      #b00110000
-	      #b00110000
-	      #b00110000
-	      #b00110000
-	      #b00110000
-	      #b00000000
-	      #b00110000
-	      #b00110000
-	      #b00000000
-	      #b00000000
-	      #b00000000))
+              #b00000000
+              #b00000000
+              #b00110000
+              #b00110000
+              #b00110000
+              #b00110000
+              #b00110000
+              #b00110000
+              #b00110000
+              #b00110000
+              #b00000000
+              #b00110000
+              #b00110000
+              #b00000000
+              #b00000000
+              #b00000000))
     (define-fringe-bitmap 'flycheck-fringe-bitmap-two-excl
       (vector #b00000000
-	      #b00000000
-	      #b00000000
-	      #b01100110
-	      #b01100110
-	      #b01100110
-	      #b01100110
-	      #b01100110
-	      #b01100110
-	      #b01100110
-	      #b01100110
-	      #b00000000
-	      #b01100110
-	      #b01100110
-	      #b00000000
-	      #b00000000
-	      #b00000000))
+              #b00000000
+              #b00000000
+              #b01100110
+              #b01100110
+              #b01100110
+              #b01100110
+              #b01100110
+              #b01100110
+              #b01100110
+              #b01100110
+              #b00000000
+              #b01100110
+              #b01100110
+              #b00000000
+              #b00000000
+              #b00000000))
 
     (flycheck-define-error-level 'error
       :severity 100
@@ -1651,11 +1651,11 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       (setq-local show-trailing-whitespace t))
     :hook
     (elisp-mode-hook . (lambda ()
-			 (my/configure-elisp-mode)
-			 (display-fill-column-indicator-mode)))
+                         (my/configure-elisp-mode)
+                         (display-fill-column-indicator-mode)))
     (emacs-lisp-mode-hook . (lambda ()
-			      (my/configure-elisp-mode)
-			      (display-fill-column-indicator-mode))))
+                              (my/configure-elisp-mode)
+                              (display-fill-column-indicator-mode))))
 
   (use-package pp
     :ensure nil
@@ -1813,11 +1813,11 @@ Elpy currently has problems with upstream ~jedi~.
        (python . t)
        (perl . t)))
     :bind (:map org-mode-map
-		("C-c a" . org-agenda)
-		("C-c ." . org-time-stamp)
-		("C-c C-." . org-time-stamp-inactive)
-		:map org-src-mode-map
-		("C-c C-c" . org-edit-src-exit))
+                ("C-c a" . org-agenda)
+                ("C-c ." . org-time-stamp)
+                ("C-c C-." . org-time-stamp-inactive)
+                :map org-src-mode-map
+                ("C-c C-c" . org-edit-src-exit))
     :hook
     (org-mode-hook . abbrev-mode)
     (org-mode-hook . (lambda () (setq indent-tabs-mode nil))))
@@ -1852,7 +1852,7 @@ Elpy currently has problems with upstream ~jedi~.
   (use-package yaml-mode
     :ensure t
     :mode (("\\.yml\\'" . yaml-mode)
-	   ("\\.yaml\\'" . yaml-mode)))
+           ("\\.yaml\\'" . yaml-mode)))
 #+end_src
 ** JSON
 #+begin_src emacs-lisp
