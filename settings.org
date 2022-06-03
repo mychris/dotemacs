@@ -299,6 +299,13 @@ This is mostly use-package and local utilities which are used throught the confi
   (use-package minibuffer
     :ensure nil
     :config
+    (defun switch-to-minibuffer-window ()
+      "Switch to minibuffer window (if active)"
+      (interactive)
+      (when (active-minibuffer-window)
+        (select-frame-set-input-focus (window-frame (active-minibuffer-window)))
+        (select-window (active-minibuffer-window))))
+
     (defun kill-other-buffers ()
       "Kill all other buffers."
       (interactive)
@@ -347,6 +354,7 @@ This is mostly use-package and local utilities which are used throught the confi
 
     :bind (("H-f" . myext-focus-minibuffer-or-completion)
            ("C-x k" . kill-this-buffer-save)
+           ("C-x C-o" . switch-to-minibuffer-window)
            :map minibuffer-local-completion-map
            ("RET" . minibuffer-force-complete-and-exit)
            ("<tab>" . minibuffer-complete)
