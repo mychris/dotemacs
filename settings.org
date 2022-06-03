@@ -794,7 +794,17 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 ** dired [built-in] - directory editor
 #+begin_src emacs-lisp
   (use-package dired
-    :ensure nil)
+    :ensure nil
+    :init
+    (setq dired-listing-switches "-AlGh --group-directories-first")
+    :bind (:map dired-mode-map
+                ("o" . dired-find-file)
+                ("C-o" . dired-find-file-other-window)
+                ("C-<return>" . dired-find-file-other-window)
+                ("<mouse-2>" . dired-mouse-find-file)
+                ("C-<mouse-2>" . dired-mouse-find-file-other-window)
+                ("C-<mouse-1>" . dired-mouse-find-file-other-window)
+                ("C-<down-mouse-1>" . dired-mouse-find-file-other-window)))
 #+end_src
 ** COMMENT neotree - A tree plugin like NerdTree for Vim
 #+begin_src emacs-lisp
