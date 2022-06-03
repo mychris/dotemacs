@@ -81,6 +81,15 @@ This is mostly use-package and local utilities which are used throught the confi
     )
   
 #+end_src
+** nsm.el [built-in] - Network Security Manager
+#+begin_src emacs-lisp
+  (use-package nsm
+    :ensure nil
+    :demand
+    :custom
+    (nsm-settings-file (expand-file-name "network-security.data" user-emacs-cache-directory))
+    (network-security-level 'high))
+#+end_src
 ** Emacs server and desktop
 #+begin_src emacs-lisp
   (use-package server
