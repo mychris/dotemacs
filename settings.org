@@ -1084,6 +1084,11 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package multiple-cursors
     :ensure t
+    :custom
+    (mc/list-file (locate-user-emacs-file ".mc-lists.el"))
+    (mc/max-cursors nil)
+    (mc/always-run-for-all nil)
+    (mc/always-repeat-command nil)
     :bind (("M-C-SPC" . set-rectangular-region-anchor)
            ("C->" . mc/mark-next-like-this)
            ("C-<" . mc/mark-previous-like-this)))

@@ -3,6 +3,7 @@
 
 (setq mc/cmds-to-run-for-all
       '(
+        backward-kill-char-or-word
         org-self-insert-command
         ))
 
