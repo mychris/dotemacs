@@ -126,8 +126,6 @@
 
 ;;;; Load settings
 
-(add-to-list 'load-path (file-name-as-directory (expand-file-name "contrib" user-emacs-directory)))
-
 (defun my/file-time-less-p (a b)
   "Return non-nil if the file modification time for `A' is less than `B'."
   (time-less-p
