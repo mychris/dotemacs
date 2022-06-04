@@ -562,17 +562,23 @@ This is mostly use-package and local utilities which are used throught the confi
 #+begin_src emacs-lisp
   (use-package embark
     :ensure t
-    :bind (("C-S-a" . embark-act)
-           :map minibuffer-local-map
-           ("C-a" . embark-act)
-           ("C-e" . embark-export))
     :config
     ;; Show Embark actions via which-key
     (setq embark-action-indicator
           (lambda (map)
             (which-key--show-keymap "Embark" map nil nil 'no-paging)
             #'which-key--hide-popup-ignore-command)
-          embark-become-indicator embark-action-indicator))
+          embark-become-indicator embark-action-indicator)
+    (defun embark-collect-toggle-mark ()
+      "Toggle the mark of the candidate at point in an Embark collect buffer."
+      (interactive)
+      (embark-collect-mark (embark-collect--marked-p)))
+    :bind (("C-S-a" . embark-act)
+           :map embark-collect-mode-map
+           ("SPC" . embark-collect-toggle-mark)
+           :map minibuffer-local-map
+           ("C-a" . embark-act)
+           ("C-e" . embark-export)))
 
   (use-package embark-consult
     :ensure t
