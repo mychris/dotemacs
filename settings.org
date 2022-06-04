@@ -500,19 +500,39 @@ This is mostly use-package and local utilities which are used throught the confi
   (use-package vertico
     :ensure t
     :init
-    ;; Those are the default values, but check the user option
-    ;; `vertico-multiform-categories' for per-category tweaks.
     (setq vertico-scroll-margin 0)
     (setq vertico-count 10)
     (setq vertico-resize nil)
     (setq vertico-cycle t)
     (vertico-mode 1)
+    (vertico-multiform-mode 1)
     :bind (:map vertico-map
+                ("C-f" . vertico-quick-insert)
                 ("M-," . vertico-quick-insert)
-                ("M-." . vertico-quick-exit))
+                ("M-." . vertico-quick-exit)))
 
+  (use-package vertico-directory
+    :ensure nil ;; part of vertico
+    :after vertico
+    :commands (vertico-directory-tidy)
+    :bind (:map vertico-map
+                ("RET" . vertico-directory-enter)
+                ("DEL" . vertico-directory-delete-char)
+                ("M-DEL" . vertico-directory-delete-word))
     :hook
-    (rfn-eshadow-update-overlay-hook . vertico-directory-tidy))
+    (rfn-eshadow-update-overlay . vertico-directory-tidy))
+
+  (use-package vertico-multiform
+    :ensure nil ;; part of vertico
+    :after vertico
+    :commands (vertico-multiform-mode)
+    :config
+    (setq vertico-multiform-commands
+          '((consult-line buffer)
+            (consult-imenu reverse buffer)))
+    (setq vertico-multiform-categories
+          '((imenu (:not indexed mouse))
+            (symbol (vertico-sort-function . vertico-sort-alpha)))))
 #+end_src
 ** Consult - Consulting completing-read
 #+begin_src emacs-lisp
