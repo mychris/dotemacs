@@ -536,6 +536,8 @@ This is mostly use-package and local utilities which are used throught the confi
            ("M-s l" . consult-line)
            ("M-s g" . consult-ripgrep)
            ([remap switch-to-buffer] . consult-buffer)
+           ([remap jump-to-register] . consult-register-load)
+           ([remap point-to-register] . consult-register-store)
            :map consult-narrow-map
            ("?" . consult-narrow-help)))
 
@@ -543,6 +545,7 @@ This is mostly use-package and local utilities which are used throught the confi
     :ensure t
     :after (:all lsp consult)
     :bind (:map lsp-mode-map
+                ("M-s S" . consult-lsp-symbols)
                 ("M-s s" . consult-lsp-file-symbols))
     )
 #+end_src
