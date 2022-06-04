@@ -1252,8 +1252,8 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :ensure nil
     :demand
     :init
-    (setq-default line-number-mode t)
-    (setq-default column-number-mode t)
+    (line-number-mode 1)
+    (column-number-mode 1)
     (setq-default mode-line-percent-position '(-3 "%p"))
     ;; mode-line-position-column-line-format '(" %l,%c") ; Emacs 28
     (setq-default mode-line-format
@@ -1272,9 +1272,12 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
                     mode-line-modes
                     " "
                     mode-line-misc-info
-                    mode-line-end-spaces)))
+                    mode-line-end-spaces))
+    (setq-default header-line-format mode-line-format)
+    (setq-default mode-line-format nil))
 
   (use-package telephone-line
+    :disabled
     :ensure t
     :diminish telephone-line-mode
     :commands (telephone-line-mode)
