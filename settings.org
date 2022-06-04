@@ -1041,7 +1041,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (call-interactively #'forward-paragraph)
     (recenter nil t))
 
-  (defun backward-paragraph-recnter (&optional arg)
+  (defun backward-paragraph-recenter (&optional arg)
     "Move backward to start of paragraph and center point using `recnter'.
   With argument `ARG', do it `ARG' times;
   a negative argument `ARG' = -N means move forward N paragraphs."
