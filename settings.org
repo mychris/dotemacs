@@ -527,8 +527,8 @@ This is mostly use-package and local utilities which are used throught the confi
     (setq consult-async-input-debounce 0.5)
     (setq consult-async-input-throttle 0.8)
     (setq consult-narrow-key ">")
-    :bind (("M-g g" . consult-goto-line)
-           ("M-g M-g" . consult-goto-line)
+    :bind (("M-g l" . consult-goto-line)
+           ("M-g M-l" . consult-goto-line)
            ("M-X" . consult-mode-command)
            ("M-s m" . consult-mark)
            ("M-s i" . consult-imenu)
@@ -1073,9 +1073,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package avy
     :ensure t
-    :bind (("M-g l" . goto-line)
-           ("M-g M-l" . goto-line)
-           ("M-g g" . avy-goto-line)
+    :bind (("M-g g" . avy-goto-line)
            ("M-g M-g" . avy-goto-line)
            ("M-g c" . avy-goto-char)
            ("M-g M-c" . avy-goto-char)
