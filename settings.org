@@ -1051,6 +1051,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 
   (global-set-key (kbd "M-}") #'forward-paragraph-recenter)
   (global-set-key (kbd "M-{") #'backward-paragraph-recenter)
+  (global-set-key (kbd "M-i") #'back-to-indentation)
 #+end_src
 ** golden-ratio-scroll-screen - Scroll half screen down or up, and highlight current line
 #+begin_src emacs-lisp
@@ -1077,6 +1078,14 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
                move-text-region-down)
     :bind (("M-p" . move-text-up)
            ("M-n" . move-text-down)))
+#+end_src
+** iy-go-to-char.el - Go to next CHAR
+#+begin_src emacs-lisp
+  (use-package iy-go-to-char
+    :ensure nil ;; Not on melpa.
+    :bind (("M-m" . iy-go-up-to-char)
+           ("M-M" . iy-go-up-to-char-backward))
+    )
 #+end_src
 ** Avy - Jump to arbitrary positions in visible text and select text quickly
 #+begin_src emacs-lisp
