@@ -138,19 +138,19 @@
 Also byte compiles the file and use the cached .elc, if `DO-BYTE-COMPILE'
 evaluates to a non-nil value."
   (let* ((file-el (concat (file-name-sans-extension file-org) ".el")))
-    (if (file-exists-p file-org)
-        (if (and (file-exists-p file-el)
-                 (my/file-time-less-p file-org file-el))
-            ;; found that one somewhere, shaves off another 200ms during startup.
-            ;; no idea if this has any negative side effects, nothing emerged yet.
-            (let ((file-name-handler-alist nil))
-              (load (file-name-sans-extension file-el)))
-          (progn
-            (require 'org)
-            (org-babel-load-file file-org)
-            (when do-byte-compile
-              (byte-compile-file file-el))))
-      (error "Init org file '%s' missing" file-org))))
+    (if (not (file-exists-p file-org))
+        (error "Org file '%s' missing" file-org)
+      (when (not (and (file-exists-p file-el)
+               (my/file-time-less-p file-org file-el)))
+        (progn
+          (require 'org)
+          (org-babel-tangle-file file-org file-el "emacs-lisp")
+          (when do-byte-compile
+            (byte-compile-file file-el))))
+      ;; found that one somewhere, shaves off another 200ms during startup.
+      ;; no idea if this has any negative side effects, nothing emerged yet.
+      (let ((file-name-handler-alist nil))
+        (load (file-name-sans-extension file-el))))))
 
 ;; For now, do not byte compile the settings files. For some reason, this
 ;; messes up some of the use-package declaration.
