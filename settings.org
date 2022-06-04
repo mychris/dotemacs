@@ -128,7 +128,7 @@ This is mostly use-package and local utilities which are used throught the confi
 #+end_src
 ** Make sure that UTF-8 is used everywhere.
 #+begin_src emacs-lisp
-  (use-package emacs
+  (use-package mule
     :ensure nil
     :demand
     :init
@@ -138,7 +138,7 @@ This is mostly use-package and local utilities which are used throught the confi
     (set-selection-coding-system 'utf-8)
     (prefer-coding-system 'utf-8)
     (set-input-method nil)
-    (setq-default locale-coding-system 'utf-8)
+    (setq locale-coding-system 'utf-8)
     (add-to-list 'process-coding-system-alist '("python" . (utf-8 . utf-8)))
     (add-to-list 'process-coding-system-alist '("elpy" . (utf-8 . utf-8))))
 #+end_src
@@ -167,7 +167,7 @@ This is mostly use-package and local utilities which are used throught the confi
 #+end_src
 ** Backups
 #+begin_src emacs-lisp
-  (use-package emacs
+  (use-package files
     :ensure nil
     :demand
     :init
@@ -183,7 +183,7 @@ This is mostly use-package and local utilities which are used throught the confi
 #+end_src
 ** Auto-save
 #+begin_src emacs-lisp
-  (use-package emacs
+  (use-package files
     :ensure nil
     :demand
     :init
@@ -1017,7 +1017,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 * Kill-ring
 ** System clipboard integration
 #+begin_src emacs-lisp
-  (use-package emacs
+  (use-package simple
     :ensure nil
     :demand
     :init
@@ -1063,7 +1063,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 
   (defun backward-paragraph-recenter (&optional arg)
     "Move backward to start of paragraph and center point using `recnter'.
-  With argument `ARG', do it `ARG' times;
+
   a negative argument `ARG' = -N means move forward N paragraphs."
     (interactive "^p")
     (call-interactively #'backward-paragraph)
