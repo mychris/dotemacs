@@ -26,9 +26,7 @@
  '(sml/name-width 30)
  '(sml/no-confirm-load-theme t)
  '(sml/shorten-modes t)
- '(sml/theme 'dark)
- '(undo-tree-auto-save-history t)
- '(undo-tree-visualizer-diff t))
+ '(sml/theme 'dark))
 
 ;;; custom.el ends here
 (custom-set-faces

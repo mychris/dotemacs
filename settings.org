@@ -950,31 +950,29 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :ensure t
     :diminish
     :defer 1
+    :commands (global-undo-tree-mode unto-tree-visualize unto-tree-undo)
+    :custom
+    (undo-tree-auto-save-history t)
+    (undo-tree-history-directory-alist `(("." . ,(file-name-as-directory
+                                                  (expand-file-name
+                                                   "undo"
+                                                   user-emacs-cache-directory)))))
+    (undo-tree-visualizer-diff t)
+    (undo-tree-visualizer-timestamps t)
+    :init
+    (global-undo-tree-mode 1)
+    :config
+    (let
+        ((undo-dir (file-name-as-directory
+                    (expand-file-name "undo" user-emacs-cache-directory))))
+      (unless (file-exists-p undo-dir) (make-directory undo-dir t)))
     :bind (:map undo-tree-map
                 ([remap undo] . undo-tree-undo)
                 ("C-x u" . undo-tree-undo)
                 ("C-_" . undo-tree-undo)
-                ("C-x U" . undo-tree-visualize-with-diff)
+                ("C-x U" . undo-tree-visualize)
                 :map undo-tree-visualizer-mode-map
-                ("k" . undo-tree-visualize-undo)
-                ("j" . undo-tree-visualize-redo)
-                ("l" . undo-tree-visualize-switch-branch-right)
-                ("h" . undo-tree-visualize-switch-branch-left)
-                ("C-x u" . undo-tree-visualize-quit))
-    :init
-    (let
-        ((undo-dir (file-name-as-directory (expand-file-name "undo" user-emacs-cache-directory))))
-      (unless (file-exists-p undo-dir) (make-directory undo-dir t))
-      (setq-default undo-tree-auto-save-history t) ;; Automatically save the undo history
-      (setq-default undo-tree-history-directory-alist `(("." . ,undo-dir))) ;; Save history to folder
-      )
-    :config
-    (global-undo-tree-mode 1)
-    (defun undo-tree-visualize-with-diff ()
-      "Visualize the current buffer's undo tree with diff displayed."
-      (interactive "*" undo-tree-mode)
-      (setq undo-tree-visualizer-diff t)
-      (call-interactively 'undo-tree-visualize)))
+                ("C-x u" . undo-tree-visualize-quit)))
 #+end_src
 * Editing
 ** expand-region - Increas the selected region by semantic units
