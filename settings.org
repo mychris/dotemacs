@@ -253,11 +253,13 @@ This is mostly use-package and local utilities which are used throught the confi
   (use-package gcmh
     :ensure t
     :diminish gcmh-mode
-    :init
-    (setq gcmh-idle-delay 'auto)
-    (setq gcmh-auto-idle-delay-factor 10)
-    (setq gcmh-high-cons-threshold (* 16 1024 1024))
-    :hook (emacs-startup-hook . gcmh-mode))
+    :custom
+    (gcmh-idle-delay 'auto)
+    (gcmh-auto-idle-delay-factor 10)
+    (gcmh-high-cons-threshold (* 16 1024 1024))
+    (gcmh-verbose nil)
+    :hook
+    (emacs-startup-hook . gcmh-mode))
 #+end_src
 ** utils - Personal utilities
 #+begin_src emacs-lisp
