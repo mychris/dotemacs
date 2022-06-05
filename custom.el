@@ -19,11 +19,6 @@
  '(lsp-ui-peek-enable t)
  '(lsp-ui-sideline-enable nil)
  '(my-background-color "gray9" t)
- '(neo-dont-be-alone t t)
- '(neo-smart-open t)
- '(neo-theme 'icons)
- '(neo-vc-integration '(face char))
- '(neo-window-fixed-size nil)
  '(org-bullets-bullet-list '("◉" "○" "✸" "✿" "☼" "⚬") t)
  '(package-selected-packages
    '(fzf multiple-cursors gruber-darker-theme hyperbole spray git-modes imenu-list lsp-clangd consult-lsp smartparens embark s telephone-line use-package rustic dune utop tuareg golden-ration treemacs-persp treemacs-magit treemacs-projectile treemacs string-inflection string-infliction projectile jenkinsfile-mode groovy-mode monky magit org-superstar elpy company-shell company keycast help xah-fly-keys embark-consult all-the-icons spinner ggtags spacemacs-theme lsp-ui company-lsp lsp-mode flycheck-pos-tip json-mode yaml-mode markdown-mode delight company-quickhelp toml-mode racer smart-mode-line sexy-monochrome org-bullets expand-region yasnippet counsel ace-window which-key zenburn-theme flycheck-rust flycheck cargo undo-tree neotree))

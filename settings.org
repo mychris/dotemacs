@@ -858,19 +858,18 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
                 ("C-<mouse-1>" . dired-mouse-find-file-other-window)
                 ("C-<down-mouse-1>" . dired-mouse-find-file-other-window)))
 #+end_src
-** COMMENT neotree - A tree plugin like NerdTree for Vim
+** neotree - A tree plugin like NerdTree for Vim
 #+begin_src emacs-lisp
   (use-package neotree
+    :disabled
     :ensure t
     :defer 1
-    :init
-    (setq-default neo-smart-open t)
-    (setq-default neo-dont-be-alone t)
-    (setq-default neo-theme 'nerd)
-    (setq-default neo-vc-integration '(face char))
-    (setq-default neo-window-fixed-size nil)
-    (setq-default neo-window-width 55)
-    (setq-default neo-theme (if (display-graphic-p) 'icons 'arrow))
+    :custom
+    (neo-smart-open t)
+    (neo-vc-integration '(face char))
+    (neo-window-fixed-size nil)
+    (neo-window-width 55)
+    (neo-theme (if (display-graphic-p) 'icons 'arrow))
     :bind (("<f8>" . neotree-toggle)
            :map neotree-mode-map
            ("<C-return>" . neotree-change-root)
