@@ -1473,40 +1473,40 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package lsp-mode
     :ensure t
-    :after (:all company xref)
     :commands (lsp)
     :init
-    (setq lsp-keymap-prefix "s-g")
-    :config
-    (setq lsp-session-file (expand-file-name "lsp-session-v1" user-emacs-cache-directory))
-    (setq lsp-enable-snippet nil)
-    (setq lsp-completion-provider :none)
     (defun my/lsp-find-definition-at-mouse (click)
       "Click to start `xref-find-definitions-at-mouse' at clicked point."
       (interactive "e")
       (call-interactively #'mouse-set-point)
       (call-interactively #'xref-find-definitions-at-mouse))
+    :custom
+    (lsp-keymap-prefix "s-g")
+    (lsp-session-file (expand-file-name "lsp-session-v1" user-emacs-cache-directory))
+    (lsp-enable-snippet nil)
+    (lsp-completion-provider :none)
     :hook
     (lsp-mode-hook . company-mode)
     :bind (:map lsp-mode-map
                 ("C-<down-mouse-1>" . my/lsp-find-definition-at-mouse)
+                ("C-<mouse-1>" . my/lsp-find-definition-at-mouse)
                 ("<wheel-left>" . xref-go-back)
                 ("<wheel-right>" . xref-go-use)))
 
   (use-package lsp-ui
     :ensure t
-    :after (:all lsp-mode)
-    :hook (lsp-mode-hook . lsp-ui-mode)
-    :config
-    (setq lsp-ui-peek-enable t)
-    (setq lsp-ui-sideline-enable t)
-    (setq lsp-ui-sideline-show-hover t)
-    (setq lsp-ui-sideline-update-mode 'line)
-    (setq lsp-ui-sideline-delay 1)
-    (setq lsp-ui-doc-enable t)
-    (setq lsp-ui-doc-show-with-cursor nil)
-    (setq lsp-ui-doc-show-with-mouse nil)
-    (setq lsp-ui-doc-position 'at-point))
+    :hook
+    (lsp-mode-hook . lsp-ui-mode)
+    :custom
+    (lsp-ui-peek-enable t)
+    (lsp-ui-sideline-enable t)
+    (lsp-ui-sideline-show-hover t)
+    (lsp-ui-sideline-update-mode 'line)
+    (lsp-ui-sideline-delay 1)
+    (lsp-ui-doc-enable t)
+    (lsp-ui-doc-show-with-cursor nil)
+    (lsp-ui-doc-show-with-mouse nil)
+    (lsp-ui-doc-position 'at-point))
 #+end_src
 ** ggtags - emacs frontend to GNU Global source code tagging system
 #+begin_src emacs-lisp
@@ -1524,7 +1524,6 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   (use-package company
     :ensure t
     :diminish
-    :after (:all yasnippet)
     :config
     (setq tab-always-indent 'complete)
     (setq company-tooltip-align-annotations t)

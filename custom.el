@@ -13,8 +13,6 @@
  '(helm-minibuffer-history-key "M-p")
  '(ivy-display-style 'fancy)
  '(ivy-use-virtual-buffers t)
- '(lsp-ui-peek-enable t)
- '(lsp-ui-sideline-enable nil)
  '(my-background-color "gray9" t)
  '(org-bullets-bullet-list '("◉" "○" "✸" "✿" "☼" "⚬") t)
  '(package-selected-packages
