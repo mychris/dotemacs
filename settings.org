@@ -1150,10 +1150,10 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   (use-package ace-window
     :ensure t
     :defer t
-    :config
-    (setq aw-keys '(?1 ?2 ?3 ?4 ?5 ?6 ?7 ?8 ?9))
-    (setq aw-background nil)
-    (add-to-list 'aw-ignored-buffers "*Ilist*")
+    :custom
+    (aw-keys '(?1 ?2 ?3 ?4 ?5 ?6 ?7 ?8 ?9))
+    (aw-background nil)
+    (aw-ignored-buffers '("*Ilist*" "*Calc Trail*" " *LV*"))
     :custom-face
     (aw-leading-char-face ((t (:inherit ace-jump-face-foreground :height 3.0))))
     :bind (([remap other-window] . ace-window)))
