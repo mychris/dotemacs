@@ -934,11 +934,11 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :ensure t
     :defer 1
     :diminish
+    :custom
+    (highlight-thing-delay-seconds 2)
+    (highlight-thing-exclude-thing-under-point t)
+    (highlight-thing-prefer-active-region t)
     :init
-    (setq-default highlight-thing-delay-seconds 2)
-    (setq-default highlight-thing-exclude-thing-under-point t)
-    (setq-default highlight-thing-prefer-active-region t)
-    :config
     (global-highlight-thing-mode 1))
 
   (use-package hi-lock
