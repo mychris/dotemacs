@@ -7,6 +7,10 @@
 To please the compiler, we need to require all the dependencies the settings have, which are not loaded using use-package, or are needed by use-package.
 This is mostly use-package and local utilities which are used throught the configuration or are configured to be used interactively.
 #+begin_src emacs-lisp
+  ;;; settings.el --- personal configuration           -*- lexical-binding: t; -*-
+  ;;; Commentary:
+  ;; Generated from `settings.org' in `init.el'.
+  ;;; Code:
   (require 'use-package)
   (require 'my-utils)
 #+end_src
