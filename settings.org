@@ -853,10 +853,27 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package dired
     :ensure nil
+    :custom
+    (dired-listing-switches "-AblGh --group-directories-first")
     :init
-    (setq dired-listing-switches "-AlGh --group-directories-first")
+    (defun dired-alternate-up-directory ()
+      "In Dired, visit the parent directory via `find-alternate-file'.
+  This kills the Dired buffer, then visits the parent directory."
+      (interactive)
+      (find-alternate-file ".."))
+    (defun my/dired-open ()
+      "In Dired, visit the file or directory named on this line.
+  If one is about to visit a directory, it is opened via `find-alternate-file'.
+  This kills the Dired buffer, then visits the directory.
+  Otherwise, it is opened via `find-file'."
+      (interactive)
+      (if (file-directory-p (dired-get-file-for-visit))
+          (find-alternate-file (dired-get-file-for-visit))
+        (find-file (dired-get-file-for-visit))))
     :bind (:map dired-mode-map
-                ("o" . dired-find-file)
+                ("<return>" . my/dired-open)
+                ("^" . dired-alternate-up-directory)
+                ("o" . my/dired-open)
                 ("C-o" . dired-find-file-other-window)
                 ("C-<return>" . dired-find-file-other-window)
                 ("<mouse-2>" . dired-mouse-find-file)
