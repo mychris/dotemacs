@@ -22,11 +22,17 @@ This is mostly use-package and local utilities which are used throught the confi
     :demand
     :init
     (global-hl-line-mode 1) ;; highlight the line in all windows
-    (setq-default large-file-warning-threshold (* 100 1000 1000))
-    (setq-default frame-title-name '("%b")) ;; set frame title to buffer name
-    (setq-default echo-keystrokes 0)        ;; use the which-key package
-    (setq-default visible-bell t)
-    (setq-default initial-major-mode 'text-mode)
+    (setq large-file-warning-threshold (* 100 1000 1000))
+    (setq frame-title-format
+          '("Emacs - "
+            (:eval (if (buffer-file-name)
+                       (abbreviate-file-name (buffer-file-name))
+                     "%b"))
+            (:eval (when (buffer-modified-p)
+                       " ↯"))))
+    (setq echo-keystrokes 0)        ;; use the which-key package
+    (setq visible-bell t)
+    (setq initial-major-mode 'text-mode)
     (defalias 'yes-or-no-p 'y-or-n-p)
     (put 'narrow-to-region 'disabled nil)
     (put 'upcase-region 'disabled nil)
