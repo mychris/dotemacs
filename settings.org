@@ -379,20 +379,6 @@ This is mostly use-package and local utilities which are used throught the confi
            ("RET" . minibuffer-force-complete-and-exit)
            ))
 #+end_src
-** isearch [built-in]
-#+begin_src emacs-lisp
-  (use-package isearch
-    :ensure nil
-    :diminish
-    :config
-    (setq search-highlight t)
-    (setq search-whitespace-regexp ".*?")
-    (setq isearch-lax-whitespace t)
-    (setq isearch-regexp-lax-whitespace nil)
-    (setq isearch-lazy-highlight t)
-    :bind (:map isearch-mode-map
-                ("C-g" . isearch-cancel)))
-#+end_src
 ** autorevert [built-in]
 #+begin_src emacs-lisp
   (use-package autorevert
@@ -1192,13 +1178,23 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   (use-package isearch
     :ensure nil
     :config
-    (setq-default isearch-lazy-count t)
-    (setq-default isearch-lazy-highlight t)
+    (setq search-highlight t)
+    (setq search-whitespace-regexp ".*?")
+    (setq isearch-lax-whitespace t)
+    (setq isearch-regexp-lax-whitespace nil)
+    (setq isearch-lazy-count t)
+    (setq isearch-lazy-highlight t)
     (defun my/isearch-and-regex (search-input &optional lax)
       (message search-input)
       search-input)
-    (isearch-define-mode-toggle and "S-6" my/isearch-and-regex
-      "Turning on and search turns off regexp mode."))
+    (isearch-define-mode-toggle and "^" my/isearch-and-regex
+      "Turning on and search turns off regexp mode.")
+    :bind (:map isearch-mode-map
+                ("C-g" . isearch-cancel)
+                ("<help>" . nil)
+                ("C-h <help>" . nil)
+                ("<f1> <help>" . nil)
+                ("M-ESC ESC" . nil)))
 #+end_src
 * Coloring / themes / fonts
 #+begin_src emacs-lisp
