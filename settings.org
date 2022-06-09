@@ -22,11 +22,17 @@ This is mostly use-package and local utilities which are used throught the confi
     :demand
     :init
     (global-hl-line-mode 1) ;; highlight the line in all windows
-    (setq-default large-file-warning-threshold (* 100 1000 1000))
-    (setq-default frame-title-name '("%b")) ;; set frame title to buffer name
-    (setq-default echo-keystrokes 0)        ;; use the which-key package
-    (setq-default visible-bell t)
-    (setq-default initial-major-mode 'text-mode)
+    (setq large-file-warning-threshold (* 100 1000 1000))
+    (setq frame-title-format
+          '("Emacs - "
+            (:eval (if (buffer-file-name)
+                       (abbreviate-file-name (buffer-file-name))
+                     "%b"))
+            (:eval (when (buffer-modified-p)
+                       " ↯"))))
+    (setq echo-keystrokes 0)        ;; use the which-key package
+    (setq visible-bell t)
+    (setq initial-major-mode 'text-mode)
     (defalias 'yes-or-no-p 'y-or-n-p)
     (put 'narrow-to-region 'disabled nil)
     (put 'upcase-region 'disabled nil)
@@ -378,20 +384,6 @@ This is mostly use-package and local utilities which are used throught the confi
            :map minibuffer-local-filename-completion-map
            ("RET" . minibuffer-force-complete-and-exit)
            ))
-#+end_src
-** isearch [built-in]
-#+begin_src emacs-lisp
-  (use-package isearch
-    :ensure nil
-    :diminish
-    :config
-    (setq search-highlight t)
-    (setq search-whitespace-regexp ".*?")
-    (setq isearch-lax-whitespace t)
-    (setq isearch-regexp-lax-whitespace nil)
-    (setq isearch-lazy-highlight t)
-    :bind (:map isearch-mode-map
-                ("C-g" . isearch-cancel)))
 #+end_src
 ** autorevert [built-in]
 #+begin_src emacs-lisp
@@ -1209,13 +1201,23 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   (use-package isearch
     :ensure nil
     :config
-    (setq-default isearch-lazy-count t)
-    (setq-default isearch-lazy-highlight t)
+    (setq search-highlight t)
+    (setq search-whitespace-regexp ".*?")
+    (setq isearch-lax-whitespace t)
+    (setq isearch-regexp-lax-whitespace nil)
+    (setq isearch-lazy-count t)
+    (setq isearch-lazy-highlight t)
     (defun my/isearch-and-regex (search-input &optional lax)
       (message search-input)
       search-input)
-    (isearch-define-mode-toggle and "S-6" my/isearch-and-regex
-      "Turning on and search turns off regexp mode."))
+    (isearch-define-mode-toggle and "^" my/isearch-and-regex
+      "Turning on and search turns off regexp mode.")
+    :bind (:map isearch-mode-map
+                ("C-g" . isearch-cancel)
+                ("<help>" . nil)
+                ("C-h <help>" . nil)
+                ("<f1> <help>" . nil)
+                ("M-ESC ESC" . nil)))
 #+end_src
 * Coloring / themes / fonts
 #+begin_src emacs-lisp
