@@ -1514,10 +1514,19 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package cc-mode ;; built-in
     :ensure nil
+    :config
+    (defun lsp-maybe-active-if-compile-commands-in-projectile-root ()
+      "Enable `lsp' if the project root contains `compile_commands.json'.
+  The project root is found using `projectile-project-root'."
+      (let ((project-root (projectile-project-root)))
+        (if (not project-root)
+            t
+          (file-exists-p (expand-file-name "compile_commands.json" project-root)))))
+    (lsp-maybe-add-predicate 'c-mode #'lsp-maybe-active-if-compile-commands-in-projectile-root)
     :hook
-    (c-mode-common-hook . lsp)
-    (c-mode-hook . lsp)
-    (c++-mode-hook . lsp))
+    (c-mode-common-hook . lsp-maybe)
+    (c-mode-hook . lsp-maybe)
+    (c++-mode-hook . lsp-maybe))
 
   (defconst openjdk-cc-style
     `((c-recognize-knr-p . nil)
