@@ -507,7 +507,7 @@ This is mostly use-package and local utilities which are used throught the confi
       "Toggle the mark of the candidate at point in an Embark collect buffer."
       (interactive)
       (embark-collect-mark (embark-collect--marked-p)))
-    :bind (("C-S-a" . embark-act)
+    :bind (;("C-S-a" . embark-act)
            :map embark-collect-mode-map
            ("SPC" . embark-collect-toggle-mark)
            :map minibuffer-local-map
