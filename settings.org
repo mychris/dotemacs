@@ -1738,15 +1738,16 @@ Also, it looks like parameter substitution inside strings are not to be complete
 #+begin_src emacs-lisp
   (use-package org
     :ensure nil
+    :commands (org-mode)
     :config
-    (setq-default org-directory "~/Documents/org")
-    (setq-default org-imenu-depth 7)
+    (setq org-directory "~/Documents/org")
+    (setq org-imenu-depth 7)
     ;;
-    (setq-default org-adapt-indentation nil)
+    (setq org-adapt-indentation nil)
     ;; agenda
-    (setq-default org-agenda-files '("~/Documents/org"))
-    (setq-default org-agenda-span 14)
-    (setq-default org-agenda-start-on-weekday 1)
+    (setq org-agenda-files '("~/Documents/org"))
+    (setq org-agenda-span 14)
+    (setq org-agenda-start-on-weekday 1)
     ;; code blocks languages
     (org-babel-do-load-languages
      'org-babel-load-languages
@@ -1767,10 +1768,10 @@ Also, it looks like parameter substitution inside strings are not to be complete
   (use-package org-superstar
     :ensure t
     :after (:all org)
-    :commands org-superstar-mode
+    :commands (org-superstar-mode)
     :config
-    (setq-default org-superstar-remove-leading-stars t)
-    (setq-default org-bullets-bullet-list '("◉" "○" "✸" "✿" "☼" "⚬"))
+    (setq org-superstar-remove-leading-stars t)
+    (setq org-bullets-bullet-list '("◉" "○" "✸" "✿" "☼" "⚬"))
     :hook
     (org-mode-hook . org-superstar-mode))
 #+end_src
@@ -1780,34 +1781,39 @@ Also, it looks like parameter substitution inside strings are not to be complete
     :ensure t
     :mode (("\\.md\\'" . markdown-mode)
            ("\\.markdown\\'" . markdown-mode))
+    :commands (markdown-mode)
     :config
-    (setq-default markdown-command "multimarkdown"))
+    (setq markdown-command "multimarkdown"))
 #+end_src
 ** TOML
 #+begin_src emacs-lisp
   (use-package toml-mode
     :ensure t
-    :mode (("\\.toml\\'" . toml-mode)))
+    :mode (("\\.toml\\'" . toml-mode))
+    :commands (toml-mode))
 #+end_src
 ** YAML
 #+begin_src emacs-lisp
   (use-package yaml-mode
     :ensure t
     :mode (("\\.yml\\'" . yaml-mode)
-           ("\\.yaml\\'" . yaml-mode)))
+           ("\\.yaml\\'" . yaml-mode))
+    :commands (yaml-mode))
 #+end_src
 ** JSON
 #+begin_src emacs-lisp
   (use-package json-mode
     :ensure t
-    :mode (("\\.json\\'" . json-mode)))
+    :mode (("\\.json\\'" . json-mode))
+    :commands (json-mode))
 #+end_src
 * Configuration files
 ** xmodmap
 #+begin_src emacs-lisp
   (use-package xmodmap-mode
     :ensure nil
-    :mode (("\\.Xmodmap\\'" . xmodmap-mode)))
+    :mode (("\\.Xmodmap\\'" . xmodmap-mode))
+    :commands (xmodmap-mode))
 #+end_src
 * Version control
 ** Magit - A Git Porcelain inside Emacs
