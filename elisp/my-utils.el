@@ -1,4 +1,4 @@
-;; utils.el --- Utility functions
+;; utils.el --- Utility functions                    -*- lexical-binding: t; -*-
 
 ;; Copyright (c) 2020-2022 Christoph Göttschkes
 

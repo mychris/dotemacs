@@ -274,6 +274,7 @@ This is mostly use-package and local utilities which are used throught the confi
 #+begin_src emacs-lisp
   (use-package my-utils
     :ensure nil
+    :demand
     :load-path "elisp"
     :bind (("C-x 9" . my/delete-most-recent-window)))
 #+end_src
