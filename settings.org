@@ -274,46 +274,6 @@ This is mostly use-package and local utilities which are used throught the confi
     :load-path "elisp"
     :bind (("C-x 9" . my/delete-most-recent-window)))
 #+end_src
-* COMMENT Evil
-** evil - Extensible Vi layer for Emacs.
-#+begin_src emacs-lisp
-  (use-package evil
-    :ensure t
-    :init
-    (setq evil-want-integration t)
-    (setq evil-want-keybinding nil)
-    (setq evil-want-C-u-scroll t)
-    (setq evil-search-module 'evil-search)
-    :config
-    (evil-mode))
-#+end_src
-** org-evil - Evil extensions for Org.
-#+begin_src emacs-lisp
-  (use-package org-evil
-    :ensure t
-    :after (:all evil org))
-#+end_src
-** evil-collection - A set of keybindings for Evil mode
-#+begin_src emacs-lisp
-  (use-package evil-collection
-    :ensure t
-    :after (:all evil)
-    :diminish evil-collection-unimpaired-mode
-    :config
-    (evil-collection-init))
-#+end_src
-** evil-escape - Customizable key sequence to escape from insert state and everything else in Emacs.
-#+begin_src emacs-lisp
-  (use-package evil-escape
-    :ensure t
-    :after (:all evil)
-    :diminish
-    :config
-    (evil-escape-mode)
-    (setq-default evil-escape-key-sequence "jk")
-    (setq-default evil-escape-delay 0.2)
-    (setq-default evil-escape-unordered-key-sequence t))
-#+end_src
 * Interface enhancements
 ** Minibuffer [built-in]
 #+begin_src emacs-lisp
@@ -393,57 +353,6 @@ This is mostly use-package and local utilities which are used throught the confi
     :config
     (setq auto-revert-verbose t)
     :hook (after-init-hook . global-auto-revert-mode))
-#+end_src
-** COMMENT Ido [built-in] - Interactively do things with buffers and files
-#+begin_src emacs-lisp
-  (use-package ido
-    :ensure nil
-    :diminish
-    :defer 1
-    :init
-    (setq-default ido-save-directory-list-file (expand-file-name "ido.last" user-emacs-cache-directory))
-    (setq-default ido-enable-flex-matching t)
-    (setq-default ido-everywhere t)
-    :config
-    (ido-mode 1))
-#+end_src
-** COMMENT Ivy - Incremental Vertical completYon
-#+begin_src emacs-lisp
-  (use-package ivy
-    :ensure t
-    :diminish
-    :defer 1
-    :init
-    (ivy-mode 1)
-    :config
-    (setq-default ivy-use-virtual-buffers t)
-    (setq-default ivy-display-style 'fancy)
-    ;;(setq-default ivy-re-builders-alist '((t . ivy--regex-fuzzy)))
-    :bind (("C-c C-r" . ivy-resume)))
-#+end_src
-** COMMENT Counsel - Various completion functions using Ivy
-#+begin_src emacs-lisp
-  (use-package counsel
-    :ensure t
-    :after (:all ivy)
-    :bind (("M-x" . counsel-M-x)
-           ("C-x C-f" . counsel-find-file)
-           :map minibuffer-local-map
-           ("C-r" . counsel-minibuffer-history)))
-#+end_src
-** COMMENT Swiper - Isearch with an overview
-#+begin_src emacs-lisp
-  (use-package swiper
-    :ensure t
-    :after (:all ivy)
-    :bind (("C-s" . swiper))
-    :init
-    (defun swiper-advice-recenter ()
-      "Recenter display after swiper.  Ignore ARGS."
-      (recenter))
-    (setq enable-recursive-minibuffers t)
-    :config
-    (advice-add 'swiper :after #'swiper-advice-recenter))
 #+end_src
 ** imenu - find major definitions in a file by name
 #+begin_src emacs-lisp
@@ -659,28 +568,6 @@ This is mostly use-package and local utilities which are used throught the confi
                 ("SPC" . nil)
                 ("?" . nil)))
 #+end_src
-** COMMENT helm - Helm is an Emacs incremental and narrowing framework
-#+begin_src emacs-lisp
-  (use-package helm
-    :ensure t
-    :diminish
-    :defer nil
-    :config
-    (setq helm-default-display-buffer-functions '(display-buffer-in-side-window))
-    (helm-mode)
-    :bind (("M-x" . helm-M-x)
-           ("C-x C-f" . helm-find-files)
-           ("C-x b" . helm-buffers-list)
-           ("M-s i" . helm-imenu)
-           ("M-s l" . helm-occur)
-           ("M-s g" . helm-do-grep-ag)))
-#+end_src
-** COMMENT helm-rg - a helm interface to ripgrep
-#+begin_src emacs-lisp
-  (use-package helm-rg
-    :ensure t
-    :after (:all helm))
-#+end_src
 ** perspective - switch between named "perspectives" of the editor
 #+begin_src emacs-lisp
   (use-package perspective
@@ -724,53 +611,6 @@ This is mostly use-package and local utilities which are used throught the confi
            ("M-6" . persp-switch-to-frame-6)
            ("M-7" . persp-switch-to-frame-7)
            ("M-0" . persp-kill-current-frame)))
-#+end_src
-** COMMENT eyebrowse - Easy window config switching
-#+begin_src emacs-lisp
-  (use-package eyebrowse
-    :ensure t
-    :diminish
-    :defer 1
-    :config
-    (eyebrowse-mode)
-    :bind (("M-1" . eyebrowse-switch-to-window-config-1)
-           ("M-2" . eyebrowse-switch-to-window-config-2)
-           ("M-3" . eyebrowse-switch-to-window-config-3)
-           ("M-4" . eyebrowse-switch-to-window-config-4)
-           ("M-5" . eyebrowse-switch-to-window-config-5)
-           ("M-6" . eyebrowse-switch-to-window-config-6)
-           ("M-7" . eyebrowse-switch-to-window-config-7)
-           ("M-`" . eyebrowse-last-window-config)
-           ("M-0" . eyebrowse-close-window-config)))
-
-  (use-package zed-eyebrowse
-    :ensure nil
-    :after (:all eyebrowse)
-    :bind (("M-~" . zed-eyebrowse-toggle-monocle))
-    :hook
-    (eyebrowse-pre-window-switch-hook . zed-eyebrowse-monocle-window-config-switch)
-    (window-configuration-change-hook . zed-eyebrowse-monocle-window-config-change))
-#+end_src
-** COMMENT golden-ratio - Automatic resizing of Emacs windows to the golden ratio
-#+begin_src emacs-lisp
-  (use-package golden-ratio
-    :ensure t
-    :diminish
-    :commands (golden-ratio-mode)
-    :config
-    (golden-ratio-mode 1)
-    (setq golden-ratio-adjust-factor 1.0)
-    (setq golden-ratio-wide-adjust-factor 0.8)
-    (setq golden-ratio-max-width nil)
-    (setq golden-ratio-auto-scale nil)
-    (setq golden-ratio-recenter nil)
-    (setq golden-ratio-extra-commands
-          '(windmove-left
-            windmove-right
-            windmove-down
-            windmove-up
-            ace-window
-            )))
 #+end_src
 * Help / Discovery / Cheat sheets
 ** help [built-in]
@@ -1426,14 +1266,6 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :bind (("<escape> <escape> p" . projectile-switch-project)
            ("C-x p t" . projectile-test-project)))
 #+end_src
-** COMMENT helm-projectile - Helm integration for Projectile
-#+begin_src emacs-lisp
-  (use-package helm-projectile
-    :ensure t
-    :after (:all helm projectile)
-    :config
-    (helm-projectile-on))
-#+end_src
 ** fzf - A front-end for fzf.
 #+begin_src emacs-lisp
   (use-package fzf
@@ -1535,11 +1367,6 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   (use-package ggtags
     :ensure t
     :diminish)
-#+end_src
-** COMMENT helm-gtags - GNU Global helm interface
-#+begin_src emacs-lisp
-  (use-package helm-gtags
-    :ensure t)
 #+end_src
 ** company - Modular text completion framework
 #+begin_src emacs-lisp
@@ -2015,14 +1842,6 @@ Also, it looks like parameter substitution inside strings are not to be complete
     :ensure t)
 #+end_src
 * Tools
-** GNU Hyperbole - The Everyday Hypertextual Information Manager
-#+begin_src emacs-lisp
-  (use-package hyperbole
-    :ensure t
-    :diminish
-    :hook (emacs-startup-hook . hyperbole-mode)
-    )
-#+end_src
 ** spray - A speed reading mode for Emacs
 #+begin_src emacs-lisp
   (use-package spray
