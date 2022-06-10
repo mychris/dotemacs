@@ -641,10 +641,18 @@ This is mostly use-package and local utilities which are used throught the confi
 #+begin_src emacs-lisp
   (use-package which-key
     :ensure t
-    :defer 1
+    :defer 5
     :diminish which-key-mode
-    :init
-    (setq-default which-key-idle-delay 0.4)
+    :commands (which-key-mode)
+    :custom
+    (which-key-idle-delay 0.4)
+    (which-key-idle-secondary-delay 0)
+    (which-key-max-description-length 32)
+    (which-key-add-column-padding 2)
+    (which-key-min-display-lines 7)
+    (which-key-use-C-h-commands t)
+    (which-key-show-early-on-C-h t)
+    :config
     (which-key-mode 1))
 #+end_src
 ** free-keys - Show free keybindings for modkeys or prefixes
