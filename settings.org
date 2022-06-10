@@ -663,10 +663,12 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package free-keys
     :ensure t
-    :diminish
-    :config
-    (setq-default free-keys-modifiers '("" "C" "M" "C-M" "H"))
-    :bind (("C-h C-k" . 'free-keys)))
+    :commands (free-keys)
+    :custom
+    (free-keys-modifiers '("" "C" "M" "C-M"))
+    :bind (("C-h C-k" . 'free-keys)
+           :map free-keys-mode-map
+           ("q" . kill-buffer-and-window)))
 #+end_src
 ** keyfreq - track command frequencies
 #+begin_src emacs-lisp
