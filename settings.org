@@ -1812,6 +1812,12 @@ Also, it looks like parameter substitution inside strings are not to be complete
     :commands (json-mode))
 #+end_src
 * Configuration files
+** git-modes
+#+begin_src emacs-lisp
+  (use-package git-modes
+    :ensure t
+    :commands (gitattributes-mode gitconfig-mode gitignore-mode))
+#+end_src
 ** xmodmap
 #+begin_src emacs-lisp
   (use-package xmodmap-mode
