@@ -23,6 +23,8 @@
 
 ;;; Code:
 
+(require 'lsp-mode)
+
 (defgroup lsp-maybe nil
   "Maybe start the Language Server Protocol client."
   :group 'tools
@@ -50,8 +52,8 @@ started or not."
               (and predicates (seq-reduce
                                (lambda (acc pred) (and acc (funcall pred)))
                                (car (cdr predicates))
-                               t))
-      (message "Enabling LSP"))))
+                               t)))
+      (lsp))))
 
 (defun lsp-maybe-add-predicate (mode predicate)
   "Check the given `PREDICATE' to decide if lsp should be started in `MODE'."

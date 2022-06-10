@@ -1375,6 +1375,11 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (lsp-ui-doc-show-with-cursor nil)
     (lsp-ui-doc-show-with-mouse nil)
     (lsp-ui-doc-position 'at-point))
+
+  (use-package lsp-maybe
+    :ensure nil
+    :load-path "elisp"
+    :commands (lsp-maybe lsp-maybe-add-predicate))
 #+end_src
 ** ggtags - emacs frontend to GNU Global source code tagging system
 #+begin_src emacs-lisp
