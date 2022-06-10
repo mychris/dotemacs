@@ -819,8 +819,8 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package undo-tree
     :ensure t
-    :diminish
-    :defer 1
+    :demand ;; we always want the undo tree and its presistance.
+    :diminish undo-tree-mode
     :commands (global-undo-tree-mode unto-tree-visualize unto-tree-undo)
     :custom
     (undo-tree-auto-save-history t)
@@ -830,17 +830,15 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
                                                    user-emacs-cache-directory)))))
     (undo-tree-visualizer-diff t)
     (undo-tree-visualizer-timestamps t)
-    :init
-    (global-undo-tree-mode 1)
     :config
     (let
         ((undo-dir (file-name-as-directory
                     (expand-file-name "undo" user-emacs-cache-directory))))
       (unless (file-exists-p undo-dir) (make-directory undo-dir t)))
+    (global-undo-tree-mode 1)
     :bind (:map undo-tree-map
                 ([remap undo] . undo-tree-undo)
-                ("C-x u" . undo-tree-undo)
-                ("C-_" . undo-tree-undo)
+                ([remap undo-redo] . undo-tree-redo)
                 ("C-x U" . undo-tree-visualize)
                 :map undo-tree-visualizer-mode-map
                 ("C-x u" . undo-tree-visualize-quit)))
