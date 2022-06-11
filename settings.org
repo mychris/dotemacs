@@ -1512,88 +1512,105 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 * Programming languages
 ** C/C++
 #+begin_src emacs-lisp
-  (use-package cc-mode ;; built-in
-    :ensure nil
-    :config
-    (defun lsp-maybe-active-if-compile-commands-in-projectile-root ()
-      "Enable `lsp' if the project root contains `compile_commands.json'.
-  The project root is found using `projectile-project-root'."
-      (let ((project-root (projectile-project-root)))
-        (if (not project-root)
-            t
-          (file-exists-p (expand-file-name "compile_commands.json" project-root)))))
-    (lsp-maybe-add-predicate 'c-mode #'lsp-maybe-active-if-compile-commands-in-projectile-root)
-    :hook
-    (c-mode-common-hook . lsp-maybe)
-    (c-mode-hook . lsp-maybe)
-    (c++-mode-hook . lsp-maybe))
+    (use-package cc-mode ;; built-in
+      :ensure nil
+      :init
+      (defun my/c-mark-block ()
+        "Put mark at end of current statement, point at beginning."
+        (interactive)
+        (let ((start (progn
+                       (call-interactively #'backward-up-list)
+                       (point)))
+              (end (progn
+                       (call-interactively #'forward-list)
+                       (point))))
+          (goto-char start)
+          (push-mark end)
+          (setq mark-active t)))
+      (defun lsp-maybe-active-if-compile-commands-in-projectile-root ()
+        "Enable `lsp' if the project root contains `compile_commands.json'.
+    The project root is found using `projectile-project-root'."
+        (let ((project-root (projectile-project-root)))
+          (if (not project-root)
+              t
+            (file-exists-p (expand-file-name "compile_commands.json" project-root)))))
+      :config
+      (lsp-maybe-add-predicate 'c-mode #'lsp-maybe-active-if-compile-commands-in-projectile-root)
+      :bind
+      (:map c-mode-map
+            ("M-h" . my/c-mark-block)
+            ("C-M-h" . c-mark-function))
+      :hook
+      (c-mode-common-hook . lsp-maybe)
+      (c-mode-hook . lsp-maybe)
+      (c++-mode-hook . lsp-maybe))
 
-  (defconst openjdk-cc-style
-    `((c-recognize-knr-p . nil)
-      (c-enable-xemacs-performance-kludge-p . t)
-      (c-basic-offset . 2)
-      (indent-tabs-mode . nil)
-      (c-comment-only-line-offset . 0)
-      (c-hanging-braces-alist . ((defun-open after)
-                                 (defun-close before after)
-                                 (class-open after)
-                                 (class-close before after)
-                                 (inexpr-class-open after)
-                                 (inexpr-class-close before)
-                                 (namespace-open after)
-                                 (inline-open after)
-                                 (inline-close before after)
-                                 (block-open after)
-                                 (block-close . c-snug-do-while)
-                                 (extern-lang-open after)
-                                 (extern-lang-close after)
-                                 (statement-case-open after)
-                                 (substatement-open after)))
-      (c-hanging-colons-alist . ((case-label)
-                                 (label after)
-                                 (access-label after)
-                                 (member-init-intro before)
-                                 (inher-intro)))
-      (c-hanging-semi&comma-criteria
-       . (c-semi&comma-no-newlines-for-oneline-inliners
-          c-semi&comma-inside-parenlist
-          c-semi&comma-no-newlines-before-nonblanks))
-      (c-indent-comments-syntactically-p . t)
-      (comment-column . 40)
-      (c-indent-comment-alist . ((other . (space . 2))))
-      (c-cleanup-list . (brace-else-brace
-                         brace-elseif-brace
-                         brace-catch-brace
-                         empty-defun-braces
-                         defun-close-semi
-                         list-close-comma
-                         scope-operator))
-      (c-offsets-alist . ((arglist-intro google-c-lineup-expression-plus-4)
-                          (func-decl-cont . ++)
-                          (member-init-intro . ++)
-                          (inher-intro . ++)
-                          (comment-intro . 0)
-                          (arglist-close . c-lineup-arglist)
-                          (topmost-intro . 0)
-                          (block-open . 0)
-                          (inline-open . 0)
-                          (substatement-open . 0)
-                          (statement-cont
-                           .
-                           (,(when (fboundp 'c-no-indent-after-java-annotations)
-                               'c-no-indent-after-java-annotations)
-                            ,(when (fboundp 'c-lineup-assignments)
-                               'c-lineup-assignments)
-                            ++))
-                          (label . /)
-                          (case-label . +)
-                          (statement-case-open . +)
-                          (statement-case-intro . +) ; case w/o {
-                          (access-label . /)
-                          (innamespace . 0))))
-    "OpenJDK C/C++ Programming Style.")
+    (defconst openjdk-cc-style
+      `((c-recognize-knr-p . nil)
+        (c-enable-xemacs-performance-kludge-p . t)
+        (c-basic-offset . 2)
+        (indent-tabs-mode . nil)
+        (c-comment-only-line-offset . 0)
+        (c-hanging-braces-alist . ((defun-open after)
+                                   (defun-close before after)
+                                   (class-open after)
+                                   (class-close before after)
+                                   (inexpr-class-open after)
+                                   (inexpr-class-close before)
+                                   (namespace-open after)
+                                   (inline-open after)
+                                   (inline-close before after)
+                                   (block-open after)
+                                   (block-close . c-snug-do-while)
+                                   (extern-lang-open after)
+                                   (extern-lang-close after)
+                                   (statement-case-open after)
+                                   (substatement-open after)))
+        (c-hanging-colons-alist . ((case-label)
+                                   (label after)
+                                   (access-label after)
+                                   (member-init-intro before)
+                                   (inher-intro)))
+        (c-hanging-semi&comma-criteria
+         . (c-semi&comma-no-newlines-for-oneline-inliners
+            c-semi&comma-inside-parenlist
+            c-semi&comma-no-newlines-before-nonblanks))
+        (c-indent-comments-syntactically-p . t)
+        (comment-column . 40)
+        (c-indent-comment-alist . ((other . (space . 2))))
+        (c-cleanup-list . (brace-else-brace
+                           brace-elseif-brace
+                           brace-catch-brace
+                           empty-defun-braces
+                           defun-close-semi
+                           list-close-comma
+                           scope-operator))
+        (c-offsets-alist . ((arglist-intro google-c-lineup-expression-plus-4)
+                            (func-decl-cont . ++)
+                            (member-init-intro . ++)
+                            (inher-intro . ++)
+                            (comment-intro . 0)
+                            (arglist-close . c-lineup-arglist)
+                            (topmost-intro . 0)
+                            (block-open . 0)
+                            (inline-open . 0)
+                            (substatement-open . 0)
+                            (statement-cont
+                             .
+                             (,(when (fboundp 'c-no-indent-after-java-annotations)
+                                 'c-no-indent-after-java-annotations)
+                              ,(when (fboundp 'c-lineup-assignments)
+                                 'c-lineup-assignments)
+                              ++))
+                            (label . /)
+                            (case-label . +)
+                            (statement-case-open . +)
+                            (statement-case-intro . +) ; case w/o {
+                            (access-label . /)
+                            (innamespace . 0))))
+      "OpenJDK C/C++ Programming Style.")
 
-  (c-add-style "OpenJDK" openjdk-cc-style nil)
+    (c-add-style "OpenJDK" openjdk-cc-style nil)
 #+end_src
 ** Rust
 #+begin_src emacs-lisp
