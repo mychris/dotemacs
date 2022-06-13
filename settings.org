@@ -1688,6 +1688,17 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   (use-package dune
     :ensure t)
 #+end_src
+** Common lisp
+#+begin_src emacs-lisp
+  (use-package sly
+    :ensure t
+    :commands (sly sly-mode)
+    :config
+    (setq inferior-lisp-program "sbcl")
+    :hook
+    (sly-mode-hook . company-mode)
+    )
+#+end_src
 ** Shell
 The shell mode is built-in.
 Flycheck can use ~shellcheck~ out of the box.
