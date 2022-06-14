@@ -257,6 +257,17 @@ This is mostly use-package and local utilities which are used throught the confi
     :demand
     :ensure t)
 #+end_src
+** package [built-in] - Simple package system for Emacs
+#+begin_src emacs-lisp
+  (use-package package
+    :ensure nil
+    :demand
+    :custom
+    (package-enable-at-startup nil) ;; Also configured in early-init.el
+    (package-quickstart nil) ;; Also configured in early-init.el
+    :bind (:map package-menu-mode-map
+                ("q" . kill-buffer-and-window)))
+#+end_src
 ** GCMH - the Garbage Collector Magic Hack
 #+begin_src emacs-lisp
   (use-package gcmh
