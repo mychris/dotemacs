@@ -1399,16 +1399,25 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (defun my/company-backend-with-yas (backends)
       "Add :with company-yasnippet to company BACKENDS.
   Taken from https://github.com/syl20bnr/spacemacs/pull/179."
-      (if (and (listp backends) (memq 'company-yasnippet backends))
+      (if (and (listp backends) (member 'company-yasnippet backends))
           backends
         (append (if (consp backends)
                     backends
                   (list backends))
                 '(:with company-yasnippet))))
-    (setq company-backends (delete 'company-dabbrev company-backends))
-    (setq company-backends (delete 'company-bbdb company-backends))
-    (setq company-backends (mapcar #'my/company-backend-with-yas company-backends))
+    (defun my/company-sort-yas-first (candidates)
+      (sort candidates
+            (lambda (c1 c2)
+              (equal (get-text-property 0 'company-backend c1) 'company-yasnippet)))
+      candidates)
+    ;(setq company-backends (delete 'company-dabbrev company-backends))
+    ;(setq company-backends (delete 'company-bbdb company-backends))
+    ;(setq company-backends (mapcar #'my/company-backend-with-yas company-backends))
+    (setq company-backends '((company-capf :with company-yasnippet)
+                           (company-dabbrev-code company-keywords company-files)
+                           (company-dabbrev)))
     (setq company-transformers '(delete-consecutive-dups
+                                 my/company-sort-yas-first
                                  company-sort-by-occurrence))
     :bind (([remap c-indent-line-or-region] . company-indent-or-complete-common)
            ([remap indent-for-tab-command] . company-indent-or-complete-common)
