@@ -1165,7 +1165,6 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+end_src
 * Coloring / themes / fonts
 #+begin_src emacs-lisp
-  
   (use-package all-the-icons
     :ensure t
     :defer 1)
@@ -1195,8 +1194,9 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :init
     (load-theme 'doom-one t))
 
-  (use-package emacs
+  (use-package face-remap
     :ensure nil
+    :demand
     :init
     (defvar my/font-cycle-list nil
       "The list of fonts used by `my/font-cycle-step'")
@@ -1212,7 +1212,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
         (let ((next-font (nth my/font-cycle-list--idx my/font-cycle-list)))
           (set-face-attribute 'default nil :font next-font)
           (message "Switching font to %s." next-font)
-        (setq my/font-cycle-list--idx (mod (1+ my/font-cycle-list--idx) (length my/font-cycle-list))))))
+          (setq my/font-cycle-list--idx (mod (1+ my/font-cycle-list--idx) (length my/font-cycle-list))))))
     (when (display-graphic-p)
       (let ((font-list (font-family-list)))
         (when (member "Fira Code" font-list)
@@ -1228,10 +1228,14 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       (if (null my/font-cycle-list)
           (error "Failed to load custom fonts")
         (my/font-cycle-step)))
+    (defun my/text-scale-reset ()
+      (interactive)
+      (text-scale-set 0))
     (set-face-background 'glyphless-char "red")
     :bind (("M-<kp-add>" . text-scale-increase)
            ("M-<kp-subtract>" . text-scale-decrease)
-           ("M-<kp-multiply>" . my/font-cycle-step)))
+           ("M-<kp-multiply>" . my/font-cycle-step)
+           ("M-<kp-0>" . my/text-scale-reset)))
 #+end_src
 * Modeline
 #+begin_src emacs-lisp
