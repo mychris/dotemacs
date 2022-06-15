@@ -1425,6 +1425,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
             (lambda (c1 c2)
               (equal (get-text-property 0 'company-backend c1) 'company-yasnippet)))
       candidates)
+    :config
     ;; (setq company-backends (delete 'company-dabbrev company-backends))
     ;; (setq company-backends (delete 'company-bbdb company-backends))
     ;; (setq company-backends (mapcar #'my/company-backend-with-yas company-backends))
@@ -1450,6 +1451,16 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
            ("C-j" . company-select-next-or-abort)
            ("C-p" . company-select-previous-or-abort)
            ("C-k" . company-select-previous-or-abort)))
+
+  (use-package company-dabbrev-code
+    :ensure nil ;; packaged with company
+    :commands (company-dabbrev-code)
+    :config
+    (add-to-list 'company-dabbrev-code-modes 'sh-mode)
+    ;; Change using setq-local for mode specific configurations.
+    (setq company-dabbrev-code-other-buffers t)
+    (setq company-dabbrev-code-everywhere t)
+    (setq company-dabbrev-code-ignore-case nil))
 
   (use-package company-quickhelp
     :ensure t
@@ -1741,12 +1752,12 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
       (setq-local indent-tabs-mode nil)
       (setq-local fill-column 119)
       (setq-local show-trailing-whitespace t)
+      (setq-local company-dabbrev-minimum-length 2)
       (setq-local company-dabbrev-code-everywhere t)
       (setq-local company-dabbrev-code-other-buffers t)
       (setq-local company-backends '((company-dabbrev-code :with company-yasnippet company-shell company-shell-env)
                                      (company-shell company-shell-env :with company-yasnippet))))
     (setq sh-basic-offset 4)
-    (add-to-list 'company-dabbrev-code-modes 'sh-mode)
     :hook
     (sh-mode-hook . flycheck-mode)
     (sh-mode-hook . company-mode)
