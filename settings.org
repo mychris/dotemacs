@@ -369,9 +369,9 @@ This is mostly use-package and local utilities which are used throught the confi
     (setq auto-revert-verbose t)
     :hook (after-init-hook . global-auto-revert-mode))
 #+end_src
-** imenu - find major definitions in a file by name
+** imenu [built-in] - find major definitions in a file by name
 #+begin_src emacs-lisp
-  (use-package imenu ;; built-in
+  (use-package imenu
     :ensure nil
     )
 
@@ -1064,7 +1064,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
            ("p" . previous-line)))
 #+end_src
 * Searching
-** isearch [builtin]
+** isearch [built-in]
 #+begin_src emacs-lisp
   (use-package isearch
     :ensure nil
@@ -1087,7 +1087,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
                 ("<f1> <help>" . nil)
                 ("M-ESC ESC" . nil)))
 #+end_src
-** replace / occur [builtin]
+** replace / occur [built-in]
 #+begin_src emacs-lisp
   (use-package replace
     :ensure nil
@@ -1113,7 +1113,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
                 :map occur-edit-mode-map
                 ("C-a" . my/occur-mode-move-beginning-of-line)))
 #+end_src
-** grep [builtin]
+** grep [built-in]
 #+begin_src emacs-lisp
   (use-package grep
     :ensure nil
