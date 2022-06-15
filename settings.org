@@ -1092,10 +1092,26 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   (use-package replace
     :ensure nil
     :demand
+    :init
+    (defun my/occur-mode-move-beginning-of-line (arg)
+      (interactive "^p")
+      (or arg (setq arg 1))
+      (if (/= arg 1)
+          (let ((line-move-visual nil))
+            (line-move (1- arg) t)))
+      (let ((current-line (thing-at-point 'line t)))
+        (if (string-match-p "^[[:space:]]*[0-9]+:" current-line)
+            (progn
+              (move-beginning-of-line 1)
+              (re-search-forward "^[[:space:]]*[0-9]+:"))
+          (move-beginning-of-line 1))))
     :bind (:map occur-mode-map
+                ("C-a" . my/occur-mode-move-beginning-of-line)
                 ("q" . kill-buffer-and-window)
                 ([remap next-line] . next-error-no-select)
-                ([remap previous-line] . previous-error-no-select)))
+                ([remap previous-line] . previous-error-no-select)
+                :map occur-edit-mode-map
+                ("C-a" . my/occur-mode-move-beginning-of-line)))
 #+end_src
 ** grep [builtin]
 #+begin_src emacs-lisp
