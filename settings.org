@@ -654,7 +654,10 @@ This is mostly use-package and local utilities which are used throught the confi
     :ensure t
     :defer 5
     :diminish which-key-mode
-    :commands (which-key-mode)
+    :commands (which-key-mode
+               which-key-add-key-based-replacements
+               which-key-add-major-mode-key-based-replacements
+               which-key-add-keymap-based-replacements)
     :custom
     (which-key-idle-delay 0.4)
     (which-key-idle-secondary-delay 0)
@@ -1084,8 +1087,69 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
                 ("<f1> <help>" . nil)
                 ("M-ESC ESC" . nil)))
 #+end_src
+** replace / occur [builtin]
+#+begin_src emacs-lisp
+  (use-package replace
+    :ensure nil
+    :demand
+    :bind (:map occur-mode-map
+                ("q" . kill-buffer-and-window)
+                ([remap next-line] . next-error-no-select)
+                ([remap previous-line] . previous-error-no-select)))
+#+end_src
+** grep [builtin]
+#+begin_src emacs-lisp
+  (use-package grep
+    :ensure nil
+    :bind (:map grep-mode-map
+                ("e" . wgrep-change-to-wgrep-mode)
+                ("C-c '" . wgrep-change-to-wgrep-mode)
+                ("q" . kill-buffer-and-window)))
+#+end_src
+** wgrep - Writable grep buffer and apply the changes to files
+#+begin_src emacs-lisp
+  (use-package wgrep
+    :ensure t
+    :commands (wgrep-setup wgrep-change-to-wgrep-mode)
+    :bind (:map wgrep-mode-map
+                ("C-x C-s" . nil)
+                ("C-c c" . wgrep-finish-edit)
+                ("C-c k" . wgrep-abort-changes)
+                ("C-c r" . wgrep-remove-change)
+                ("C-c u" . wgrep-remove-all-change)))
+#+end_src
+** rg - A search tool based on ripgrep
+#+begin_src emacs-lisp
+  (use-package rg
+    :ensure t
+    :commands (rg
+               rg-project
+               rg-literal
+               rg-dwim
+               rg-dwim-project-dir
+               rg-dwim-current-dir
+               rg-dwim-current-file)
+    :custom
+    (rg-command-line-flags nil)
+    (rg-buffer-name "ripgrep")
+    (rg-ignore-ripgreprc t)
+    :bind (:map rg-mode-map
+                ("C-c '" . wgrep-change-to-wgrep-mode)
+                ("q" . kill-buffer-and-window)))
+
+  (use-package rg-menu
+    :ensure nil ;; part of rg
+    :commands (rg-menu rg-enable-menu))
+
+  (use-package wgrep-rg
+    :ensure nil ;; part of rg
+    :commands (wgrep-rg-setup)
+    :hook
+    (rg-mode-hook . wgrep-rg-setup))
+#+end_src
 * Coloring / themes / fonts
 #+begin_src emacs-lisp
+  
   (use-package all-the-icons
     :ensure t
     :defer 1)
@@ -1289,6 +1353,8 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :init
     (projectile-mode)
     :bind (("<escape> <escape> p" . projectile-switch-project)
+           ("C-x p o" . projectile-ripgrep)
+           ("C-x p O" . projectile-grep)
            ("C-x p t" . projectile-test-project)))
 #+end_src
 ** fzf - A front-end for fzf.
@@ -1545,6 +1611,19 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :after (:all flycheck)
     :init
     (eval-after-load 'flycheck (flycheck-pos-tip-mode)))
+#+end_src
+** next-error [built-in]
+#+begin_src emacs-lisp
+  (use-package simple
+    :ensure nil
+    :demand
+    :custom
+    (next-error-recenter '(4))
+    :config
+    (which-key-add-key-based-replacements "M-g e" "next-error prefix")
+    :bind (("M-g e n" . next-error)
+           ("M-g e p" . previous-error)
+           ("M-g e b" . next-error-select-buffer)))
 #+end_src
 * Programming languages
 ** C/C++
