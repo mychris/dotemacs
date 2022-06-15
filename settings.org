@@ -1403,10 +1403,14 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   (use-package company
     :ensure t
     :diminish
-    :config
+    :custom
+    (company-tooltip-align-annotations t)
+    (company-minimum-prefix-length 1)
+    (company-show-quick-access 'left)
+    (company-quick-access-modifier 'meta)
+    (company-quick-access-keys '("1" "2" "3" "4" "5" "6" "7" "8" "9" "0"))
+    :init
     (setq tab-always-indent 'complete)
-    (setq company-tooltip-align-annotations t)
-    (setq company-minimum-prefix-length 1)
     (defun my/company-backend-with-yas (backends)
       "Add :with company-yasnippet to company BACKENDS.
   Taken from https://github.com/syl20bnr/spacemacs/pull/179."
@@ -1421,12 +1425,12 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
             (lambda (c1 c2)
               (equal (get-text-property 0 'company-backend c1) 'company-yasnippet)))
       candidates)
-    ;(setq company-backends (delete 'company-dabbrev company-backends))
-    ;(setq company-backends (delete 'company-bbdb company-backends))
-    ;(setq company-backends (mapcar #'my/company-backend-with-yas company-backends))
+    ;; (setq company-backends (delete 'company-dabbrev company-backends))
+    ;; (setq company-backends (delete 'company-bbdb company-backends))
+    ;; (setq company-backends (mapcar #'my/company-backend-with-yas company-backends))
     (setq company-backends '((company-capf :with company-yasnippet)
-                           (company-dabbrev-code company-keywords company-files)
-                           (company-dabbrev)))
+                             (company-dabbrev-code company-keywords company-files)
+                             (company-dabbrev)))
     (setq company-transformers '(delete-consecutive-dups
                                  my/company-sort-yas-first
                                  company-sort-by-occurrence))
@@ -1449,9 +1453,11 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 
   (use-package company-quickhelp
     :ensure t
-    :after (:all company)
-    :init
-    :hook (company-mode-hook . company-quickhelp-mode))
+    :custom
+    (company-quickhelp-delay 1)
+    (company-quickhelp-max-lines 40)
+    :hook
+    (company-mode-hook . company-quickhelp-mode))
 #+end_src
 ** flycheck - On-the-fly syntax checking
 #+begin_src emacs-lisp
