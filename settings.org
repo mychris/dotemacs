@@ -2015,7 +2015,7 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
     :mode (("\\.Xmodmap\\'" . xmodmap-mode))
     :commands (xmodmap-mode))
 #+end_src
-* Version control
+* Tools
 ** Magit - A Git Porcelain inside Emacs
 #+begin_src emacs-lisp
   (use-package magit
@@ -2047,7 +2047,6 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
   (use-package git-modes
     :ensure t)
 #+end_src
-* Tools
 ** spray - A speed reading mode for Emacs
 #+begin_src emacs-lisp
   (use-package spray
