@@ -429,7 +429,7 @@ This is mostly use-package and local utilities which are used throught the confi
     (vertico-mode 1)
     (vertico-multiform-mode 1)
     :bind (:map vertico-map
-                ("C-f" . vertico-quick-insert)
+                ("M-f" . vertico-quick-insert)
                 ("M-," . vertico-quick-insert)
                 ("M-." . vertico-quick-exit)))
 
@@ -507,6 +507,10 @@ This is mostly use-package and local utilities which are used throught the confi
 #+begin_src emacs-lisp
   (use-package embark
     :ensure t
+    :custom
+    (embark-quit-after-action t)
+    (embark-mixed-indicator-delay 0)
+    (embark-verbose-indicator-display-action '(display-buffer-at-bottom (window-height . fit-window-to-buffer)))
     :config
     ;; Show Embark actions via which-key
     (setq embark-action-indicator
@@ -518,12 +522,14 @@ This is mostly use-package and local utilities which are used throught the confi
       "Toggle the mark of the candidate at point in an Embark collect buffer."
       (interactive)
       (embark-collect-mark (embark-collect--marked-p)))
-    :bind (;("C-S-a" . embark-act)
+    :bind (("M-g a" . embark-act)
+           ("M-g M-a" . embark-act)
            :map embark-collect-mode-map
            ("SPC" . embark-collect-toggle-mark)
            :map minibuffer-local-map
-           ("C-a" . embark-act)
-           ("C-e" . embark-export)))
+           ("M-a" . embark-act)
+           ("M-b" . embark-become)
+           ("M-e" . embark-export)))
 
   (use-package embark-consult
     :ensure t
@@ -538,7 +544,6 @@ This is mostly use-package and local utilities which are used throught the confi
     (prot-embark-clear-live-buffers . zed-embark-clear-all-collection-buffers)
     :bind (:map minibuffer-local-completion-map
                 ("C-n" . zed-embark-switch-to-completion-buffer-top)))
-
 #+end_src
 ** Orderless - Use space-separated search terms in any order when completing with Icomplete or the default interface
 #+begin_src emacs-lisp
