@@ -1725,8 +1725,6 @@ Flycheck can use ~shellcheck~ out of the box.
 The ~company-shell~ package provides completion for CLI utilities and environment variables,
 but not for variables or functions defined in the shell file.
 Use ~company-dabbrev-code~ for now, until another tool is found.
-This is missing completion for functions and variables defined in other files which are sourced.
-Also, it looks like parameter substitution inside strings are not to be completed.
 #+begin_src emacs-lisp
   (use-package sh-script
     :ensure nil
@@ -1737,19 +1735,27 @@ Also, it looks like parameter substitution inside strings are not to be complete
       (setq-local indent-tabs-mode nil)
       (setq-local fill-column 119)
       (setq-local show-trailing-whitespace t)
-      (setq-local company-backends '((company-dabbrev-code :with company-yasnippet)
-                                     (company-shell :with company-yasnippet)
-                                     (company-shell-env :with company-yasnippet))))
-    (setq-default sh-basic-offset 4)
+      (setq-local company-dabbrev-code-everywhere t)
+      (setq-local company-dabbrev-code-other-buffers t)
+      (setq-local company-backends '((company-dabbrev-code :with company-yasnippet company-shell company-shell-env)
+                                     (company-shell company-shell-env :with company-yasnippet))))
+    (setq sh-basic-offset 4)
+    (add-to-list 'company-dabbrev-code-modes 'sh-mode)
     :hook
     (sh-mode-hook . flycheck-mode)
     (sh-mode-hook . company-mode)
     (sh-mode-hook . display-fill-column-indicator-mode)
     (sh-mode-hook . my/configure-sh-mode)
     :bind (:map sh-mode-map
+                ("C-c (" . nil)
+                ("C-c +" . nil)
+                ("C-c :" . nil)
+                ("C-c C-\\" . nil)
+                ("C-c TAB" . nil)
+                ("C-c C-l" . nil)
+                ("C-c C-r" . nil)
                 ("C-c C-c" . nil)
                 ("C-c C-f" . nil)
-                ("C-c TAB" . nil)
                 ("C-c C-n" . nil)
                 ("C-c C-o" . nil)
                 ("C-c C-s" . nil)
