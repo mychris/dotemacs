@@ -1558,8 +1558,8 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
                              (company-dabbrev-code company-keywords company-files)
                              (company-dabbrev)))
     (setq company-transformers '(delete-consecutive-dups
-                                 my/company-sort-yas-first
-                                 company-sort-by-occurrence))
+                                 company-sort-by-occurrence
+                                 my/company-sort-yas-first))
     :bind (([remap c-indent-line-or-region] . company-indent-or-complete-common)
            ([remap indent-for-tab-command] . company-indent-or-complete-common)
            :map company-active-map
