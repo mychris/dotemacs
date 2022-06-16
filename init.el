@@ -123,7 +123,9 @@
   ;; If non-nil, cause imenu to see 'use-package' declarations.
   (setq use-package-enable-imenu-support t)
   ;; Text append to the name of hooks mentioned by :hook.
-  (setq use-package-hook-name-suffix nil))
+  (setq use-package-hook-name-suffix nil)
+  ;; Quit the use-package-report window and kill the buffer as well.
+  (define-key use-package-statistics-mode-map ["q"] #'kill-buffer-and-window))
 
 ;;;; Load settings
 
