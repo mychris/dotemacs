@@ -817,11 +817,49 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :hook
     (prog-mode-hook . whitespace-mode))
 #+end_src
+** hi-lock [built-in] - minor mode for interactive automatic highlighting
+#+begin_src emacs-lisp
+  (use-package hi-lock
+    :ensure nil
+    :demand
+    :diminish
+    :init
+    (defun my/highlight-region-or-symbol (&optional face)
+      "Highlight occurences of either the currently region or the symbol at point."
+      (interactive
+       (list (hi-lock-read-face-name)))
+      (or (facep face) (setq face 'hi-yellow))
+      (unless hi-lock-mode (hi-lock-mode 1))
+      (let ((thing-to-highlight
+             (if (use-region-p)
+                 (buffer-substring (region-beginning) (region-end))
+               (thing-at-point 'symbol 'no-properties))))
+        (unless thing-to-highlight
+          (user-error "Nothing to highlight"))
+        (hi-lock-set-pattern (regexp-quote thing-to-highlight) face)))
+
+    (defun my/unhighlight-region-or-symbol ()
+      "Unhighlight either the currently region or the symbol at point."
+      (interactive nil hi-lock-mode)
+      (let ((thing-to-highlight
+             (if (use-region-p)
+                 (buffer-substring (region-beginning) (region-end))
+               (thing-at-point 'symbol 'no-properties))))
+        (unhighlight-regexp (regexp-quote thing-to-highlight))))
+
+    (defun my/unhighlight-all ()
+      "Unhighlight everything that has been previously highlighted."
+      (interactive nil hi-lock-mode)
+      (unhighlight-regexp t))
+    :bind (("M-s h ." . my/highlight-region-or-symbol)
+           ("M-s h ," . my/unhighlight-region-or-symbol)
+           ("M-s h U" . my/unhighlight-all)))
+#+end_src
 ** highlight-thing - Minimalistic minor mode to highlight current thing under point
 #+begin_src emacs-lisp
   (use-package highlight-thing
     :ensure t
-    :defer 1
+    :demand
     :diminish
     :custom
     (highlight-thing-delay-seconds 2)
@@ -829,10 +867,6 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (highlight-thing-prefer-active-region t)
     :init
     (global-highlight-thing-mode 1))
-
-  (use-package hi-lock
-    :ensure nil
-    :diminish)
 #+end_src
 ** undo-tree - Treat undo history as a tree
 #+begin_src emacs-lisp
