@@ -549,6 +549,8 @@ This is mostly use-package and local utilities which are used throught the confi
 #+begin_src emacs-lisp
   (use-package orderless
     :ensure t
+    :demand ;; If it is lazy loaded, a message is show in the minibuffer the
+            ;; first time it is used
     :custom
     (completion-styles '(basic orderless))
     (completion-category-defaults nil)
