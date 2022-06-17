@@ -4,6 +4,7 @@
 (setq mc/cmds-to-run-for-all
       '(
         backward-kill-char-or-word
+        c-electric-delete-forward
         org-self-insert-command
         ))
 
