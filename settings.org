@@ -1922,7 +1922,24 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
                 ("C-c C-d C-." . sly-describe-symbl)
                 :map sly-apropos-mode-map
                 ("n" . sly-apropos-next-symbol)
-                ("p" . sly-apropos-previous-symbol))
+                ("p" . sly-apropos-previous-symbol)
+                :map sly-inspector-mode-map
+                ("?" . describe-mode)
+                ("SPC" . scroll-up-command)
+                ("S-SPC" . scroll-down-command)
+                ("DEL" . scroll-down-command)
+                ("TAB" . forward-button)
+                ("<backtab>" . backward-button)
+                ("C-M-i" . backward-button)
+                ("C-c C-c" . sly-button-inspect)
+                ("r" . sly-inspector-next)
+                ("l" . sly-inspector-pop)
+                ("C-c C-f" . sly-inspector-next)
+                ("C-c C-b" . sly-inspector-pop)
+                ("<wheel-left>" . sly-inspector-pop)
+                ("<wheel-right>" . sly-inspector-next)
+                ("<mouse-8>" . sly-inspector-pop)
+                ("<mouse-9>" . sly-inspector-next))
     :hook
     (sly-mode-hook . company-mode))
 #+end_src
