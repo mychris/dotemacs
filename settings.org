@@ -305,19 +305,19 @@ This is mostly use-package and local utilities which are used throught the confi
     (defun kill-other-buffers ()
       "Kill all other buffers."
       (interactive)
-      (mapc 'kill-buffer (delq (current-buffer) (buffer-list))))
+      (mapc 'kill-buffer-save (delq (current-buffer) (buffer-list))))
 
     ;; https://www.emacswiki.org/emacs/KillingBuffers#toc9
-    (setq-default kill-this-buffer-save-list '("*scratch*"))
-    (defun kill-this-buffer-save ()
+    (setq kill-buffer-save-list '("*scratch*" "*Messages*"))
+    (defun kill-buffer-save (&optional buffer-or-name)
       "Only kill buffers not in the kill-buffer-save-list."
-      (interactive)
-      (if (member (buffer-name (current-buffer)) kill-this-buffer-save-list)
-          (progn
-            (erase-buffer)
-            (bury-buffer))
-        (kill-buffer (current-buffer))))
-
+      (interactive "bKill buffer: ")
+      (or buffer-or-name (setq buffer-or-name (current-buffer)))
+      (if (member
+           (if (bufferp buffer-or-name) (buffer-name buffer-or-name) buffer-or-name)
+           kill-buffer-save-list)
+          (bury-buffer buffer-or-name)
+        (kill-buffer buffer-or-name)))
     (defun myext-focus-minibuffer-or-completion ()
       "Focus the active minibuffer or completion window.
   TODO: needs refactoring."
@@ -349,7 +349,8 @@ This is mostly use-package and local utilities which are used throught the confi
     (minibuffer-electric-default-mode 1)
 
     :bind (("H-f" . myext-focus-minibuffer-or-completion)
-           ("C-x k" . kill-this-buffer-save)
+           ("C-x k" . kill-buffer-save)
+           ("C-x K" . kill-other-buffers)
            ("C-x C-o" . switch-to-minibuffer-window)
            :map minibuffer-local-completion-map
            ("RET" . minibuffer-force-complete-and-exit)
