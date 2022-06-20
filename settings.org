@@ -1897,12 +1897,36 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   (use-package sly
     :ensure t
     :commands (sly sly-mode)
+    :custom
+    (sly-kill-without-query-p t)
+    (sly-net-coding-system 'utf-8-unix)
+    (sly-complete-symbol-function #'sly-simple-completions)
     :config
     (setq inferior-lisp-program "sbcl")
+    (defun sly-apropos-next-symbol ()
+      "Move cursor down to the next symbol in an `sly-apropos-mode' buffer."
+      (interactive nil sly-apropos-mode)
+      (forward-line)
+      (while (and (not (eq (get-text-property (point) 'face) 'sly-apropos-symbol))
+                  (< (point) (point-max)))
+        (forward-line)))
+    (defun sly-apropos-previous-symbol ()
+      "Move cursor back to the last symbol in an `sly-apropos-mode' buffer."
+      (interactive nil sly-apropos-mode)
+      (forward-line -1)
+      (while (and (not (eq (get-text-property (point) 'face) 'sly-apropos-symbol))
+                  (> (point) (point-min)))
+        (forward-line -1)))
+    :bind (:map sly-mode-map
+                ("C-c C-d ." . sly-describe-symbol)
+                ("C-c C-d C-." . sly-describe-symbl)
+                :map sly-apropos-mode-map
+                ("n" . sly-apropos-next-symbol)
+                ("p" . sly-apropos-previous-symbol))
     :hook
-    (sly-mode-hook . company-mode)
-    )
+    (sly-mode-hook . company-mode))
 #+end_src
+
 ** Shell
 The shell mode is built-in.
 Flycheck can use ~shellcheck~ out of the box.
