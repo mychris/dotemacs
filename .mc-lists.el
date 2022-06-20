@@ -5,6 +5,8 @@
       '(
         backward-kill-char-or-word
         c-electric-delete-forward
+        c-electric-slash
+        c-electric-star
         org-self-insert-command
         ))
 
