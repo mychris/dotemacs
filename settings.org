@@ -1550,9 +1550,22 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (company-quick-access-keys '("1" "2" "3" "4" "5" "6" "7" "8" "9" "0"))
     :init
     (setq tab-always-indent 'complete)
+    (defun my/wrap--company-yasnippet--candidates (orig-fun &rest args)
+      "Wrapper for `company-yasnippet--candidates'.
+  For some reason, the yasnippet backend also provides completion if the prefix
+  is empty.  This gives yasnippet completion everytime and makes completion
+  often a burden.
+
+  A less hacky way of implementing this would be using a transformer and removing
+  all yasnippet candidates if there are more than a certain threshold (using the
+  `company-backend' text property), but it is useless work to compute all the
+  candidates if they are later dropped."
+      (if (and (stringp (car args)) (string-blank-p (car args)))
+          nil
+        (apply orig-fun args)))
     (defun my/company-backend-with-yas (backends)
       "Add :with company-yasnippet to company BACKENDS.
-  Taken from https://github.com/syl20bnr/spacemacs/pull/179."
+   Taken from https://github.com/syl20bnr/spacemacs/pull/179."
       (if (and (listp backends) (member 'company-yasnippet backends))
           backends
         (append (if (consp backends)
@@ -1574,6 +1587,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (setq company-transformers '(delete-consecutive-dups
                                  company-sort-by-occurrence
                                  my/company-sort-yas-first))
+    (advice-add 'company-yasnippet--candidates :around #'my/wrap--company-yasnippet--candidates)
     :bind (([remap c-indent-line-or-region] . company-indent-or-complete-common)
            ([remap indent-for-tab-command] . company-indent-or-complete-common)
            :map company-active-map
