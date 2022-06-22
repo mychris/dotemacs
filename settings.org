@@ -1443,7 +1443,12 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package abbrev
     :ensure nil
-    :diminish)
+    :diminish
+    :custom
+    (abbrev-file-name (expand-file-name "abbrev_defs" use-emacs-directory))
+    (only-global-abbrevs nil)
+    :config
+    (read-abbrev-file abbrev-file-name t))
 #+end_src
 ** paren [built-in] - highlight matching paren
 #+begin_src emacs-lisp
