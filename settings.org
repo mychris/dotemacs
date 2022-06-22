@@ -227,6 +227,7 @@ This is mostly use-package and local utilities which are used throught the confi
 #+begin_src emacs-lisp
   (use-package display-line-numbers
     :ensure nil
+    :disabled ;; For now, try to life without it, performance degradation is sometimes too bad.
     :diminish
     :commands (display-line-numbers-mode global-display-line-numbers-mode)
     :init
