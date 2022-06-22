@@ -312,7 +312,7 @@ This is mostly use-package and local utilities which are used throught the confi
     (setq kill-buffer-save-list '("*scratch*" "*Messages*"))
     (defun kill-buffer-save (&optional buffer-or-name)
       "Only kill buffers not in the kill-buffer-save-list."
-      (interactive "bKill buffer: ")
+      (interactive)
       (or buffer-or-name (setq buffer-or-name (current-buffer)))
       (if (member
            (if (bufferp buffer-or-name) (buffer-name buffer-or-name) buffer-or-name)
