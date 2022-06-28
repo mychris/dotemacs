@@ -24,6 +24,7 @@ This is mostly use-package and local utilities which are used throught the confi
     :ensure nil
     :demand
     :init
+    (blink-cursor-mode 0)
     (global-hl-line-mode 1) ;; highlight the line in all windows
     (setq large-file-warning-threshold (* 100 1000 1000))
     (setq frame-title-format
