@@ -2041,6 +2041,19 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
   (use-package groovy-mode
     :ensure t)
 #+end_src
+** FASM
+#+begin_src emacs-lisp
+  (use-package fasm-mode
+    :ensure nil
+    :mode (("\\.ASM\\'" . fasm-mode))
+    :commands (fasm-mode)
+    :hook
+    (fasm-mode-hook . (lambda ()
+                        (setq-local fasm-basic-offset 8)
+                        (setq-local tab-width 8)
+                        (setq-local indent-tabs-mode t)
+                        (setq-local fill-column 88))))
+#+end_src
 ** jenkinsfile-mode
 #+begin_src emacs-lisp
   (use-package jenkinsfile-mode
