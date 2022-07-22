@@ -950,6 +950,15 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
            ("M-l" . string-inflection-cycle-auto-detection)
     ))
 #+end_src
+** delsel [built-in] - delete selection if you insert
+#+begin_src emacs-lisp
+  (use-package delsel
+    :ensure nil
+    :demand
+    :commands (delete-selection-mode)
+    :hook
+    (emacs-startup-hook . delete-selection-mode))
+#+end_src
 * Kill-ring
 ** System clipboard integration
 #+begin_src emacs-lisp
