@@ -2213,6 +2213,11 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
            ("RET" . spray-quit)
            ("<return>" . spray-quit)))
 #+end_src
+** system-packages - functions to manage system packages
+#+begin_src emacs-lisp
+  (use-package system-packages
+    :ensure t)
+#+end_src
 * OTHER
 #+begin_src emacs-lisp
   (defun my/ref-find-definitions-at-mouse (event)
