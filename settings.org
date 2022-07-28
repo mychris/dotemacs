@@ -1089,7 +1089,6 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (setq sp-autoinsert-pair nil)
     (setq sp-escape-quotes-after-insert nil)
     :bind (([remap backward-sexp] . my/sp-beginning-of-sexp)
-           ([remap forward-sexp] . my/sp-end-of-sexp)
            ([remap forward-sexp] . my/sp-end-of-sexp))
     )
 #+end_src
