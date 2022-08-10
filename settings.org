@@ -2167,10 +2167,17 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
     :commands (magit-status git-commit-turn-on-flyspell)
     :config
     (magit-auto-revert-mode 1)
+    (defun my/kill-magit-buffers ()
+      "Kill all magit buffers and restore the window configuration."
+      (interactive)
+      (magit-restore-window-configuration)
+      (mapc #'kill-buffer (magit-mode-get-buffers)))
     :hook
     (magit-mode-hook . magit-load-config-extensions)
     (git-commit-setup-hook . git-commit-turn-on-flyspell)
-    :bind (:map magit-section-mode-map
+    :bind (:map magit-status-mode-map
+                ("q" . my/kill-magit-buffers)
+           :map magit-section-mode-map
                 ("M-1" . nil)
                 ("M-2" . nil)
                 ("M-3" . nil)
