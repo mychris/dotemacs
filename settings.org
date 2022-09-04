@@ -756,6 +756,8 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
         (find-file (dired-get-file-for-visit))))
     :bind (:map dired-mode-map
                 ("<return>" . my/dired-open)
+                ("<up>" . dired-previous-line)
+                ("<down>" . dired-next-line)
                 ("^" . dired-alternate-up-directory)
                 ("o" . my/dired-open)
                 ("C-o" . dired-find-file-other-window)
