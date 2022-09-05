@@ -1175,13 +1175,16 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
               (move-beginning-of-line 1)
               (re-search-forward "^[[:space:]]*[0-9]+:"))
           (move-beginning-of-line 1))))
-    :bind (:map occur-mode-map
-                ("C-a" . my/occur-mode-move-beginning-of-line)
-                ("q" . kill-buffer-and-window)
-                ([remap next-line] . next-error-no-select)
-                ([remap previous-line] . previous-error-no-select)
-                :map occur-edit-mode-map
-                ("C-a" . my/occur-mode-move-beginning-of-line)))
+    :bind (("M-%" . query-replace)
+           ("C-%" . replace-string)
+           ("C-M-%" . query-replace-regexp)
+           :map occur-mode-map
+           ("C-a" . my/occur-mode-move-beginning-of-line)
+           ("q" . kill-buffer-and-window)
+           ([remap next-line] . next-error-no-select)
+           ([remap previous-line] . previous-error-no-select)
+           :map occur-edit-mode-map
+           ("C-a" . my/occur-mode-move-beginning-of-line)))
 #+end_src
 ** grep [built-in]
 #+begin_src emacs-lisp
