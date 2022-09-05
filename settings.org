@@ -801,7 +801,10 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (setq-default treemacs-persist-file (expand-file-name "treemacs-persist" user-emacs-cache-directory))
     :hook
     (treemacs-mode-hook . (lambda () (display-line-numbers-mode 0)))
-    :bind (("<f8>" . treemacs)))
+    :bind (("<f8>" . treemacs)
+           :map treemacs-mode-map
+           ("<up>" . treemacs-previous-line)
+           ("<down>" . treemacs-next-line)))
 
   (use-package treemacs-projectile
     :ensure t
