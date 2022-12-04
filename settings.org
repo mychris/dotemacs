@@ -2209,6 +2209,12 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
     :mode (("\\.Xmodmap\\'" . xmodmap-mode))
     :commands (xmodmap-mode))
 #+end_src
+** i3wm-config
+#+begin_src emacs-lisp
+  (use-package i3wm-config-mode
+    :ensure t
+    :commands (i3wm-config-mode))
+#+end_src
 * Tools
 ** Magit - A Git Porcelain inside Emacs
 #+begin_src emacs-lisp
