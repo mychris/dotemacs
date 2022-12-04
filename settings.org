@@ -1339,10 +1339,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
                     mode-line-modes
                     " "
                     mode-line-misc-info
-                    mode-line-end-spaces))
-    (setq-default header-line-format mode-line-format)
-    (setq-default header-line-format nil)
-    (setq-default mode-line-format nil))
+                    mode-line-end-spaces)))
 
   (use-package telephone-line
     :ensure t
