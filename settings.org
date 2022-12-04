@@ -291,6 +291,47 @@ This is mostly use-package and local utilities which are used throught the confi
     :load-path "elisp"
     :bind (("C-x 9" . my/delete-most-recent-window)))
 #+end_src
+* Evil
+** evil - Extensible Vi layer for Emacs.
+#+begin_src emacs-lisp
+  (use-package evil
+    :ensure t
+    :demand t
+    :init
+    (setq evil-want-integration t)
+    (setq evil-want-keybinding nil)
+    (setq evil-want-C-u-scroll t)
+    (setq evil-search-module 'evil-search)
+    :config
+    (evil-mode 1))
+#+end_src
+** org-evil - Evil extensions for Org.
+#+begin_src emacs-lisp
+  (use-package org-evil
+    :ensure t
+    :after (evil org))
+#+end_src
+** evil-collection - A set of keybindings for Evil mode
+#+begin_src emacs-lisp
+  (use-package evil-collection
+    :ensure t
+    :after evil
+    :diminish evil-collection-unimpaired-mode
+    :config
+    (evil-collection-init))
+#+end_src
+** evil-escape - Customizable key sequence to escape from insert state and everything else in Emacs.
+#+begin_src emacs-lisp
+  (use-package evil-escape
+    :ensure t
+    :after evil
+    :diminish
+    :config
+    (evil-escape-mode)
+    (setq-default evil-escape-key-sequence "jk")
+    (setq-default evil-escape-delay 0.2)
+    (setq-default evil-escape-unordedred-key-sequence t))
+#+end_src
 * Interface enhancements
 ** Minibuffer [built-in]
 #+begin_src emacs-lisp
