@@ -149,10 +149,11 @@ evaluates to a non-nil value."
           (org-babel-tangle-file file-org file-el "emacs-lisp")
           (when do-byte-compile
             (byte-compile-file file-el))))
+      (require 'settings (file-name-sans-extension file-el)))))
       ;; found that one somewhere, shaves off another 200ms during startup.
       ;; no idea if this has any negative side effects, nothing emerged yet.
-      (let ((file-name-handler-alist nil))
-        (require 'settings (file-name-sans-extension file-el))))))
+;;      (let ((file-name-handler-alist nil))
+;;        (require 'settings (file-name-sans-extension file-el))))))
 
 ;; For now, do not byte compile the settings files. For some reason, this
 ;; messes up some of the use-package declaration.
