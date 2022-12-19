@@ -395,6 +395,8 @@ This is mostly use-package and local utilities which are used throught the confi
            ("C-x k" . kill-buffer-save)
            ("C-x K" . kill-other-buffers)
            ("C-x C-o" . switch-to-minibuffer-window)
+           :map minibuffer-local-map
+           ("C-<kp-7>" . minibuffer-keyboard-quit)
            :map minibuffer-local-completion-map
            ("RET" . minibuffer-force-complete-and-exit)
            ("<tab>" . minibuffer-complete)
