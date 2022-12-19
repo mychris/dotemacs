@@ -298,12 +298,14 @@ This is mostly use-package and local utilities which are used throught the confi
     :ensure t
     :demand t
     :init
+    (setq evil-echo-state t)
     (setq evil-want-integration t)
     (setq evil-want-keybinding nil)
     (setq evil-want-C-u-scroll t)
-    (setq evil-search-module 'evil-search)
+    (setq evil-undo-system 'undo-tree)
     :config
-    (evil-mode 1))
+    (evil-mode 1)
+    (evil-select-search-module 'evil-search-module 'isearch))
 #+end_src
 ** org-evil - Evil extensions for Org.
 #+begin_src emacs-lisp
@@ -326,11 +328,12 @@ This is mostly use-package and local utilities which are used throught the confi
     :ensure t
     :after evil
     :diminish
+    :init
+    (setq evil-escape-key-sequence "jk")
+    (setq evil-escape-delay 0.2)
+    (setq evil-escape-unodered-key-sequence t)
     :config
-    (evil-escape-mode)
-    (setq-default evil-escape-key-sequence "jk")
-    (setq-default evil-escape-delay 0.2)
-    (setq-default evil-escape-unordedred-key-sequence t))
+    (evil-escape-mode 1))
 #+end_src
 * Interface enhancements
 ** Minibuffer [built-in]
@@ -548,6 +551,12 @@ This is mostly use-package and local utilities which are used throught the confi
                 ("M-s S" . consult-lsp-symbols)
                 ("M-s s" . consult-lsp-file-symbols))
     )
+
+  (use-package emacs
+    :ensure nil
+    :after (:all evil consult)
+    :init
+    (evil-global-set-key 'normal (kbd "g l") #'consult-goto-line))
 #+end_src
 ** Marginalia - Enrich existing commands with completion annotations
 #+begin_src emacs-lisp
