@@ -1305,6 +1305,11 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :ensure t
     :defer 1)
 
+  (use-package solarized-theme
+    :ensure t
+    :init
+    (load-theme 'solarized-dark t))
+
   (use-package ample-theme
     :ensure t
     :defer 1)
@@ -1319,8 +1324,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 
   (use-package doom-themes
     :ensure t
-    :init
-    (load-theme 'doom-one t))
+    :defer 1)
 
   (use-package face-remap
     :ensure nil
