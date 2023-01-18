@@ -2141,6 +2141,88 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
     :ensure t
     :after (:all groovy-mode))
 #+end_src
+** make-mode [built-in]
+#+begin_src emacs-lisp
+  (use-package make-mode
+    :ensure nil
+    :hook
+    (makefile-mode-hook . (lambda ()
+                            (setq-local tab-width 8)
+                            (setq-local indent-tabs-mode t)
+                            (setq-local fill-column 132)
+                            (setq-local show-trailing-whitespace t)
+                            (setq-local makefile-space 'trailing-whitespace)
+                            (display-fill-column-indicator-mode 1))))
+
+  ;; TODO: put this into its own package
+  (use-package emacs
+    :ensure nil
+    :after (:all evil make-mode)
+    :init
+    (defun makefile-join-line (&optional arg beg end)
+      "Join this line to previous in a makefile specific way.
+  With prefix ARG, join the current line to the following line.
+  When BEG and END are non-nil, join all lines in the region they
+  define.  Interactively, BEG and END are, respectively, the start
+  and end of the region if it is active, else nil.  (The region is
+  ignored if prefix ARG is given.)"
+      (interactive
+       (progn (barf-if-buffer-read-only)
+              (cons current-prefix-arg
+                    (and (use-region-p)
+                         (list (region-beginning) (region-end))))))
+      ;; Consistently deactivate mark even when no text is changed.
+      (setq deactivate-mark t)
+      (if (and beg (not arg))
+          ;; Region is active.  Go to END, but only if region spans
+          ;; multiple lines.
+          (and (goto-char beg)
+               (> end (line-end-position))
+               (goto-char end))
+        ;; Region is inactive.  Set a loop sentinel
+        ;; (subtracting 1 in order to compare less than BOB).
+        (setq beg (1- (line-beginning-position (and arg 2))))
+        (when arg (forward-line)))
+      (let ((prefix (and (> (length fill-prefix) 0)
+                         (regexp-quote fill-prefix))))
+        (while (and (> (line-beginning-position) beg)
+                    (forward-line 0)
+                    (= (preceding-char) ?\n))
+          (delete-char -1)
+          ;; If the appended line started with the fill prefix,
+          ;; delete the prefix.
+          (if (and prefix (looking-at prefix))
+              (replace-match "" t t))
+          ;; Additional fixes for makefile specific line joining.
+          (cond
+           ;; If two .PHONY: targets are joined, remove the target and make it
+           ;; a single one
+           ((and (looking-at "\\.PHONY:")
+                 (string-prefix-p ".PHONY:" (buffer-substring-no-properties
+                                             (line-beginning-position)
+                                             (line-end-position))))
+            (delete-char 7))
+           ;; If lines have been splitted, remove the backslash of the end of
+           ;; the previous line
+           ((looking-back "\\\\" 1)
+            (delete-char -1))
+           ;; If two comment lines have been joined, remove the pound symbol
+           ((and (nth 4 (syntax-ppss))
+                 (looking-at "#"))
+            (delete-char 1)))
+          (fixup-whitespace))))
+
+    (evil-define-operator evil-makefile-join (beg end)
+      "Join the selected lines in a makefile specific way."
+      :motion evil-line
+      (let ((count (count-lines beg end)))
+        (when (> count 1)
+          (setq count (1- count)))
+        (goto-char beg)
+        (dotimes (_ count)
+          (makefile-join-line 1))))
+  (evil-define-key 'normal 'makefile-mode-map (kbd "J") 'evil-makefile-join))
+#+end_src
 * Markup languages
 ** Org Mode
 #+begin_src emacs-lisp
