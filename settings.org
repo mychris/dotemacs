@@ -305,7 +305,10 @@ This is mostly use-package and local utilities which are used throught the confi
     (setq evil-undo-system 'undo-tree)
     :config
     (evil-mode 1)
-    (evil-select-search-module 'evil-search-module 'isearch))
+    (evil-select-search-module 'evil-search-module 'isearch)
+    :bind
+    (:map evil-motion-state-map
+     ("C-w m" . switch-to-minibuffer-window)))
 #+end_src
 ** org-evil - Evil extensions for Org.
 #+begin_src emacs-lisp
@@ -2046,7 +2049,7 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
     (defun my/configure-sh-mode ()
       (setq-local tab-width 4)
       (setq-local indent-tabs-mode nil)
-      (setq-local fill-column 119)
+      (setq-local fill-column 132)
       (setq-local show-trailing-whitespace t)
       (setq-local company-dabbrev-minimum-length 2)
       (setq-local company-dabbrev-code-everywhere t)
@@ -2102,8 +2105,7 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
       (setq fill-column 88))
     :hook
     (python-mode-hook . my/python-mode-hook)
-    (python-mode-hook . display-fill-column-indicator-mode)
-    )
+    (python-mode-hook . display-fill-column-indicator-mode))
 
   (use-package elpy
     :ensure t
