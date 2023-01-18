@@ -338,6 +338,15 @@ This is mostly use-package and local utilities which are used throught the confi
     :config
     (evil-escape-mode 1))
 #+end_src
+** evil-easymotion
+#+begin_src emacs-lisp
+  (use-package evil-easymotion
+    :ensure t
+    :after evil
+    :init
+    (evilem-default-keybindings "SPC")
+    )
+#+end_src
 * Interface enhancements
 ** Minibuffer [built-in]
 #+begin_src emacs-lisp
