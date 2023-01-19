@@ -1192,6 +1192,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package multiple-cursors
     :ensure t
+    :disabled
     :custom
     (mc/list-file (locate-user-emacs-file ".mc-lists.el"))
     (mc/max-cursors nil)
@@ -1200,6 +1201,18 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :bind (("M-C-SPC" . set-rectangular-region-anchor)
            ("C->" . mc/mark-next-like-this)
            ("C-<" . mc/mark-previous-like-this)))
+#+end_src
+** evil-mc - Multiple cursors implementation for evil-mode
+#+begin_src emacs-lisp
+  (use-package evil-mc
+    :ensure t
+    :after evil
+    :bind (("C->" . evil-mc-make-cursor-move-next-line)
+           ("C-<" . evil-mc-make-cursor-move-prev-line))
+    :config
+    (global-evil-mc-mode 1)
+    :init
+    (setq-default evil-mc-one-cursor-show-mode-line-text nil))
 #+end_src
 ** view.el [built-in] - peruse file or buffer without editing
 #+begin_src emacs-lisp
