@@ -411,6 +411,10 @@ This is mostly use-package and local utilities which are used throught the confi
            ("C-x K" . kill-other-buffers)
            ("C-x C-o" . switch-to-minibuffer-window)
            :map minibuffer-local-map
+           ("<left>" . left-char)
+           ("C-<left>" . left-word)
+           ("<right>" . right-char)
+           ("C-<right>" . right-word)
            ("C-<kp-7>" . minibuffer-keyboard-quit)
            :map minibuffer-local-completion-map
            ("RET" . minibuffer-force-complete-and-exit)
