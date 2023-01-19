@@ -34,7 +34,6 @@ This is mostly use-package and local utilities which are used throught the confi
                      "%b"))
             (:eval (when (buffer-modified-p)
                        " ↯"))))
-    (setq echo-keystrokes 0)        ;; use the which-key package
     (setq visible-bell t)
     (setq initial-major-mode 'text-mode)
     (defalias 'yes-or-no-p 'y-or-n-p)
@@ -749,6 +748,7 @@ This is mostly use-package and local utilities which are used throught the confi
                which-key-add-major-mode-key-based-replacements
                which-key-add-keymap-based-replacements)
     :custom
+    (echo-keystrokes 0)
     (which-key-idle-delay 0.4)
     (which-key-idle-secondary-delay 0)
     (which-key-max-description-length 32)
