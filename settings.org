@@ -303,11 +303,35 @@ This is mostly use-package and local utilities which are used throught the confi
     (setq evil-want-C-u-scroll t)
     (setq evil-undo-system 'undo-tree)
     :config
+    (evil-define-command evil-goto-mark-center (char &optional noerror)
+      "Go to the marker specified by CHAR and scroll to the center."
+      :keep-visual t
+      :repeat nil
+      :type exclusive
+      :jump t
+      (interactive (list (read-char)))
+      (let ((stored-point (point)))
+        (evil-goto-mark char noerror)
+        (when (not (eq (point) stored-point))
+          (evil-scroll-line-to-center nil))))
+    (evil-define-command evil-goto-mark-line-center (char &optional noerror)
+      "Go to the line of the marker specified by CHAR and scroll to the center."
+      :keep-visual t
+      :repeat nil
+      :type line
+      :jump t
+      (interactive (list (read-char)))
+      (let ((stored-point (point)))
+        (evil-goto-mark-line char noerror)
+        (when (not (eq (point) stored-point))
+          (evil-scroll-line-to-center nil))))
     (evil-mode 1)
     (evil-select-search-module 'evil-search-module 'isearch)
     :bind
     (:map evil-motion-state-map
-     ("C-w m" . switch-to-minibuffer-window)))
+          ("`" . evil-goto-mark-center)
+          ("'" . evil-goto-mark-line-center)
+          ("C-w m" . switch-to-minibuffer-window)))
 #+end_src
 ** org-evil - Evil extensions for Org.
 #+begin_src emacs-lisp
