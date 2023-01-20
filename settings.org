@@ -450,6 +450,8 @@ This is mostly use-package and local utilities which are used throught the confi
 #+begin_src emacs-lisp
   (use-package imenu
     :ensure nil
+    :hook
+    (imenu-after-jump-hook . recenter-top-bottom)
     )
 
   (use-package imenu-list
