@@ -296,42 +296,16 @@ This is mostly use-package and local utilities which are used throught the confi
   (use-package evil
     :ensure t
     :demand t
-    :init
-    (setq evil-echo-state t)
-    (setq evil-want-integration t)
-    (setq evil-want-keybinding nil)
-    (setq evil-want-C-u-scroll t)
-    (setq evil-undo-system 'undo-tree)
+    :custom
+    (evil-echo-state nil)
+    (evil-want-integration t)
+    (evil-want-keybinding nil)
+    (evil-want-C-u-scroll t)
+    (evil-undo-system #'undo-tree)
     :config
-    (evil-define-command evil-goto-mark-center (char &optional noerror)
-      "Go to the marker specified by CHAR and scroll to the center."
-      :keep-visual t
-      :repeat nil
-      :type exclusive
-      :jump t
-      (interactive (list (read-char)))
-      (let ((stored-point (point)))
-        (evil-goto-mark char noerror)
-        (when (not (eq (point) stored-point))
-          (evil-scroll-line-to-center nil))))
-    (evil-define-command evil-goto-mark-line-center (char &optional noerror)
-      "Go to the line of the marker specified by CHAR and scroll to the center."
-      :keep-visual t
-      :repeat nil
-      :type line
-      :jump t
-      (interactive (list (read-char)))
-      (let ((stored-point (point)))
-        (evil-goto-mark-line char noerror)
-        (when (not (eq (point) stored-point))
-          (evil-scroll-line-to-center nil))))
-    (evil-mode 1)
     (evil-select-search-module 'evil-search-module 'isearch)
-    :bind
-    (:map evil-motion-state-map
-          ("`" . evil-goto-mark-center)
-          ("'" . evil-goto-mark-line-center)
-          ("C-w m" . switch-to-minibuffer-window)))
+    :hook
+    (after-init-hook . evil-mode))
 #+end_src
 ** org-evil - Evil extensions for Org.
 #+begin_src emacs-lisp
@@ -369,6 +343,21 @@ This is mostly use-package and local utilities which are used throught the confi
     :init
     (evilem-default-keybindings "SPC")
     )
+#+end_src
+** my-evil-commands - Additional evil commands
+#+begin_src emacs-lisp
+  (use-package my-evil-commands
+    :ensure nil
+    :after (:all evil)
+    :load-path "elisp"
+    :bind
+    (:map evil-normal-state-map
+          ("g ;" . evil-goto-last-change-center)
+          ("g ," . evil-goto-last-change-reverse-center)
+          :map evil-motion-state-map
+          ("`" . evil-goto-mark-center)
+          ("'" . evil-gata-mark-line-center)
+          ("C-w m" . switch-to-minibuffer-window)))
 #+end_src
 * Interface enhancements
 ** Minibuffer [built-in]
