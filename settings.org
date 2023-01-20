@@ -1116,6 +1116,28 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   (global-set-key (kbd "M-{") #'backward-paragraph-recenter)
   (global-set-key (kbd "M-i") #'back-to-indentation)
 #+end_src
+** disable-mouse - Disable mouse commands globally
+#+begin_src emacs-lisp
+  (use-package disable-mouse
+    :disabled
+    :ensure t
+    :diminish disable-mouse-mode
+    :commands (disable-mouse-mode
+               disable-mouse-global-mode
+               disable-mouse-in-keymap)
+    :init
+    (disable-mouse-global-mode))
+
+  (use-package emacs
+    :ensure nil
+    :after (:all evil disable-mouse)
+    :init
+    (mapc #'disable-mouse-in-keymap
+          (list evil-motion-state-map
+                evil-normal-state-map
+                evil-visual-state-map
+                evil-insert-state-map)))
+#+end_src
 ** golden-ratio-scroll-screen - Scroll half screen down or up, and highlight current line
 #+begin_src emacs-lisp
   (use-package golden-ratio-scroll-screen
