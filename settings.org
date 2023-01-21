@@ -13,6 +13,7 @@ This is mostly use-package and local utilities which are used throught the confi
   ;;; Code:
   (eval-when-compile
     (require 'use-package))
+  (require 'use-package-prettify)
   (require 'diminish)
   (require 'bind-key)
   (require 'my-utils)
