@@ -335,10 +335,11 @@ This is mostly use-package and local utilities which are used throught the confi
     :ensure t
     :after evil
     :diminish
-    :init
-    (setq evil-escape-key-sequence "jk")
-    (setq evil-escape-delay 0.2)
-    (setq evil-escape-unodered-key-sequence t)
+    :demand
+    :custom
+    (evil-escape-key-sequence "jk")
+    (evil-escape-delay 0.1)
+    (evil-escape-unodered-key-sequence t)
     :config
     (evil-escape-mode 1))
 #+end_src
