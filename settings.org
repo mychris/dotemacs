@@ -1372,7 +1372,12 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
            ("C-M-%" . query-replace-regexp)
            :map occur-mode-map
            ("C-a" . my/occur-mode-move-beginning-of-line)
+           ("^" . my/occur-mode-move-beginnig-of-line)
            ("q" . kill-buffer-and-window)
+           ("<up>" . previous-line)
+           ("<down>" . next-line)
+           ("j" . next-line)
+           ("k" . previous-line)
            ([remap next-line] . next-error-no-select)
            ([remap previous-line] . previous-error-no-select)
            :map occur-edit-mode-map
