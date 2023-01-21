@@ -839,6 +839,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package free-keys
     :ensure t
+    :defer t
     :commands (free-keys)
     :custom
     (free-keys-modifiers '("" "C" "M" "C-M"))
@@ -846,11 +847,18 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
            :map free-keys-mode-map
            ("q" . kill-buffer-and-window)))
 
-  (use-package emacs
+  (use-package free-keys
     :ensure nil
     :after (:all evil free-keys)
+    :defer t
+    :commands (free-keys)
     :config
-    (evil-global-set-key 'normal (kbd "q") #'kill-buffer-and-window))
+    (evil-define-key 'normal 'free-keys-mode-map
+      (kbd "q") #'kill-buffer-and-window
+      (kbd "p") #'free-keys-set-prefix
+      (kbd "b") #'free-keys-change-buffer
+      (kbd "<") #'beginning-of-buffer
+      (kbd ">") #'end-of-buffer))
 #+end_src
 ** keyfreq - track command frequencies
 #+begin_src emacs-lisp
