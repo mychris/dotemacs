@@ -323,7 +323,8 @@ This is mostly use-package and local utilities which are used throught the confi
 #+begin_src emacs-lisp
   (use-package evil-collection
     :ensure t
-    :after evil
+    :after (:all evil)
+    :demand
     :diminish evil-collection-unimpaired-mode
     :config
     (evil-collection-init))
