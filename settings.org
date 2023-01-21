@@ -317,7 +317,9 @@ This is mostly use-package and local utilities which are used throught the confi
 #+begin_src emacs-lisp
   (use-package org-evil
     :ensure t
-    :after (evil org))
+    :disabled
+    :after (evil org)
+    :demand)
 #+end_src
 ** evil-collection - A set of keybindings for Evil mode
 #+begin_src emacs-lisp
