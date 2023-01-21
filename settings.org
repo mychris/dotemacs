@@ -742,11 +742,48 @@ This is mostly use-package and local utilities which are used throught the confi
 #+begin_src emacs-lisp
   (use-package help
     :ensure nil
+    :defer t
+    :commands (help-mode)
     :bind (:map help-mode-map
                 ("<mouse-8>" . help-go-back)
                 ("<wheel-left>" . help-go-back)
                 ("<mouse-9>" . help-go-forward)
                 ("<wheel-right>" . help-go-forward)))
+  (use-package help
+    :ensure nil
+    :after (evil help)
+    :config
+    (evil-define-key 'motion help-mode-map
+      (kbd "<mouse-8>") #'help-go-back
+      (kbd "<wheel-left>") #'help-go-back))
+#+end_src
+** info [built-in]
+#+begin_src emacs-lisp
+  (use-package info
+    :ensure nil
+    :bind (:map Info-mode-map
+                ("TAB" . Info-next-reference)
+                ("<mouse-8>" . Info-history-back)
+                ("<wheel-left>" . Info-history-back)
+                ("<mouse-9>" . Info-history-forward)
+                ("<wheel-right>" . Info-history-forward)))
+
+  (use-package info
+    :ensure nil
+    :after (:all evil info)
+    :config
+    (evil-define-key 'motion Info-mode-map
+      (kbd "<return>") #'Info-follow-nearest-node
+      (kbd "C-t") #'Info-history-back
+      (kbd "C-o") #'Info-history-back
+      (kbd "C-i") #'Info-history-forward
+      (kbd "gj") #'Info-next
+      (kbd "gk") #'Info-prev
+      (kbd "TAB") #'Info-next-reference
+      (kbd "g TAB") #'Info-next-reference
+      (kbd "g]") #'Info-next-reference
+      (kbd "g[") #'Info-prev-reference
+      (kbd "T") #'Info-toc))
 #+end_src
 ** man [built-in]
 #+begin_src emacs-lisp
