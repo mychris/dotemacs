@@ -23,7 +23,7 @@ This is mostly use-package and local utilities which are used throught the confi
 #+begin_src emacs-lisp
   (use-package emacs
     :ensure nil
-    :demand
+    :demand t
     :init
     (blink-cursor-mode 0)
     (global-hl-line-mode 1) ;; highlight the line in all windows
@@ -74,7 +74,7 @@ This is mostly use-package and local utilities which are used throught the confi
 
   (use-package emacs
     :ensure nil
-    :demand
+    :demand t
     :init
     (global-unset-key (kbd "<up>"))
     (global-unset-key (kbd "C-<up>"))
@@ -96,7 +96,8 @@ This is mostly use-package and local utilities which are used throught the confi
 
   (use-package cua-base
     :ensure nil
-    :demand
+    :demand t
+    :commands (cua-mode)
     :init
     (cua-mode 0))
 #+end_src
@@ -104,7 +105,7 @@ This is mostly use-package and local utilities which are used throught the confi
 #+begin_src emacs-lisp
   (use-package nsm
     :ensure nil
-    :demand
+    :demand t
     :custom
     (nsm-settings-file (expand-file-name "network-security.data" user-emacs-cache-directory))
     (network-security-level 'high))
@@ -137,19 +138,20 @@ This is mostly use-package and local utilities which are used throught the confi
 
   (use-package emacs
     :ensure nil
-    :demand
+    :demand t
+    :custom
+    (initial-buffer-choice t)
+    (inhibit-startup-message t)
+    (inhibit-startup-screen t)
+    (inhibit-startup-buffer-menu t)
     :init
-    (setq-default initial-buffer-choice t)
-    (setq-default inhibit-startup-message t)
-    (setq-default inhibit-startup-screen t)
-    (setq-default inhibit-startup-buffer-menu t)
     (setq-default inhibit-x-resources t))
 #+end_src
 ** Make sure that UTF-8 is used everywhere.
 #+begin_src emacs-lisp
   (use-package mule
     :ensure nil
-    :demand
+    :demand t
     :init
     (set-terminal-coding-system 'utf-8)
     (set-keyboard-coding-system 'utf-8)
@@ -167,28 +169,30 @@ This is mostly use-package and local utilities which are used throught the confi
     :ensure nil
     :diminish
     :commands (savehist-mode)
-    :init
-    (setq-default savehist-file (expand-file-name "savehist" user-emacs-cache-directory))
-    (setq-default history-length 1000)
-    (setq-default history-delete-duplicates t)
-    (setq-default savehist-save-minibuffer-history t)
-    (savehist-mode 1))
+    :custom
+    (savehist-file (expand-file-name "savehist" user-emacs-cache-directory))
+    (history-length 1000)
+    (history-delete-duplicates t)
+    (savehist-save-minibuffer-history t)
+    :hook
+    (emacs-startup-hook . savehist-mode))
 #+end_src
 ** Saveplace (cursor position)
 #+begin_src emacs-lisp
   (use-package saveplace
     :ensure nil
     :diminish
-    :init
-    (setq-default save-place-file (expand-file-name "saveplace" user-emacs-cache-directory))
-    (setq-default save-place-forget-unreadable-files t)
-    :hook (emacs-startup-hook . save-place-mode))
+    :custom
+    (save-place-file (expand-file-name "saveplace" user-emacs-cache-directory))
+    (save-place-forget-unreadable-files t)
+    :hook
+    (emacs-startup-hook . save-place-mode))
 #+end_src
 ** Backups
 #+begin_src emacs-lisp
   (use-package files
     :ensure nil
-    :demand
+    :demand t
     :init
     (let
         ((backup-dir (file-name-as-directory (expand-file-name "backups" user-emacs-cache-directory))))
@@ -204,7 +208,7 @@ This is mostly use-package and local utilities which are used throught the confi
 #+begin_src emacs-lisp
   (use-package files
     :ensure nil
-    :demand
+    :demand t
     :init
     (let
         ((auto-save-dir (file-name-as-directory (expand-file-name "auto-save" user-emacs-cache-directory)))
@@ -223,11 +227,12 @@ This is mostly use-package and local utilities which are used throught the confi
     :ensure nil
     :diminish
     :defer 1
-    :init
-    (setq-default recentf-save-file (expand-file-name "recentf" user-emacs-cache-directory))
-    (setq-default recentf-max-saved-items 200)
-    (setq-default recentf-exclude '("\\.gz" "\\.xz" "\\.zip" "/elpa/" "/ssh:" "/sudo:"))
-    :hook (emacs-startup-hook . recentf-mode))
+    :custom
+    (recentf-save-file (expand-file-name "recentf" user-emacs-cache-directory))
+    (recentf-max-saved-items 200)
+    (recentf-exclude '("\\.gz" "\\.xz" "\\.zip" "/elpa/" "/ssh:" "/sudo:"))
+    :hook
+    (emacs-startup-hook . recentf-mode))
 #+end_src
 ** Line numbers
 #+begin_src emacs-lisp
@@ -236,10 +241,11 @@ This is mostly use-package and local utilities which are used throught the confi
     :disabled ;; For now, try to life without it, performance degradation is sometimes too bad.
     :diminish
     :commands (display-line-numbers-mode global-display-line-numbers-mode)
+    :custom
+    (display-line-numbers-type t)
+    (display-line-numbers-width-start t)
+    (display-line-numbers-grow-only t)
     :init
-    (setq-default display-line-numbers-type t)
-    (setq-default display-line-numbers-width-start t)
-    (setq-default display-line-numbers-grow-only t)
     (set-face-attribute 'line-number-current-line nil :weight 'bold)
     (global-display-line-numbers-mode)
     :hook
@@ -249,26 +255,26 @@ This is mostly use-package and local utilities which are used throught the confi
 ** S - The long lost Emacs string manipulation library
 #+begin_src emacs-lisp
   (use-package s
-    :demand
+    :demand t
     :ensure t)
 #+end_src
 ** f - Modern API for working with files and directories
 #+begin_src emacs-lisp
   (use-package f
-    :demand
+    :demand t
     :ensure t)
 #+end_src
 ** dash - A modern list API for Emacs.
 #+begin_src emacs-lisp
   (use-package dash
-    :demand
+    :demand t
     :ensure t)
 #+end_src
 ** package [built-in] - Simple package system for Emacs
 #+begin_src emacs-lisp
   (use-package package
     :ensure nil
-    :demand
+    :demand t
     :custom
     (package-enable-at-startup nil) ;; Also configured in early-init.el
     (package-quickstart nil) ;; Also configured in early-init.el
@@ -279,7 +285,7 @@ This is mostly use-package and local utilities which are used throught the confi
 #+begin_src emacs-lisp
   (use-package gcmh
     :ensure t
-    :diminish gcmh-mode
+    :diminish (gcmh-mode)
     :custom
     (gcmh-idle-delay 'auto)
     (gcmh-auto-idle-delay-factor 10)
@@ -292,7 +298,7 @@ This is mostly use-package and local utilities which are used throught the confi
 #+begin_src emacs-lisp
   (use-package my-utils
     :ensure nil
-    :demand
+    :demand t
     :load-path "elisp"
     :bind (("C-x 9" . my/delete-most-recent-window)))
 #+end_src
@@ -314,21 +320,24 @@ This is mostly use-package and local utilities which are used throught the confi
     :hook
     (after-init-hook . evil-mode))
 #+end_src
-** org-evil - Evil extensions for Org.
+** evil-org - evil keybindings for org-mode
 #+begin_src emacs-lisp
-  (use-package org-evil
+  (use-package evil-org
     :ensure t
-    :disabled
-    :after (evil org)
-    :demand)
+    :pin melpa
+    :after (:all evil org)
+    :diminish (evil-org-mode)
+    :commands (evil-org-mode)
+    :hook
+    (org-mode-hook . evil-org-mode))
 #+end_src
 ** evil-collection - A set of keybindings for Evil mode
 #+begin_src emacs-lisp
   (use-package evil-collection
     :ensure t
     :after (:all evil)
-    :demand
-    :diminish evil-collection-unimpaired-mode
+    :demand t
+    :diminish (evil-collection-unimpaired-mode)
     :config
     (evil-collection-init))
 #+end_src
@@ -336,24 +345,25 @@ This is mostly use-package and local utilities which are used throught the confi
 #+begin_src emacs-lisp
   (use-package evil-escape
     :ensure t
-    :after evil
+    :after (:all evil)
+    :demand t
     :diminish
-    :demand
+    :commands (evil-escape-mode)
     :custom
     (evil-escape-key-sequence "jk")
     (evil-escape-delay 0.1)
-    (evil-escape-unodered-key-sequence t)
-    :config
-    (evil-escape-mode 1))
+    (evil-escape-unodered-key-sequence nil)
+    :hook
+    (evil-mode-hook . evil-escape-mode))
 #+end_src
 ** evil-easymotion
 #+begin_src emacs-lisp
   (use-package evil-easymotion
     :ensure t
-    :after evil
+    :after (:all evil)
+    :demand t
     :init
-    (evilem-default-keybindings "SPC")
-    )
+    (evilem-default-keybindings "SPC"))
 #+end_src
 ** my-evil-commands - Additional evil commands
 #+begin_src emacs-lisp
@@ -452,10 +462,11 @@ This is mostly use-package and local utilities which are used throught the confi
 #+begin_src emacs-lisp
   (use-package autorevert
     :ensure nil
-    :diminish auto-revert-mode
-    :config
-    (setq auto-revert-verbose t)
-    :hook (after-init-hook . global-auto-revert-mode))
+    :diminish (auto-revert-mode)
+    :custom
+    (auto-revert-verbose t)
+    :hook
+    (after-init-hook . global-auto-revert-mode))
 #+end_src
 ** imenu [built-in] - find major definitions in a file by name
 #+begin_src emacs-lisp
@@ -511,6 +522,7 @@ This is mostly use-package and local utilities which are used throught the confi
 #+begin_src emacs-lisp
   (use-package vertico
     :ensure t
+    :commands (vertico-mode)
     :init
     (setq vertico-scroll-margin 0)
     (setq vertico-count 10)
@@ -537,7 +549,7 @@ This is mostly use-package and local utilities which are used throught the confi
 
   (use-package vertico-directory
     :ensure nil ;; part of vertico
-    :after vertico
+    :after (:all vertico)
     :commands (vertico-directory-tidy)
     :bind (:map vertico-map
                 ("RET" . vertico-directory-enter)
@@ -548,7 +560,7 @@ This is mostly use-package and local utilities which are used throught the confi
 
   (use-package vertico-multiform
     :ensure nil ;; part of vertico
-    :after vertico
+    :after (:all vertico)
     :commands (vertico-multiform-mode)
     :config
     (setq vertico-multiform-commands
@@ -562,7 +574,7 @@ This is mostly use-package and local utilities which are used throught the confi
 #+begin_src emacs-lisp
   (use-package consult
     :ensure t
-    :demand
+    :demand t
     :config
     (setq consult-line-numbers-widen t)
     (setq completion-in-region-function #'consult-completion-in-region)
@@ -643,7 +655,8 @@ This is mostly use-package and local utilities which are used throught the confi
     :ensure t
     :after (:all embark consult)
     :demand t
-    :hook (embark-collect-mode-hook . consult-preview-at-point-mode))
+    :hook
+    (embark-collect-mode-hook . consult-preview-at-point-mode))
 
   (use-package zed-embark
     :ensure nil
@@ -657,8 +670,8 @@ This is mostly use-package and local utilities which are used throught the confi
 #+begin_src emacs-lisp
   (use-package orderless
     :ensure t
-    :demand ;; If it is lazy loaded, a message is show in the minibuffer the
-            ;; first time it is used
+    :demand t ;; If it is lazy loaded, a message is show in the minibuffer the
+              ;; first time it is used
     :custom
     (completion-styles '(basic orderless))
     (completion-category-defaults nil)
@@ -756,7 +769,7 @@ This is mostly use-package and local utilities which are used throught the confi
                 ("<wheel-right>" . help-go-forward)))
   (use-package help
     :ensure nil
-    :after (evil help)
+    :after (:all evil help)
     :config
     (evil-define-key 'motion help-mode-map
       (kbd "<mouse-8>") #'help-go-back
@@ -795,8 +808,8 @@ This is mostly use-package and local utilities which are used throught the confi
   (use-package man
     :ensure nil
     :functions (Man-next-section)
-    :config
-    (setq Man-notify-method 'aggressive)
+    :custom
+    (Man-notify-method 'aggressive)
     :bind (:map Man-mode-map
                 ([remap Man-next-section] . (lambda () (interactive) (progn (Man-next-section 1) (recenter))))))
 #+end_src
@@ -805,7 +818,7 @@ This is mostly use-package and local utilities which are used throught the confi
   (use-package which-key
     :ensure t
     :defer 5
-    :diminish which-key-mode
+    :diminish (which-key-mode)
     :commands (which-key-mode
                which-key-add-key-based-replacements
                which-key-add-major-mode-key-based-replacements
@@ -889,6 +902,12 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   (use-package help-fns+
     :ensure nil
     :load-path "elisp"
+    :commands (describe-buffer
+               describe-command
+               describe-option
+               describe-option-of-type
+               describe-file
+               describe-keymap)
     :bind (("C-h K" . describe-keymap)))
 #+end_src
 * File manager
@@ -1006,7 +1025,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package hi-lock
     :ensure nil
-    :demand
+    :demand t
     :diminish
     :init
     (defun my/highlight-region-or-symbol (&optional face)
@@ -1044,7 +1063,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package highlight-thing
     :ensure t
-    :demand
+    :demand t
     :diminish
     :custom
     (highlight-thing-delay-seconds 2)
@@ -1057,8 +1076,8 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package undo-tree
     :ensure t
-    :demand ;; we always want the undo tree and its presistance.
-    :diminish undo-tree-mode
+    :demand t ;; we always want the undo tree and its presistance.
+    :diminish (undo-tree-mode)
     :commands (global-undo-tree-mode unto-tree-visualize unto-tree-undo)
     :custom
     (undo-tree-auto-save-history t)
@@ -1122,7 +1141,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package delsel
     :ensure nil
-    :demand
+    :demand t
     :commands (delete-selection-mode)
     :hook
     (emacs-startup-hook . delete-selection-mode))
@@ -1132,7 +1151,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package simple
     :ensure nil
-    :demand
+    :demand t
     :init
     (setq-default save-interprogram-paste-before-kill t))
 #+end_src
@@ -1191,7 +1210,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   (use-package disable-mouse
     :disabled
     :ensure t
-    :diminish disable-mouse-mode
+    :diminish (disable-mouse-mode)
     :commands (disable-mouse-mode
                disable-mouse-global-mode
                disable-mouse-in-keymap)
@@ -1258,7 +1277,6 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   (use-package smartparens
     :ensure t
     :diminish
-    :hook (prog-mode-hook . smartparens-mode)
     :config
     (defun my/sp-beginning-of-sexp (&optional ARG)
       "Like `sp-beginning-of-sexp` but a bit better.
@@ -1280,7 +1298,8 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (setq sp-escape-quotes-after-insert nil)
     :bind (([remap backward-sexp] . my/sp-beginning-of-sexp)
            ([remap forward-sexp] . my/sp-end-of-sexp))
-    )
+    :hook
+    (prog-mode-hook . smartparens-mode))
 #+end_src
 ** ace-window - Quickly switch windows
 #+begin_src emacs-lisp
@@ -1313,13 +1332,14 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package evil-mc
     :ensure t
-    :after evil
-    :bind (("C->" . evil-mc-make-cursor-move-next-line)
-           ("C-<" . evil-mc-make-cursor-move-prev-line))
+    :after (:all evil)
+    :commands (global-evil-mc-mode)
     :config
     (global-evil-mc-mode 1)
     :init
-    (setq-default evil-mc-one-cursor-show-mode-line-text nil))
+    (setq-default evil-mc-one-cursor-show-mode-line-text nil)
+    :bind (("C->" . evil-mc-make-cursor-move-next-line)
+           ("C-<" . evil-mc-make-cursor-move-prev-line)))
 #+end_src
 ** view.el [built-in] - peruse file or buffer without editing
 #+begin_src emacs-lisp
@@ -1358,7 +1378,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package replace
     :ensure nil
-    :demand
+    :demand t
     :init
     (defun my/occur-mode-move-beginning-of-line (arg)
       (interactive "^p")
@@ -1479,7 +1499,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 
   (use-package face-remap
     :ensure nil
-    :demand
+    :demand t
     :init
     (defvar my/font-cycle-list nil
       "The list of fonts used by `my/font-cycle-step'")
@@ -1524,7 +1544,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package emacs
     :ensure nil
-    :demand
+    :demand t
     :init
     (line-number-mode 1)
     (column-number-mode 1)
@@ -1550,8 +1570,8 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 
   (use-package telephone-line
     :ensure t
-    :diminish telephone-line-mode
-    :demand
+    :diminish (telephone-line-mode)
+    :demand t
     :custom
     (telephone-line-height 24)
     (telephone-line-primary-left-separator 'telephone-line-cubed-left)
@@ -1589,7 +1609,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       (add-to-list 'keycast-substitute-alist `(,event nil))))
 #+end_src
 * Shells
-** shell
+** shell [built-in] - specialized comint.el for running the shell
 #+begin_src emacs-lisp
   (use-package shell
     :ensure nil
@@ -1597,7 +1617,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (shell-mode-hook . (lambda ()
                          (face-remap-set-base 'comint-highlight-prompt :inherit nil))))
 #+end_src
-** eshell
+** eshell [built-in] - the Emacs command shell
 #+begin_src emacs-lisp
   (use-package eshell
     :ensure nil)
@@ -1613,7 +1633,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (setq-default eshell-hist-ignoredups t)
     (setq-default eshell-save-history-on-exit t))
 #+end_src
-** ansi-term
+** term [built-in] - general command interpreter in a window stuff
 #+begin_src emacs-lisp
   (use-package term
     :ensure nil
@@ -1664,13 +1684,13 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :after (:all projectile ggtags))
 #+end_src
 * Programming generic
-** abbrev [built-in]
+** abbrev [built-in] - abbrev mode commands for Emacs
 #+begin_src emacs-lisp
   (use-package abbrev
     :ensure nil
     :diminish
     :custom
-    (abbrev-file-name (expand-file-name "abbrev_defs" use-emacs-directory))
+    (abbrev-file-name (expand-file-name "abbrev_defs" user-emacs-directory))
     (only-global-abbrevs nil)
     :config
     (read-abbrev-file abbrev-file-name t))
@@ -1689,7 +1709,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package autoinsert
     :ensure nil
-    :diminish auto-insert-mode
+    :diminish (auto-insert-mode)
     :commands (auto-insert-mode define-auto-insert)
     :init
     (defun my/auto-insert-using-yasnippet (mode name)
@@ -1709,7 +1729,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package yasnippet
     :ensure t
-    :diminish yas-minor-mode
+    :diminish (yas-minor-mode)
     :commands (yas-minor-mode yas-reload-all yas-expand-snippet)
     :init
     (setq yas-alias-to-yas/prefix-p nil)
@@ -1867,6 +1887,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :ensure t
     :defer 1
     :diminish
+    :functions (flycheck-define-error-level)
     :commands (flycheck-mode)
     :config
     (define-fringe-bitmap 'flycheck-fringe-bitmap-one-excl
@@ -1929,11 +1950,15 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       :error-list-face 'flycheck-error-list-info)
     :hook
     (lsp-mode-hook . flycheck-mode)
-    (emacs-lisp-mode-hook . flycheck-mode))
+    (emacs-lisp-mode-hook . flycheck-mode)
+    (org-src-mode-hook . (lambda ()
+                           (setq-local flycheck-disabled-checkers
+                                       '(emacs-lisp-checkdoc)))))
 
   (use-package flycheck-pos-tip
     :ensure t
     :after (:all flycheck)
+    :commands (flycheck-pos-tip-mode)
     :init
     (eval-after-load 'flycheck (flycheck-pos-tip-mode)))
 #+end_src
@@ -1941,7 +1966,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package simple
     :ensure nil
-    :demand
+    :demand t
     :custom
     (next-error-recenter '(4))
     :config
@@ -2101,16 +2126,16 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :ensure t
     :init
     (add-to-list 'safe-local-variable-values '(eval projectile-project-compilation-cmd))
-    :hook
-    (tuareg-mode-hook . utop-minor-mode)
-    (tuareg-mode-hook . lsp)
-    (tuareg-mode-hook . company-mode)
     :config
     (add-hook 'tuareg-mode-hook #'electric-pair-local-mode)
     (setq auto-mode-alist
           (append '(("\\.ml[ily]?$" . tuareg-mode)
                     ("\\.topml$" . tuareg-mode))
-                  auto-mode-alist)))
+                  auto-mode-alist))
+    :hook
+    (tuareg-mode-hook . utop-minor-mode)
+    (tuareg-mode-hook . lsp)
+    (tuareg-mode-hook . company-mode))
 
   ;(use-package merlin
   ;  :ensure t
@@ -2252,7 +2277,7 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
     :defer t
     :init
     (defun my/python-mode-hook ()
-      (setq fill-column 88))
+      (setq-local fill-column 80))
     :hook
     (python-mode-hook . my/python-mode-hook)
     (python-mode-hook . display-fill-column-indicator-mode))
@@ -2407,6 +2432,16 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
     (org-mode-hook . abbrev-mode)
     (org-mode-hook . (lambda () (setq indent-tabs-mode nil))))
 
+  (use-package org-src
+    :ensure nil
+    :after (:all org)
+    :commands (org-src-mode)
+    :bind
+    (:map org-src-mode-map
+          ("C-c s" . org-edit-src-save)
+          ("C-c c" . org-edit-src-exit)
+          ("C-c k" . org-edit-src-abort)))
+
   (use-package org-superstar
     :ensure t
     :after (:all org)
@@ -2484,7 +2519,6 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
       (mapc #'kill-buffer (magit-mode-get-buffers)))
     :hook
     (magit-mode-hook . magit-load-config-extensions)
-    (git-commit-setup-hook . git-commit-turn-on-flyspell)
     :bind (:map magit-status-mode-map
                 ("q" . my/kill-magit-buffers)
            :map magit-section-mode-map
@@ -2498,9 +2532,11 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
     :config
     (setq git-commit-summary-max-length 72)
     :hook
-    (git-commit-mode-hook . (lambda ()
-                              (setq-local fill-column 72)
-                              (display-fill-column-indicator-mode 1)))
+    (git-commit-setup-hook . (lambda ()
+                               (setq-local fill-column 72)
+                               (display-fill-column-indicator-mode t)
+                               (git-commit-turn-on-flyspell)
+                               (evil-insert-state)))
     :bind (:map git-commit-mode-map
                 ("C-c c" . with-editor-finish)
                 ("C-c k" . with-editor-cancel)))
@@ -2513,12 +2549,12 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
   (use-package spray
     :ensure t
     :commands (spray-mode)
-    :init
-    (setq spray-wpm 375) ;; Words per minute
-    (setq spray-height 400) ;; Height of characters
-    (setq spray-margin-top 1) ;; Character margin at top of buffer
-    (setq spray-margin-left 1) ;; Character margin at left of buffer
-    (setq spray-ramp 3) ;; Initial words before ramping up to full speed
+    :custom
+    (spray-wpm 375 "Words per minute")
+    (spray-height 400 "Height of characters")
+    (spray-margin-top 1 "Character margin at top of buffer")
+    (spray-margin-left 1 "Character margin at left of buffer")
+    (spray-ramp 3 "Initial words before ramping up to full speed")
     :bind (("<f6>" . spray-mode)
            :map spray-mode-map
            ("SPC" . spray-start/stop)
@@ -2561,6 +2597,7 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
 * Postface
 #+begin_src emacs-lisp
   (provide 'settings)
+
   ;;; settings.el ends here
 
 #+end_src
