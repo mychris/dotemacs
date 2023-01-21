@@ -779,6 +779,16 @@ This is mostly use-package and local utilities which are used throught the confi
     (which-key-show-early-on-C-h t)
     :config
     (which-key-mode 1))
+
+  ;; TODO: figure out how to add some margin to the posframe
+  (use-package which-key-posframe
+    :ensure t
+    :after (:all which-key)
+    :commands (which-key-posframe-mode)
+    :custom
+    (which-key-posframe-border-width 2)
+    :init
+    (which-key-posframe-mode 1))
 #+end_src
 ** free-keys - Show free keybindings for modkeys or prefixes
 I found the ~free-keys~ documentation a bit confusing in the beginning.
