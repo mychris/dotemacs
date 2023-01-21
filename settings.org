@@ -780,14 +780,18 @@ This is mostly use-package and local utilities which are used throught the confi
     :config
     (which-key-mode 1))
 
-  ;; TODO: figure out how to add some margin to the posframe
   (use-package which-key-posframe
     :ensure t
     :after (:all which-key)
     :commands (which-key-posframe-mode)
     :custom
+    (which-key-posframe-font nil)
+    (which-key-posframe-poshandler #'my/which-key-posframe-poshandler)
     (which-key-posframe-border-width 2)
     :init
+    (defun my/which-key-posframe-poshandler (info)
+      (let ((centered (posframe-poshandler-frame-center info)))
+        (cons (car centered) (/ (cdr centered) 2 ))))
     (which-key-posframe-mode 1))
 #+end_src
 ** free-keys - Show free keybindings for modkeys or prefixes
