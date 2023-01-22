@@ -1154,7 +1154,11 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :ensure nil
     :demand t
     :init
-    (setq-default save-interprogram-paste-before-kill t))
+    (setq-default save-interprogram-paste-before-kill t)
+    :bind
+    (("<XF86Cut>" . clipboard-kill-region)
+     ("<XF86Copy>" . clipboard-kill-ring-save)
+     ("<XF86Paste>" . clipboard-yank)))
 #+end_src
 * Movement / Navigation
 #+begin_src emacs-lisp
@@ -1639,6 +1643,8 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   (use-package term
     :ensure nil
     :config
+    :hook
+    (term-mode-hook . (lambda () (display-line-numbers-mode 0)))
     :bind (:map term-raw-map
                 ("M-1" . nil)
                 ("M-2" . nil)
@@ -1690,19 +1696,40 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   (use-package abbrev
     :ensure nil
     :diminish
+    :commands (abbrev-mode
+               edit-abbrevs-mode
+               read-abbrev-file
+               quietly-read-abbrev-file
+               write-abbrev-file
+               expand-abbrev
+               unexpand-abbrev
+               abbrev-insert
+               insert-abbrevs
+               list-abbrevs
+               define-abbrevs
+               edit-abbrevs
+               edit-abbrevs-redefine
+               add-global-abbrev
+               add-mode-abbrev
+               inverse-add-global-abbrev
+               inversa-add-mode-abbrev
+               insert-abbrev-table-description
+               abbrev-suggest-show-report)
     :custom
     (abbrev-file-name (expand-file-name "abbrev_defs" user-emacs-directory))
-    (only-global-abbrevs nil)
+    (only-global-abbrevs nil "Enable mode-specific abbrevs")
+    (abbrev-all-caps nil)
+    (abbrev-suggest nil "Do not suggest using an abbrev in the echo area")
     :config
-    (read-abbrev-file abbrev-file-name t))
+    (quietly-read-abbrev-file abbrev-file-name))
 #+end_src
 ** paren [built-in] - highlight matching paren
 #+begin_src emacs-lisp
   (use-package paren
     :ensure nil
-    :config
-    (setq show-paren-delay 0.25)
-    (setq show-paren-style 'parenthesis)
+    :custom
+    (show-paren-delay 0.25)
+    (show-paren-style 'parenthesis)
     :hook
     (prog-mode-hook . show-paren-mode))
 #+end_src
@@ -1731,7 +1758,9 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   (use-package yasnippet
     :ensure t
     :diminish (yas-minor-mode)
-    :commands (yas-minor-mode yas-reload-all yas-expand-snippet)
+    :commands (yas-minor-mode
+               yas-reload-all
+               yas-expand-snippet)
     :init
     (setq yas-alias-to-yas/prefix-p nil)
     :config
@@ -2599,10 +2628,6 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
 
   (unless (fboundp 'xref-find-definitions-at-mouse)
     (defalias 'xref-find-definitions-at-mouse 'my/xref-find-definitions-at-mouse))
-
-  ;;; misc stuff
-
-  (add-hook 'term-mode-hook (lambda () (display-line-numbers-mode 0)))
 #+end_src
 * Postface
 #+begin_src emacs-lisp
