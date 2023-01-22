@@ -63,6 +63,7 @@ This is mostly use-package and local utilities which are used throught the confi
     (global-unset-key (kbd "<f1> 4 i"))
     (global-unset-key (kbd "C-h 4 i"))
     (define-key global-map (kbd "<menu>") iso-transl-ctl-x-8-map)
+    (define-key iso-transl-ctl-x-8-map (kbd "<menu>") #'execute-extended-command)
     (global-unset-key (kbd "M-`")) ;; tmm-menubar
     (global-unset-key (kbd "<f10>")) ;; menu-bar-open
     (global-unset-key (kbd "C-<f10>")) ;; buffer-menu-open
@@ -1643,8 +1644,17 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   (use-package term
     :ensure nil
     :config
+    (defun my/kill-term-process-sentinel ()
+      (let* ((buff (current-buffer))
+             (proc (get-buffer-process buff)))
+        (set-process-sentinel
+         proc
+         `(lambda (process event)
+            (when (string= event "finished\n")
+                (kill-buffer ,buff))))))
     :hook
     (term-mode-hook . (lambda () (display-line-numbers-mode 0)))
+    (term-exec-hook . my/kill-term-process-sentinel)
     :bind (:map term-raw-map
                 ("M-1" . nil)
                 ("M-2" . nil)
