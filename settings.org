@@ -2006,6 +2006,13 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       (setq-local indent-tabs-mode nil))
     :config
     (lsp-maybe-add-predicate 'c-mode #'lsp-maybe-active-if-compile-commands-in-projectile-root)
+    :prettify
+    (c-mode-common
+     ("!=" . ?≠)
+     ("==" . ?⩵)
+     ("->" . ?→)
+     ("<=" . ?≦)
+     (">=" . ?≧))
     :bind
     (:map c-mode-map
           ("M-h" . my/c-mark-block)

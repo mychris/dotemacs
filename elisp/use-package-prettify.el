@@ -5,7 +5,7 @@
 ;; Author: Christoph Göttschkes
 ;; Maintainer: Christoph Göttschkes
 ;; Created: 21 Jan 2023
-;; Modified: 21 Jan 2023
+;; Modified: 22 Jan 2023
 ;; Version: 0.1
 ;; Keywords: convenience extension tools
 
@@ -49,9 +49,10 @@ Elements in the list which are not cons pairs use the given NAME as a key.
 For each element in the input, a normalized key is computed in the following
 way:
 
-If the key ends with '-hook', this suffix is removed.
-If the key ends with '-mode', the key is used as given.
-Otherwise, '-mode' is appended to the key.
+If the key is \"c-mode-common\", use it as given.
+If the key ends with \"-hook\", this suffix is removed.
+If the key ends with \"-mode\", the key is used as given.
+Otherwise, \"-mode\" is appended to the key.
 
 This is also true for the given NAME, which is used if an element does not
 define a key."
@@ -64,6 +65,8 @@ define a key."
                        name))
                     (norm-mode
                      (cond
+                      ((string= (symbol-name mode) "c-mode-common")
+                       mode)
                       ((string-suffix-p "-hook" (symbol-name mode))
                        (intern
                         (string-remove-suffix "-hook" (symbol-name mode))))
@@ -94,19 +97,17 @@ prettifying rules specified in ARGS do not define a `mode' or `hook' they are
 associated with, NAME-SYMBOL is used."
   (use-package-concat
    (use-package-process-keywords name-symbol rest state)
-   (let (forms)
-     (cl-loop for carg in args
-              do
-              (let ((mode (car carg))
-                    (rules (cdr carg)))
-                (push
-                 `(add-hook
-                   (quote ,(intern (concat (symbol-name mode) "-hook")))
-                   (lambda ()
-                     (setq prettify-symbols-alist (quote ,rules))
-                     (prettify-symbols-mode t)))
-                 forms)))
-     forms)))
+   (cl-loop for arg in args
+            collect
+            (let ((mode (car arg))
+                  (rules (cdr arg)))
+              (backquote
+               (add-hook
+                (quote ,(intern (concat (symbol-name mode) "-hook")))
+                (lambda ()
+                  (setq prettify-symbols-alist
+                        (append prettify-symbols-alist (quote ,rules)))
+                  (prettify-symbols-mode t))))))))
 
 ;;;###autoload
 (defalias 'use-package-normalize/:prettify 'use-package-prettify--normalize)
