@@ -1,5 +1,4 @@
 *.elc
-elpa/
 tree-sitter-module/
 projectile-bookmarks.eld
 settings.el
