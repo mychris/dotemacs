@@ -25,8 +25,6 @@ This is mostly use-package and local utilities which are used throught the confi
     :ensure nil
     :demand t
     :init
-    (blink-cursor-mode 0)
-    (global-hl-line-mode 1) ;; highlight the line in all windows
     (setq large-file-warning-threshold (* 100 1000 1000))
     (setq frame-title-format
           '("Emacs - "
@@ -34,7 +32,7 @@ This is mostly use-package and local utilities which are used throught the confi
                        (abbreviate-file-name (buffer-file-name))
                      "%b"))
             (:eval (when (buffer-modified-p)
-                       " ↯"))))
+                     " ↯"))))
     (setq visible-bell t)
     (setq initial-major-mode 'text-mode)
     (defalias 'yes-or-no-p 'y-or-n-p)
@@ -72,7 +70,9 @@ This is mostly use-package and local utilities which are used throught the confi
     (global-set-key (kbd "M-C-{") #'beginning-of-buffer)
     (global-unset-key (kbd "M->"))
     (global-set-key (kbd "M-C-}") #'end-of-buffer)
-    )
+    :hook
+    (emacs-startup-hook . (lambda () (blink-cursor-mode -1)))
+    (emacs-startup-hook . global-hl-line-mode))
 
   (use-package emacs
     :ensure nil
@@ -93,15 +93,13 @@ This is mostly use-package and local utilities which are used throught the confi
     (global-unset-key (kbd "<right>"))
     (global-unset-key (kbd "<C-right>"))
     (global-unset-key (kbd "<M-right>"))
-    (global-unset-key (kbd "<C-M-right>"))
-    )
+    (global-unset-key (kbd "<C-M-right>")))
 
   (use-package cua-base
     :ensure nil
-    :demand t
     :commands (cua-mode)
-    :init
-    (cua-mode 0))
+    :hook
+    (emacs-startup-hook . (lambda () (cua-mode -1))))
 #+end_src
 ** nsm.el [built-in] - Network Security Manager
 #+begin_src emacs-lisp
@@ -124,19 +122,19 @@ This is mostly use-package and local utilities which are used throught the confi
 
   (use-package desktop
     :ensure nil
-    :init
-    (setq-default desktop-auto-save-timeout 300)
-    (setq-default desktop-dirname (file-name-as-directory user-emacs-cache-directory))
-    (setq-default desktop-path `(,desktop-dirname))
-    (setq-default desktop-base-file-name "desktop")
-    (setq-default desktop-files-not-to-save nil)
-    (setq-default desktop-globals-to-clear nil)
-    (setq-default desktop-load-locked-desktop t)
-    (setq-default desktop-missing-file-warning nil)
-    (setq-default desktop-restore-eager 0)
-    (setq-default desktop-restore-frames nil)
-    (setq-default desktop-save 'ask-if-new)
-    (desktop-save-mode 0))
+    :custom
+    (desktop-auto-save-timeout 300)
+    (desktop-path (list (file-name-as-directory user-emacs-cache-directory)))
+    (desktop-base-file-name "desktop")
+    (desktop-files-not-to-save nil)
+    (desktop-globals-to-clear nil)
+    (desktop-load-locked-desktop t)
+    (desktop-missing-file-warning nil)
+    (desktop-restore-eager 0)
+    (desktop-restore-frames nil)
+    (desktop-save 'ask-if-new)
+    :hook
+    (emacs-startup-hook . (lambda () (desktop-save-mode -1))))
 
   (use-package emacs
     :ensure nil
@@ -169,7 +167,7 @@ This is mostly use-package and local utilities which are used throught the confi
 #+begin_src emacs-lisp
   (use-package savehist
     :ensure nil
-    :diminish
+    :diminish (savehist-mode)
     :commands (savehist-mode)
     :custom
     (savehist-file (expand-file-name "savehist" user-emacs-cache-directory))
@@ -183,7 +181,7 @@ This is mostly use-package and local utilities which are used throught the confi
 #+begin_src emacs-lisp
   (use-package saveplace
     :ensure nil
-    :diminish
+    :diminish (save-place-mode)
     :custom
     (save-place-file (expand-file-name "saveplace" user-emacs-cache-directory))
     (save-place-forget-unreadable-files t)
@@ -227,8 +225,7 @@ This is mostly use-package and local utilities which are used throught the confi
 #+begin_src emacs-lisp
   (use-package recentf
     :ensure nil
-    :diminish
-    :defer 1
+    :diminish (recentf-mode)
     :custom
     (recentf-save-file (expand-file-name "recentf" user-emacs-cache-directory))
     (recentf-max-saved-items 200)
@@ -241,18 +238,19 @@ This is mostly use-package and local utilities which are used throught the confi
   (use-package display-line-numbers
     :ensure nil
     :disabled ;; For now, try to life without it, performance degradation is sometimes too bad.
-    :diminish
-    :commands (display-line-numbers-mode global-display-line-numbers-mode)
+    :diminish (display-line-numbers-mode)
+    :commands (display-line-numbers-mode
+               global-display-line-numbers-mode)
     :custom
     (display-line-numbers-type t)
     (display-line-numbers-width-start t)
     (display-line-numbers-grow-only t)
     :init
     (set-face-attribute 'line-number-current-line nil :weight 'bold)
-    (global-display-line-numbers-mode)
     :hook
     (prog-mode-hook . (lambda ()
-                        (setq display-line-numbers-type 'visual))))
+                        (setq display-line-numbers-type 'visual)))
+    (emacs-startup-hook . global-display-line-numbers-mode))
 #+end_src
 ** S - The long lost Emacs string manipulation library
 #+begin_src emacs-lisp
@@ -280,8 +278,9 @@ This is mostly use-package and local utilities which are used throught the confi
     :custom
     (package-enable-at-startup nil) ;; Also configured in early-init.el
     (package-quickstart nil) ;; Also configured in early-init.el
-    :bind (:map package-menu-mode-map
-                ("q" . kill-buffer-and-window)))
+    :bind (
+           :map package-menu-mode-map
+           ("q" . kill-buffer-and-window)))
 #+end_src
 ** GCMH - the Garbage Collector Magic Hack
 #+begin_src emacs-lisp
@@ -309,7 +308,6 @@ This is mostly use-package and local utilities which are used throught the confi
 #+begin_src emacs-lisp
   (use-package evil
     :ensure t
-    :demand t
     :custom
     (evil-echo-state nil)
     (evil-want-integration t)
@@ -329,19 +327,28 @@ This is mostly use-package and local utilities which are used throught the confi
     :pin melpa
     :after (:all evil org)
     :diminish (evil-org-mode)
-    :commands (evil-org-mode)
+    :commands (evil-org-mode
+               +evil-org-mode-toggle)
+    :config
+    (defun +evil-org-mode-toggle ()
+      "Enable/Disable `evil-org-mode' dependent on the status of the
+  `org-mode' and `evil-mode'."
+      (evil-org-mode (if (and (eq major-mode 'org-mode)
+                              (bound-and-true-p evil-mode))
+                         1 -1)))
     :hook
-    (org-mode-hook . evil-org-mode))
+    (org-mode-hook . +evil-org-mode-toggle)
+    (evil-mode-hook . +evil-org-mode-toggle))
 #+end_src
 ** evil-collection - A set of keybindings for Evil mode
 #+begin_src emacs-lisp
   (use-package evil-collection
     :ensure t
     :after (:all evil)
-    :demand t
     :diminish (evil-collection-unimpaired-mode)
-    :config
-    (evil-collection-init))
+    :commands (evil-collection-init)
+    :hook
+    (evil-mode-hook . evil-collection-init))
 #+end_src
 ** evil-escape - Customizable key sequence to escape from insert state and everything else in Emacs.
 #+begin_src emacs-lisp
@@ -349,17 +356,17 @@ This is mostly use-package and local utilities which are used throught the confi
     :ensure t
     :after (:all evil)
     :demand t
-    :diminish
-    :commands (evil-escape-mode)
+    :diminish (evil-escape-mode)
+    :commands (evil-escape-mode
+               +evil-escape-mode-toggle)
     :custom
     (evil-escape-key-sequence "jk")
     (evil-escape-delay 0.1)
     (evil-escape-unodered-key-sequence nil)
     :config
     (defun +evil-escape-mode-toggle ()
-      "Enable/Disable `evil-escape-mode' dependend on the status of the `evil-mode'."
-      (eval-and-compile (require 'evil-core))
-      (evil-escape-mode (if evil-mode 1 -1)))
+      "Enable/Disable `evil-escape-mode' dependent on the status of the `evil-mode'."
+      (evil-escape-mode (if (bound-and-true-p evil-mode) 1 -1)))
     :hook
     (evil-mode-hook . +evil-escape-mode-toggle))
 #+end_src
@@ -369,8 +376,8 @@ This is mostly use-package and local utilities which are used throught the confi
     :ensure t
     :after (:all evil)
     :demand t
-    :init
-    (evilem-default-keybindings "SPC"))
+    :hook
+    (emacs-startup-hook . (lambda () (evilem-default-keybindings "SPC"))))
 #+end_src
 ** my-evil-commands - Additional evil commands
 #+begin_src emacs-lisp
@@ -378,14 +385,14 @@ This is mostly use-package and local utilities which are used throught the confi
     :ensure nil
     :after (:all evil)
     :load-path "elisp"
-    :bind
-    (:map evil-normal-state-map
-          ("g ;" . +evil-goto-last-change-center)
-          ("g ," . +evil-goto-last-change-reverse-center)
-          :map evil-motion-state-map
-          ("`" . +evil-goto-mark-center)
-          ("'" . +evil-goto-mark-line-center)
-          ("C-w m" . switch-to-minibuffer-window)))
+    :bind (
+           :map evil-normal-state-map
+           ("g ;" . +evil-goto-last-change-center)
+           ("g ," . +evil-goto-last-change-reverse-center)
+           :map evil-motion-state-map
+           ("`" . +evil-goto-mark-center)
+           ("'" . +evil-goto-mark-line-center)
+           ("C-w m" . switch-to-minibuffer-window)))
 #+end_src
 * Interface enhancements
 ** Minibuffer [built-in]
@@ -443,9 +450,6 @@ This is mostly use-package and local utilities which are used throught the confi
     (setq minibuffer-eldef-shorten-default t)
     (setq minibuffer-depth-indicator-function (lambda (depth)
                                                 (format "[%2d] " depth)))
-    (minibuffer-depth-indicate-mode 1)
-    (minibuffer-electric-default-mode 1)
-
     :bind (("H-f" . myext-focus-minibuffer-or-completion)
            ("C-x k" . kill-buffer-save)
            ("C-x K" . kill-other-buffers)
@@ -462,14 +466,17 @@ This is mostly use-package and local utilities which are used throught the confi
            ("<backtab>" . minibuffer-force-complete)
            ("M-RET" . exit-minibuffer)
            :map minibuffer-local-filename-completion-map
-           ("RET" . minibuffer-force-complete-and-exit)
-           ))
+           ("RET" . minibuffer-force-complete-and-exit))
+    :hook
+    (emacs-startup-hook . minibuffer-depth-indicate-mode)
+    (emacs-startup-hook . minibuffer-electric-default-mode))
 #+end_src
 ** autorevert [built-in]
 #+begin_src emacs-lisp
   (use-package autorevert
     :ensure nil
-    :diminish (auto-revert-mode)
+    :diminish (auto-revert-mode
+               global-auto-revert-mode)
     :custom
     (auto-revert-verbose t)
     :hook
@@ -480,8 +487,7 @@ This is mostly use-package and local utilities which are used throught the confi
   (use-package imenu
     :ensure nil
     :hook
-    (imenu-after-jump-hook . recenter-top-bottom)
-    )
+    (imenu-after-jump-hook . recenter-top-bottom))
 
   (use-package imenu-list
     :ensure t
@@ -516,52 +522,54 @@ This is mostly use-package and local utilities which are used throught the confi
       (interactive)
       (call-interactively #'imenu-list-ret-dwim)
       (kill-buffer "*Ilist*"))
-    :hook
-    (imenu-list-major-mode-hook . (lambda () (display-line-numbers-mode 0)))
     :bind (("<f7>" . +imenu-list-toggle)
            :map imenu-list-major-mode-map
            ("RET" . imenu-list-display-dwim)
            ("<return>" . imenu-list-display-dwim)
            ("TAB" . hs-toggle-hiding)
-           ("<tab>" . hs-toggle-hiding)))
+           ("<tab>" . hs-toggle-hiding))
+    :hook
+    (imenu-list-major-mode-hook . (lambda () (display-line-numbers-mode 0))))
 #+end_src
 ** vertico - VERTical Interactive COmpletion
 #+begin_src emacs-lisp
   (use-package vertico
     :ensure t
     :commands (vertico-mode)
-    :init
-    (setq vertico-scroll-margin 0)
-    (setq vertico-count 10)
-    (setq vertico-resize nil)
-    (setq vertico-cycle t)
-    (vertico-mode 1)
-    (vertico-multiform-mode 1)
-    :bind (:map vertico-map
-                ("<right>" . forward-char)
-                ("<left>" . backward-char)
-                ("<up>" . vertico-previous)
-                ("<down>" . vertico-next)
-                ("C-<up>" . previous-history-element)
-                ("C-<down>" . next-history-element)
-                ("C-f" . forward-char)
-                ("C-b" . backward-char)
-                ("C-p" . vertico-previous)
-                ("C-n" . vertico-next)
-                ("<prior>" . vertico-scroll-up)
-                ("<next>" . vertico-scroll-down)
-                ("M-f" . vertico-quick-insert)
-                ("M-," . vertico-quick-insert)
-                ("M-." . vertico-quick-exit)))
+    :custom
+    (vertico-scroll-margin 0)
+    (vertico-count 10)
+    (vertico-resize nil)
+    (vertico-cycle t)
+    :bind (
+           :map vertico-map
+           ("<right>" . forward-char)
+           ("<left>" . backward-char)
+           ("<up>" . vertico-previous)
+           ("<down>" . vertico-next)
+           ("C-<up>" . previous-history-element)
+           ("C-<down>" . next-history-element)
+           ("C-f" . forward-char)
+           ("C-b" . backward-char)
+           ("C-p" . vertico-previous)
+           ("C-n" . vertico-next)
+           ("<prior>" . vertico-scroll-up)
+           ("<next>" . vertico-scroll-down)
+           ("M-f" . vertico-quick-insert)
+           ("M-," . vertico-quick-insert)
+           ("M-." . vertico-quick-exit))
+    :hook
+    (emacs-startup-hook . vertico-mode))
 
   (use-package vertico-directory
     :ensure nil ;; part of vertico
     :after (:all vertico)
     :commands (vertico-directory-tidy)
-    :bind (:map vertico-map
-                ("RET" . vertico-directory-enter)
-                ("DEL" . vertico-directory-delete-char)
-                ("M-DEL" . vertico-directory-delete-word))
+    :bind (
+           :map vertico-map
+           ("RET" . vertico-directory-enter)
+           ("DEL" . vertico-directory-delete-char)
+           ("M-DEL" . vertico-directory-delete-word))
     :hook
     (rfn-eshadow-update-overlay . vertico-directory-tidy))
 
@@ -575,7 +583,9 @@ This is mostly use-package and local utilities which are used throught the confi
             (consult-imenu reverse buffer)))
     (setq vertico-multiform-categories
           '((imenu (:not indexed mouse))
-            (symbol (vertico-sort-function . vertico-sort-alpha)))))
+            (symbol (vertico-sort-function . vertico-sort-alpha))))
+    :hook
+    (emacs-startup-hook . vertico-multiform-mode))
 #+end_src
 ** Consult - Consulting completing-read
 #+begin_src emacs-lisp
@@ -607,10 +617,10 @@ This is mostly use-package and local utilities which are used throught the confi
   (use-package consult-lsp
     :ensure t
     :after (:all lsp consult)
-    :bind (:map lsp-mode-map
-                ("M-s S" . consult-lsp-symbols)
-                ("M-s s" . consult-lsp-file-symbols))
-    )
+    :bind (
+           :map lsp-mode-map
+           ("M-s S" . consult-lsp-symbols)
+           ("M-s s" . consult-lsp-file-symbols)))
 
   (use-package emacs
     :ensure nil
@@ -623,12 +633,13 @@ This is mostly use-package and local utilities which are used throught the confi
   (use-package marginalia
     :ensure t
     :commands (marginalia-mode)
-    :init
+    :config
     (setq-default marginalia-annotators
                   '(marginalia-annotators-heavy
                     marginalia-annotators-light))
     (setq-default marginalia-max-relative-age 0)
-    (marginalia-mode))
+    :hook
+    (emacs-startup-hook . marginalia-mode))
 #+end_src
 ** Embark - Conveniently act on minibuffer completions
 #+begin_src emacs-lisp
@@ -670,15 +681,17 @@ This is mostly use-package and local utilities which are used throught the confi
     :after (:all embark consult)
     :hook
     (prot-embark-clear-live-buffers . zed-embark-clear-all-collection-buffers)
-    :bind (:map minibuffer-local-completion-map
-                ("C-n" . zed-embark-switch-to-completion-buffer-top)))
+    :bind (
+           :map minibuffer-local-completion-map
+           ("C-n" . zed-embark-switch-to-completion-buffer-top)))
 #+end_src
 ** Orderless - Use space-separated search terms in any order when completing with Icomplete or the default interface
 #+begin_src emacs-lisp
   (use-package orderless
     :ensure t
-    :demand t ;; If it is lazy loaded, a message is show in the minibuffer the
-              ;; first time it is used
+    ;; If it is lazy loaded, a message is show in the minibuffer the
+    ;; first time it is used
+    :demand t
     :custom
     (completion-styles '(basic orderless))
     (completion-category-defaults nil)
@@ -714,19 +727,26 @@ This is mostly use-package and local utilities which are used throught the confi
           '(my/orderless-literal-style-dispatcher
             my/orderless-initialism-style-dispatcher
             my/orderless-flex-style-dispatcher))
-    :bind (:map minibuffer-local-completion-map
-                ("SPC" . nil)
-                ("?" . nil)))
+    :bind (
+           :map minibuffer-local-completion-map
+           ("SPC" . nil)
+           ("?" . nil)))
 #+end_src
 ** perspective - switch between named "perspectives" of the editor
 #+begin_src emacs-lisp
+  ;; TODO: cleanup! persp-mode and perspective are two different packages!
   (use-package perspective
     :ensure t
-    :commands (persp-switch persp-kill persp-current-name)
-    :init
+    :commands (persp-mode
+               persp-switch
+               persp-kill
+               persp-current-name)
+    :custom
+    (persp-initial-frame-name "001")
+    (persp-auto-resume-time 0)
+    :config
     ;; TODO: look into the new behaviour
     (setq persp-suppress-no-prefix-key-warning t)
-    (setq persp-initial-frame-name "001")
     (defun persp-switch-to-frame-1 ()
       (interactive)
       (persp-switch "001"))
@@ -751,8 +771,6 @@ This is mostly use-package and local utilities which are used throught the confi
     (defun persp-kill-current-frame ()
       (interactive)
       (persp-kill (persp-current-name)))
-    :config
-    (persp-mode)
     :bind (("M-1" . persp-switch-to-frame-1)
            ("M-2" . persp-switch-to-frame-2)
            ("M-3" . persp-switch-to-frame-3)
@@ -760,20 +778,22 @@ This is mostly use-package and local utilities which are used throught the confi
            ("M-5" . persp-switch-to-frame-5)
            ("M-6" . persp-switch-to-frame-6)
            ("M-7" . persp-switch-to-frame-7)
-           ("M-0" . persp-kill-current-frame)))
+           ("M-0" . persp-kill-current-frame))
+    :hook
+    (emacs-startup-hook . persp-mode))
 #+end_src
 * Help / Discovery / Cheat sheets
 ** help [built-in]
 #+begin_src emacs-lisp
   (use-package help
     :ensure nil
-    :defer t
     :commands (help-mode)
-    :bind (:map help-mode-map
-                ("<mouse-8>" . help-go-back)
-                ("<wheel-left>" . help-go-back)
-                ("<mouse-9>" . help-go-forward)
-                ("<wheel-right>" . help-go-forward)))
+    :bind (
+           :map help-mode-map
+           ("<mouse-8>" . help-go-back)
+           ("<wheel-left>" . help-go-back)
+           ("<mouse-9>" . help-go-forward)
+           ("<wheel-right>" . help-go-forward)))
   (use-package help
     :ensure nil
     :after (:all evil help)
@@ -786,12 +806,13 @@ This is mostly use-package and local utilities which are used throught the confi
 #+begin_src emacs-lisp
   (use-package info
     :ensure nil
-    :bind (:map Info-mode-map
-                ("TAB" . Info-next-reference)
-                ("<mouse-8>" . Info-history-back)
-                ("<wheel-left>" . Info-history-back)
-                ("<mouse-9>" . Info-history-forward)
-                ("<wheel-right>" . Info-history-forward)))
+    :bind (
+           :map Info-mode-map
+           ("TAB" . Info-next-reference)
+           ("<mouse-8>" . Info-history-back)
+           ("<wheel-left>" . Info-history-back)
+           ("<mouse-9>" . Info-history-forward)
+           ("<wheel-right>" . Info-history-forward)))
 
   (use-package info
     :ensure nil
@@ -817,8 +838,9 @@ This is mostly use-package and local utilities which are used throught the confi
     :functions (Man-next-section)
     :custom
     (Man-notify-method 'aggressive)
-    :bind (:map Man-mode-map
-                ([remap Man-next-section] . (lambda () (interactive) (progn (Man-next-section 1) (recenter))))))
+    :bind (
+           :map Man-mode-map
+           ([remap Man-next-section] . (lambda () (interactive) (progn (Man-next-section 1) (recenter))))))
 #+end_src
 ** which-key - Display available key bindings in popup
 #+begin_src emacs-lisp
@@ -852,10 +874,9 @@ This is mostly use-package and local utilities which are used throught the confi
     (which-key-posframe-border-width 2)
     :config
     (defun +which-key-posframe-mode-toggle ()
-      "Enable/Disable `which-key-posframe-mode' dependend on the status of the
+      "Enable/Disable `which-key-posframe-mode' dependent on the status of the
   `which-key-mode'."
-      (eval-and-compile (require 'which-key))
-      (which-key-posframe-mode (if which-key-mode 1 -1)))
+      (which-key-posframe-mode (if (bound-and-true-p which-key-mode) 1 -1)))
     (defun +which-key-posframe-poshandler (info)
       (let ((centered (posframe-poshandler-frame-center info)))
         (cons (car centered) (/ (cdr centered) 2 ))))
@@ -895,7 +916,6 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package keyfreq
     :ensure t
-    :defer 2
     :commands (keyfreq-mode keyfreq-autosave-mode)
     :custom
     (keyfreq-buffer "*keyfreq-show*")
@@ -906,9 +926,9 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
        org-self-insert-command
        mwheel-scroll
        mouse-set-point))
-    :config
-    (keyfreq-mode 1)
-    (keyfreq-autosave-mode 1))
+    :hook
+    (emacs-startup-hook . keyfreq-mode)
+    (emacs-startup-hook . keyfreq-autosave-mode))
 #+end_src
 ** help-fns+.el - Extensions to `help-fns.el'
 #+begin_src emacs-lisp
@@ -936,7 +956,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   This kills the Dired buffer, then visits the parent directory."
       (interactive)
       (find-alternate-file ".."))
-    (defun my/dired-open ()
+    (defun +dired-open ()
       "In Dired, visit the file or directory named on this line.
   If one is about to visit a directory, it is opened via `find-alternate-file'.
   This kills the Dired buffer, then visits the directory.
@@ -945,29 +965,30 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       (if (file-directory-p (dired-get-file-for-visit))
           (find-alternate-file (dired-get-file-for-visit))
         (find-file (dired-get-file-for-visit))))
-    (defun my/dired-mouse-find-file (event)
+    (defun +dired-mouse-find-file (event)
       (interactive "e")
       (dired-mouse-find-file event #'find-file #'find-alternate-file))
-    :bind (:map dired-mode-map
-                ("<return>" . my/dired-open)
-                ("<up>" . dired-previous-line)
-                ("<down>" . dired-next-line)
-                ("^" . dired-alternate-up-directory)
-                ("o" . my/dired-open)
-                ("C-o" . dired-find-file-other-window)
-                ("C-<return>" . dired-find-file-other-window)
-                ("<mouse-2>" . my/dired-mouse-find-file)
-                ("<mouse-8>" . dired-alternate-up-directory)
-                ("C-<mouse-2>" . dired-mouse-find-file-other-window)
-                ("C-<mouse-1>" . dired-mouse-find-file-other-window)
-                ("C-<down-mouse-1>" . dired-mouse-find-file-other-window)))
+    :bind (
+           :map dired-mode-map
+           ("<return>" . +dired-open)
+           ("<up>" . dired-previous-line)
+           ("<down>" . dired-next-line)
+           ("^" . dired-alternate-up-directory)
+           ("o" . +dired-open)
+           ("C-o" . dired-find-file-other-window)
+           ("C-<return>" . dired-find-file-other-window)
+           ("<mouse-2>" . +dired-mouse-find-file)
+           ("<mouse-8>" . dired-alternate-up-directory)
+           ("C-<mouse-2>" . dired-mouse-find-file-other-window)
+           ("C-<mouse-1>" . dired-mouse-find-file-other-window)
+           ("C-<down-mouse-1>" . dired-mouse-find-file-other-window)))
 #+end_src
 ** neotree - A tree plugin like NerdTree for Vim
 #+begin_src emacs-lisp
   (use-package neotree
-    :disabled
     :ensure t
-    :defer 1
+    :disabled
+    :commands (neotree-toggle)
     :custom
     (neo-smart-open t)
     (neo-vc-integration '(face char))
@@ -986,16 +1007,17 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package treemacs
     :ensure t
-    :defer 1
-    :config
-    (setq-default treemacs-follow-mode t)
-    (setq-default treemacs-persist-file (expand-file-name "treemacs-persist" user-emacs-cache-directory))
-    :hook
-    (treemacs-mode-hook . (lambda () (display-line-numbers-mode 0)))
+    :commands (treemacs
+               treemacs-follow-mode)
+    :custom
+    (treemacs-persist-file (expand-file-name "treemacs-persist" user-emacs-cache-directory))
     :bind (("<f8>" . treemacs)
            :map treemacs-mode-map
            ("<up>" . treemacs-previous-line)
-           ("<down>" . treemacs-next-line)))
+           ("<down>" . treemacs-next-line))
+    :hook
+    (emacs-startup-hook . treemacs-follow-mode)
+    (treemacs-mode-hook . (lambda () (display-line-numbers-mode 0))))
 
   (use-package treemacs-projectile
     :ensure t
@@ -1014,6 +1036,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   (use-package quick-file-access
     :ensure nil
     :load-path "elisp"
+    :commands (quick-file-access-open-file)
     :config
     (setq-default quick-file-access-file-list
                   '("~/.emacs.d/settings.org"
@@ -1027,10 +1050,10 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package whitespace
     :ensure nil
-    :diminish
+    :diminish (whitespace-mode)
     :commands (whitespace-mode)
-    :init
-    (setq-default whitespace-style '(face tab-mark))
+    :custom
+    (whitespace-style '(face tab-mark))
     :hook
     (prog-mode-hook . whitespace-mode))
 #+end_src
@@ -1039,9 +1062,9 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   (use-package hi-lock
     :ensure nil
     :demand t
-    :diminish
-    :init
-    (defun my/highlight-region-or-symbol (&optional face)
+    :diminish (hi-lock-mode)
+    :config
+    (defun +highlight-region-or-symbol (&optional face)
       "Highlight occurences of either the currently region or the symbol at point."
       (interactive
        (list (hi-lock-read-face-name)))
@@ -1055,7 +1078,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
           (user-error "Nothing to highlight"))
         (hi-lock-set-pattern (regexp-quote thing-to-highlight) face)))
 
-    (defun my/unhighlight-region-or-symbol ()
+    (defun +unhighlight-region-or-symbol ()
       "Unhighlight either the currently region or the symbol at point."
       (interactive nil hi-lock-mode)
       (let ((thing-to-highlight
@@ -1064,40 +1087,42 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
                (thing-at-point 'symbol 'no-properties))))
         (unhighlight-regexp (regexp-quote thing-to-highlight))))
 
-    (defun my/unhighlight-all ()
+    (defun +unhighlight-all ()
       "Unhighlight everything that has been previously highlighted."
       (interactive nil hi-lock-mode)
       (unhighlight-regexp t))
-    :bind (("M-s h ." . my/highlight-region-or-symbol)
-           ("M-s h ," . my/unhighlight-region-or-symbol)
-           ("M-s h U" . my/unhighlight-all)))
+    :bind (("M-s h ." . +highlight-region-or-symbol)
+           ("M-s h ," . +unhighlight-region-or-symbol)
+           ("M-s h U" . +unhighlight-all)))
 #+end_src
 ** highlight-thing - Minimalistic minor mode to highlight current thing under point
 #+begin_src emacs-lisp
   (use-package highlight-thing
     :ensure t
     :demand t
-    :diminish
+    :diminish (highlight-thing-mode)
+    :commands (highlight-thing-mode
+               global-hightlight-thing-mode)
     :custom
     (highlight-thing-delay-seconds 2)
     (highlight-thing-exclude-thing-under-point t)
     (highlight-thing-prefer-active-region t)
-    :init
-    (global-highlight-thing-mode 1))
+    :hook
+    (emacs-startup-hook . global-highlight-thing-mode))
 #+end_src
 ** undo-tree - Treat undo history as a tree
 #+begin_src emacs-lisp
   (use-package undo-tree
     :ensure t
-    :demand t ;; we always want the undo tree and its presistance.
     :diminish (undo-tree-mode)
-    :commands (global-undo-tree-mode unto-tree-visualize unto-tree-undo)
+    :commands (global-undo-tree-mode
+               unto-tree-visualize
+               unto-tree-undo)
     :custom
     (undo-tree-auto-save-history t)
-    (undo-tree-history-directory-alist `(("." . ,(file-name-as-directory
-                                                  (expand-file-name
-                                                   "undo"
-                                                   user-emacs-cache-directory)))))
+    (undo-tree-history-directory-alist
+     `(("." . ,(file-name-as-directory
+                (expand-file-name "undo" user-emacs-cache-directory)))))
     (undo-tree-visualizer-diff t)
     (undo-tree-visualizer-timestamps t)
     :config
@@ -1105,13 +1130,15 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
         ((undo-dir (file-name-as-directory
                     (expand-file-name "undo" user-emacs-cache-directory))))
       (unless (file-exists-p undo-dir) (make-directory undo-dir t)))
-    (global-undo-tree-mode 1)
-    :bind (:map undo-tree-map
-                ([remap undo] . undo-tree-undo)
-                ([remap undo-redo] . undo-tree-redo)
-                ("C-x U" . undo-tree-visualize)
-                :map undo-tree-visualizer-mode-map
-                ("C-x u" . undo-tree-visualize-quit)))
+    :bind (
+           :map undo-tree-map
+           ([remap undo] . undo-tree-undo)
+           ([remap undo-redo] . undo-tree-redo)
+           ("C-x U" . undo-tree-visualize)
+           :map undo-tree-visualizer-mode-map
+           ("C-x u" . undo-tree-visualize-quit))
+    :hook
+    (emacs-startup-hook . global-undo-tree-mode))
 #+end_src
 * Editing
 ** expand-region - Increas the selected region by semantic units
@@ -1147,14 +1174,12 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
        (t
         (string-inflection-all-cycle))))
     :bind (("M-u" . string-inflection-upcase)
-           ("M-l" . string-inflection-cycle-auto-detection)
-    ))
+           ("M-l" . string-inflection-cycle-auto-detection)))
 #+end_src
 ** delsel [built-in] - delete selection if you insert
 #+begin_src emacs-lisp
   (use-package delsel
     :ensure nil
-    :demand t
     :commands (delete-selection-mode)
     :hook
     (emacs-startup-hook . delete-selection-mode))
@@ -1164,9 +1189,8 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package simple
     :ensure nil
-    :demand t
-    :init
-    (setq-default save-interprogram-paste-before-kill t)
+    :custom
+    (save-interprogram-paste-before-kill t)
     :bind
     (("<XF86Cut>" . clipboard-kill-region)
      ("<XF86Copy>" . clipboard-kill-ring-save)
@@ -1238,8 +1262,8 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :commands (disable-mouse-mode
                disable-mouse-global-mode
                disable-mouse-in-keymap)
-    :init
-    (disable-mouse-global-mode))
+    :hook
+    (emacs-startup-hook . disable-mouse-global-mode))
 
   (use-package emacs
     :ensure nil
@@ -1257,11 +1281,11 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :ensure t
     :custom
     (golden-ratio-scroll-highlight-flag nil "Do not highlight current line before/after scroll")
+    :bind (([remap scroll-down-command] . golden-ratio-scroll-screen-down)
+           ([remap scroll-up-command] . golden-ratio-scroll-screen-up))
     :hook
     (golden-ratio-scroll-screen-up-hook . (lambda () (recenter)))
-    (golden-ratio-scroll-screen-down-hook . (lambda () (recenter)))
-    :bind (([remap scroll-down-command] . golden-ratio-scroll-screen-down)
-           ([remap scroll-up-command] . golden-ratio-scroll-screen-up)))
+    (golden-ratio-scroll-screen-down-hook . (lambda () (recenter))))
 #+end_src
 ** move-text - Move current line or region with M-up or M-down.
 #+begin_src emacs-lisp
@@ -1300,9 +1324,10 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package smartparens
     :ensure t
-    :diminish
+    :diminish (smartparens-mode)
+    :commands (smartparens-mode)
     :config
-    (defun my/sp-beginning-of-sexp (&optional ARG)
+    (defun +sp-beginning-of-sexp (&optional ARG)
       "Like `sp-beginning-of-sexp` but a bit better.
   Falls back to `backward-sexp` if point does not move."
       (interactive "^P")
@@ -1310,7 +1335,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
         (sp-beginning-of-sexp ARG)
         (when (= (point) current-point)
           (backward-sexp ARG))))
-    (defun my/sp-end-of-sexp (&optional ARG)
+    (defun +sp-end-of-sexp (&optional ARG)
       "Like `sp-beginning-of-sexp` but a bit better.
   Falls back to `forward-sexp` if point does not move."
       (interactive "^P")
@@ -1320,8 +1345,8 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
           (forward-sexp ARG))))
     (setq sp-autoinsert-pair nil)
     (setq sp-escape-quotes-after-insert nil)
-    :bind (([remap backward-sexp] . my/sp-beginning-of-sexp)
-           ([remap forward-sexp] . my/sp-end-of-sexp))
+    :bind (([remap backward-sexp] . +sp-beginning-of-sexp)
+           ([remap forward-sexp] . +sp-end-of-sexp))
     :hook
     (prog-mode-hook . smartparens-mode))
 #+end_src
@@ -1358,12 +1383,12 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :ensure t
     :after (:all evil)
     :commands (global-evil-mc-mode)
-    :config
-    (global-evil-mc-mode 1)
     :init
     (setq-default evil-mc-one-cursor-show-mode-line-text nil)
     :bind (("C->" . evil-mc-make-cursor-move-next-line)
-           ("C-<" . evil-mc-make-cursor-move-prev-line)))
+           ("C-<" . evil-mc-make-cursor-move-prev-line))
+    :hook
+    (emacs-startup-hook . global-evil-mc-mode))
 #+end_src
 ** view.el [built-in] - peruse file or buffer without editing
 #+begin_src emacs-lisp
@@ -1386,24 +1411,25 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (setq isearch-regexp-lax-whitespace nil)
     (setq isearch-lazy-count t)
     (setq isearch-lazy-highlight t)
-    (defun my/isearch-and-regex (search-input &optional lax)
+    (defun +isearch-and-regex (search-input &optional lax)
       (message search-input)
       search-input)
-    (isearch-define-mode-toggle and "^" my/isearch-and-regex
+    (isearch-define-mode-toggle and "^" +isearch-and-regex
       "Turning on and search turns off regexp mode.")
-    :bind (:map isearch-mode-map
-                ("C-g" . isearch-cancel)
-                ("<help>" . nil)
-                ("C-h <help>" . nil)
-                ("<f1> <help>" . nil)
-                ("M-ESC ESC" . nil)))
+    :bind (
+           :map isearch-mode-map
+           ("C-g" . isearch-cancel)
+           ("<help>" . nil)
+           ("C-h <help>" . nil)
+           ("<f1> <help>" . nil)
+           ("M-ESC ESC" . nil)))
 #+end_src
 ** replace / occur [built-in]
 #+begin_src emacs-lisp
   (use-package replace
     :ensure nil
     :demand t
-    :init
+    :config
     (defun +occur-mode-move-beginning-of-line (arg)
       (interactive "^p")
       (or arg (setq arg 1))
@@ -1421,7 +1447,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
            ("C-M-%" . query-replace-regexp)
            :map occur-mode-map
            ("C-a" . +occur-mode-move-beginning-of-line)
-           ("^" . my/occur-mode-move-beginnig-of-line)
+           ("^" . +occur-mode-move-beginnig-of-line)
            ("q" . kill-buffer-and-window)
            ("<up>" . previous-line)
            ("<down>" . next-line)
@@ -1436,22 +1462,24 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package grep
     :ensure nil
-    :bind (:map grep-mode-map
-                ("e" . wgrep-change-to-wgrep-mode)
-                ("C-c '" . wgrep-change-to-wgrep-mode)
-                ("q" . kill-buffer-and-window)))
+    :bind (
+           :map grep-mode-map
+           ("e" . wgrep-change-to-wgrep-mode)
+           ("C-c '" . wgrep-change-to-wgrep-mode)
+           ("q" . kill-buffer-and-window)))
 #+end_src
 ** wgrep - Writable grep buffer and apply the changes to files
 #+begin_src emacs-lisp
   (use-package wgrep
     :ensure t
     :commands (wgrep-setup wgrep-change-to-wgrep-mode)
-    :bind (:map wgrep-mode-map
-                ("C-x C-s" . nil)
-                ("C-c c" . wgrep-finish-edit)
-                ("C-c k" . wgrep-abort-changes)
-                ("C-c r" . wgrep-remove-change)
-                ("C-c u" . wgrep-remove-all-change)))
+    :bind (
+           :map wgrep-mode-map
+           ("C-x C-s" . nil)
+           ("C-c c" . wgrep-finish-edit)
+           ("C-c k" . wgrep-abort-changes)
+           ("C-c r" . wgrep-remove-change)
+           ("C-c u" . wgrep-remove-all-change)))
 #+end_src
 ** rg - A search tool based on ripgrep
 #+begin_src emacs-lisp
@@ -1468,9 +1496,10 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (rg-command-line-flags nil)
     (rg-buffer-name "ripgrep")
     (rg-ignore-ripgreprc t)
-    :bind (:map rg-mode-map
-                ("C-c '" . wgrep-change-to-wgrep-mode)
-                ("q" . kill-buffer-and-window)))
+    :bind (
+           :map rg-mode-map
+           ("C-c '" . wgrep-change-to-wgrep-mode)
+           ("q" . kill-buffer-and-window)))
 
   (use-package rg-menu
     :ensure nil ;; part of rg
@@ -1570,10 +1599,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package emacs
     :ensure nil
-    :demand t
     :init
-    (line-number-mode 1)
-    (column-number-mode 1)
     (setq-default mode-line-percent-position '(-3 "%p"))
     ;; mode-line-position-column-line-format '(" %l,%c") ; Emacs 28
     (setq-default mode-line-format
@@ -1592,12 +1618,14 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
                     mode-line-modes
                     " "
                     mode-line-misc-info
-                    mode-line-end-spaces)))
+                    mode-line-end-spaces))
+    :hook
+    (emacs-startup-hook . line-number-mode)
+    (emacs-startup-hook . column-number-mode))
 
   (use-package telephone-line
     :ensure t
     :diminish (telephone-line-mode)
-    :demand t
     :custom
     (telephone-line-height 24)
     (telephone-line-primary-left-separator 'telephone-line-cubed-left)
@@ -1617,7 +1645,8 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
                                   telephone-line-projectile-segment))
                           (accent . (telephone-line-major-mode-segment))
                           (nil . (telephone-line-airline-position-segment))))
-    (telephone-line-mode t))
+    :hook
+    (emacs-startup-hook . telephone-line-mode))
 
   (use-package keycast
     :ensure t
@@ -1664,42 +1693,43 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   (use-package term
     :ensure nil
     :config
-    (defun my/kill-term-process-sentinel ()
+    (defun +kill-term-process-sentinel ()
       (let* ((buff (current-buffer))
              (proc (get-buffer-process buff)))
         (set-process-sentinel
          proc
          `(lambda (process event)
             (when (string= event "finished\n")
-                (kill-buffer ,buff))))))
+              (kill-buffer ,buff))))))
     :hook
     (term-mode-hook . (lambda () (display-line-numbers-mode 0)))
-    (term-exec-hook . my/kill-term-process-sentinel)
-    :bind (:map term-raw-map
-                ("M-1" . nil)
-                ("M-2" . nil)
-                ("M-3" . nil)
-                ("M-4" . nil)
-                ("M-5" . nil)
-                ("M-6" . nil)
-                ("M-7" . nil)
-                ("M-8" . nil)
-                ("M-9" . nil)
-                ("M-0" . nil)))
+    (term-exec-hook . +kill-term-process-sentinel)
+    :bind (
+           :map term-raw-map
+           ("M-1" . nil)
+           ("M-2" . nil)
+           ("M-3" . nil)
+           ("M-4" . nil)
+           ("M-5" . nil)
+           ("M-6" . nil)
+           ("M-7" . nil)
+           ("M-8" . nil)
+           ("M-9" . nil)
+           ("M-0" . nil)))
 #+end_src
 * TRAMP
 #+begin_src emacs-lisp
   (use-package tramp
     :ensure nil
-    :init
-    (setq-default tramp-persistency-file-name (expand-file-name "tramp" user-emacs-cache-directory)))
+    :custom
+    (tramp-persistency-file-name (expand-file-name "tramp" user-emacs-cache-directory)))
 #+end_src
 * Project management
 ** projectile - Manage and navigate projects in Emacs easily
 #+begin_src emacs-lisp
   (use-package projectile
     :ensure t
-    :diminish
+    :diminish (projectile-mode)
     :commands (projectile-mode)
     :custom
     (projectile-cache-file (expand-file-name "projectile.cache" user-emacs-cache-directory))
@@ -1707,12 +1737,12 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (projectile-tags-backend 'ggtags)
     (projectile-switch-project-action 'projectile-dired)
     (projectile-ignored-projects `(,user-emacs-directory))
-    :init
-    (projectile-mode)
     :bind (("<escape> <escape> p" . projectile-switch-project)
            ("C-x p o" . projectile-ripgrep)
            ("C-x p O" . projectile-grep)
-           ("C-x p t" . projectile-test-project)))
+           ("C-x p t" . projectile-test-project))
+    :hook
+    (emacs-startup-hook . projectile-mode))
 #+end_src
 ** fzf - A front-end for fzf.
 #+begin_src emacs-lisp
@@ -1725,7 +1755,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package abbrev
     :ensure nil
-    :diminish
+    :diminish (abbrev-mode)
     :commands (abbrev-mode
                edit-abbrevs-mode
                read-abbrev-file
@@ -1770,7 +1800,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :diminish (auto-insert-mode)
     :commands (auto-insert-mode define-auto-insert)
     :init
-    (defun my/auto-insert-using-yasnippet (mode name)
+    (defun +auto-insert-using-yasnippet (mode name)
       "Expand a yas snippet with the given NAME in MODE."
       (yas-expand-snippet
        (yas--template-content
@@ -1778,7 +1808,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (setq auto-insert 'other)
     (setq auto-insert-query nil)
     (setq auto-insert-alist nil)
-    (define-auto-insert '(sh-mode . "Shell script") '(lambda () (my/auto-insert-using-yasnippet 'sh-mode "new-file-template")))
+    (define-auto-insert '(sh-mode . "Shell script") '(lambda () (+auto-insert-using-yasnippet 'sh-mode "new-file-template")))
     :hook
     (find-file-hook . auto-insert)
     (emacs-startup-hook . auto-insert-mode))
@@ -1787,7 +1817,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package treesit
     :ensure nil
-    :demand
+    :demand t
     :if (file-directory-p
          (file-name-as-directory
           (expand-file-name "dist" (expand-file-name "tree-sitter-module" user-emacs-directory))))
@@ -1804,15 +1834,16 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :commands (yas-minor-mode
                yas-reload-all
                yas-expand-snippet)
+    :custom
+    (yas-snippet-dirs
+     `(,(file-name-as-directory (expand-file-name "snippets" user-emacs-directory))))
+    (yas-indent-line 'auto)
+    (yas-also-auto-indent-first-line t)
+    (yas-also-indent-empty-lines nil)
+    (yas-wrap-around-region t)
     :init
     (setq yas-alias-to-yas/prefix-p nil)
     :config
-    (setq yas-snippet-dirs
-          `(,(file-name-as-directory (expand-file-name "snippets" user-emacs-directory))))
-    (setq yas-indent-line 'auto)
-    (setq yas-also-auto-indent-first-line t)
-    (setq yas-also-indent-empty-lines nil)
-    (setq yas-wrap-around-region t)
     (yas-reload-all)
     :hook
     (prog-mode-hook . yas-minor-mode)
@@ -1823,24 +1854,25 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   (use-package lsp-mode
     :ensure t
     :commands (lsp)
-    :init
-    (defun +lsp-find-definition-at-mouse (click)
-      "Click to start `xref-find-definitions-at-mouse' at clicked point."
-      (interactive "e")
-      (call-interactively #'mouse-set-point)
-      (call-interactively #'xref-find-definitions-at-mouse))
     :custom
     (lsp-keymap-prefix "s-g")
     (lsp-session-file (expand-file-name "lsp-session-v1" user-emacs-cache-directory))
     (lsp-enable-snippet nil)
     (lsp-completion-provider :none)
+    :config
+    (defun +lsp-find-definition-at-mouse (click)
+      "Click to start `xref-find-definitions-at-mouse' at clicked point."
+      (interactive "e")
+      (call-interactively #'mouse-set-point)
+      (call-interactively #'xref-find-definitions-at-mouse))
+    :bind (
+           :map lsp-mode-map
+           ("C-<down-mouse-1>" . +lsp-find-definition-at-mouse)
+           ("C-<mouse-1>" . +lsp-find-definition-at-mouse)
+           ("<wheel-left>" . xref-go-back)
+           ("<wheel-right>" . xref-go-use))
     :hook
-    (lsp-mode-hook . company-mode)
-    :bind (:map lsp-mode-map
-                ("C-<down-mouse-1>" . +lsp-find-definition-at-mouse)
-                ("C-<mouse-1>" . +lsp-find-definition-at-mouse)
-                ("<wheel-left>" . xref-go-back)
-                ("<wheel-right>" . xref-go-use)))
+    (lsp-mode-hook . company-mode))
 
   (use-package lsp-ui
     :ensure t
@@ -1864,13 +1896,13 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package ggtags
     :ensure t
-    :diminish)
+    :diminish (ggtags-mode))
 #+end_src
 ** company - Modular text completion framework
 #+begin_src emacs-lisp
   (use-package company
     :ensure t
-    :diminish
+    :diminish (company-mode)
     :custom
     (company-tooltip-align-annotations t)
     (company-minimum-prefix-length 1)
@@ -1946,20 +1978,27 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 
   (use-package company-quickhelp
     :ensure t
+    :commands (company-quickhelp-mode
+               +company-quickhelp-mode-toggle)
     :custom
     (company-quickhelp-delay 1)
     (company-quickhelp-max-lines 40)
+    :config
+    (defun +company-quickhelp-mode-toggle ()
+      "Enable/Disable the `company-quickhelp-mode' dependent on the status of the
+  `company-mode'."
+      (company-quickhelp-mode (if (bound-and-true-p company-mode) 1 -1)))
     :hook
-    (company-mode-hook . company-quickhelp-mode))
+    (company-mode-hook . +company-quickhelp-mode-toggle))
 #+end_src
 ** flycheck - On-the-fly syntax checking
 #+begin_src emacs-lisp
   (use-package flycheck
     :ensure t
     :defer 1
-    :diminish
-    :functions (flycheck-define-error-level)
+    :diminish (flycheck-mode)
     :commands (flycheck-mode)
+    :functions (flycheck-define-error-level)
     :config
     (define-fringe-bitmap 'flycheck-fringe-bitmap-one-excl
       (vector #b00000000
@@ -2035,10 +2074,9 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (flycheck-popup-tip-error-prefix "\u27a4 ")
     :config
     (defun +flycheck-popup-tip-mode-toggle ()
-      "Enable/Disable `flycheck-popup-tip-mode' dependend on the status of the
+      "Enable/Disable `flycheck-popup-tip-mode' dependent on the status of the
   `flycheck-mode'."
-      (eval-and-compile (require 'flycheck))
-      (flycheck-popup-tip-mode (if flycheck-mode 1 -1)))
+      (flycheck-popup-tip-mode (if (bound-and-true-p flycheck-mode) 1 -1)))
     :hook
     (flycheck-mode-hook . +flycheck-popup-tip-mode-toggle))
 #+end_src
@@ -2060,7 +2098,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package cc-mode ;; built-in
     :ensure nil
-    :init
+    :config
     (defun my/c-mark-block ()
       "Put mark at end of current statement, point at beginning."
       (interactive)
@@ -2080,11 +2118,10 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
         (if (not project-root)
             t
           (file-exists-p (expand-file-name "compile_commands.json" project-root)))))
-    (defun my/c-mode-hook ()
+    (defun +c-mode-setup ()
       (lsp-maybe)
       (display-fill-column-indicator-mode) 
       (setq-local indent-tabs-mode nil))
-    :config
     (lsp-maybe-add-predicate 'c-mode #'lsp-maybe-active-if-compile-commands-in-projectile-root)
     :prettify
     (c-mode-common
@@ -2093,14 +2130,14 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
      ("->" . ?→)
      ("<=" . ?≦)
      (">=" . ?≧))
-    :bind
-    (:map c-mode-map
-          ("M-h" . my/c-mark-block)
-          ("C-M-h" . c-mark-function))
+    :bind (
+           :map c-mode-map
+           ("M-h" . my/c-mark-block)
+           ("C-M-h" . c-mark-function))
     :hook
-    (c-mode-common-hook . my/c-mode-hook)
-    (c-mode-hook . my/c-mode-hook)
-    (c++-mode-hook . my/c-mode-hook))
+    (c-mode-common-hook . +c-mode-setup)
+    (c-mode-hook . +c-mode-hook-setup)
+    (c++-mode-hook . +c-mode-setup))
 
   (defconst openjdk-cc-style
     `((c-recognize-knr-p . nil)
@@ -2184,18 +2221,15 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package elisp-mode
     :ensure nil
-    :init
-    (defun my/configure-elisp-mode ()
+    :config
+    (defun +elisp-mode-setup ()
       (setq-local indent-tabs-mode nil)
       (setq-local fill-column 80)
-      (setq-local show-trailing-whitespace t))
+      (setq-local show-trailing-whitespace t)
+      (display-fill-column-indicator-mode 1))
     :hook
-    (elisp-mode-hook . (lambda ()
-                         (my/configure-elisp-mode)
-                         (display-fill-column-indicator-mode)))
-    (emacs-lisp-mode-hook . (lambda ()
-                              (my/configure-elisp-mode)
-                              (display-fill-column-indicator-mode))))
+    (elisp-mode-hook . +elisp-mode-setup)
+    (emacs-lisp-mode-hook . +elisp-mode-setup))
 
   (use-package pp
     :ensure nil
@@ -2203,9 +2237,9 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 
   (use-package eldoc
     :ensure nil
-    :diminish
-    :config
-    (global-eldoc-mode 1))
+    :diminish (eldoc-mode)
+    :hook
+    (emacs-startup-hook . global-eldoc-mode))
 #+end_src
 ** Ocaml
 #+begin_src emacs-lisp
@@ -2224,13 +2258,13 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (tuareg-mode-hook . lsp)
     (tuareg-mode-hook . company-mode))
 
-  ;(use-package merlin
-  ;  :ensure t
-  ;  :after (:all tuareg)
-  ;  :config
-  ;  (add-hook 'tuareg-mode-hook 'merlin-mode)
-  ;  (add-hook 'merlin-mode-hook #'company-mode)
-  ;  (setq merlin-error-after-save nil))
+  ;;(use-package merlin
+  ;;  :ensure t
+  ;;  :after (:all tuareg)
+  ;;  :config
+  ;;  (add-hook 'tuareg-mode-hook 'merlin-mode)
+  ;;  (add-hook 'merlin-mode-hook #'company-mode)
+  ;;  (setq merlin-error-after-save nil))
 
   (use-package utop
     :ensure t
@@ -2308,7 +2342,7 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
     :ensure nil
     :commands (sh-mode)
     :init
-    (defun my/configure-sh-mode ()
+    (defun +sh-mode-setup ()
       (setq-local tab-width 4)
       (setq-local indent-tabs-mode nil)
       (setq-local fill-column 132)
@@ -2319,11 +2353,6 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
       (setq-local company-backends '((company-dabbrev-code :with company-yasnippet company-shell company-shell-env)
                                      (company-shell company-shell-env :with company-yasnippet))))
     (setq sh-basic-offset 4)
-    :hook
-    (sh-mode-hook . flycheck-mode)
-    (sh-mode-hook . company-mode)
-    (sh-mode-hook . display-fill-column-indicator-mode)
-    (sh-mode-hook . my/configure-sh-mode)
     :bind (:map sh-mode-map
                 ("C-c (" . nil)
                 ("C-c +" . nil)
@@ -2341,7 +2370,12 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
                 ("C-c C-u" . nil)
                 ("C-c C-w" . nil)
                 ("C-c C-x" . nil)
-                ("C-c C-z" . nil)))
+                ("C-c C-z" . nil))
+    :hook
+    (sh-mode-hook . flycheck-mode)
+    (sh-mode-hook . company-mode)
+    (sh-mode-hook . display-fill-column-indicator-mode)
+    (sh-mode-hook . +sh-mode-setup))
 
   (use-package shell
     :ensure nil
@@ -2363,10 +2397,10 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
     :ensure nil
     :defer t
     :init
-    (defun my/python-mode-hook ()
+    (defun +python-mode-setup ()
       (setq-local fill-column 80))
     :hook
-    (python-mode-hook . my/python-mode-hook)
+    (python-mode-hook . +python-mode-setup)
     (python-mode-hook . display-fill-column-indicator-mode))
 
   (use-package elpy
@@ -2392,12 +2426,14 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
     :ensure nil
     :mode (("\\.ASM\\'" . fasm-mode))
     :commands (fasm-mode)
+    :config
+    (defun +fasm-mode-setup ()
+      (setq-local fasm-basic-offset 8)
+      (setq-local tab-width 8)
+      (setq-local indent-tabs-mode t)
+      (setq-local fill-column 88))
     :hook
-    (fasm-mode-hook . (lambda ()
-                        (setq-local fasm-basic-offset 8)
-                        (setq-local tab-width 8)
-                        (setq-local indent-tabs-mode t)
-                        (setq-local fill-column 88))))
+    (fasm-mode-hook . +fasm-mode-setup))
 #+end_src
 ** jenkinsfile-mode
 #+begin_src emacs-lisp
@@ -2409,14 +2445,16 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
 #+begin_src emacs-lisp
   (use-package make-mode
     :ensure nil
+    :config
+    (defun +makefile-mode-setup ()
+      (setq-local tab-width 8)
+      (setq-local indent-tabs-mode t)
+      (setq-local fill-column 132)
+      (setq-local show-trailing-whitespace t)
+      (setq-local makefile-space 'trailing-whitespace)
+      (display-fill-column-indicator-mode 1))
     :hook
-    (makefile-mode-hook . (lambda ()
-                            (setq-local tab-width 8)
-                            (setq-local indent-tabs-mode t)
-                            (setq-local fill-column 132)
-                            (setq-local show-trailing-whitespace t)
-                            (setq-local makefile-space 'trailing-whitespace)
-                            (display-fill-column-indicator-mode 1))))
+    (makefile-mode-hook . +makefile-mode-setup))
 
   ;; TODO: put this into its own package
   (use-package emacs
@@ -2476,7 +2514,7 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
             (delete-char 1)))
           (fixup-whitespace))))
 
-    (evil-define-operator evil-makefile-join (beg end)
+    (evil-define-operator +evil-makefile-join (beg end)
       "Join the selected lines in a makefile specific way."
       :motion evil-line
       (let ((count (count-lines beg end)))
@@ -2485,7 +2523,7 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
         (goto-char beg)
         (dotimes (_ count)
           (+makefile-join-line 1))))
-  (evil-define-key 'normal 'makefile-mode-map (kbd "J") 'evil-makefile-join))
+    (evil-define-key 'normal 'makefile-mode-map (kbd "J") #'+evil-makefile-join))
 #+end_src
 * Markup languages
 ** Org Mode
@@ -2547,8 +2585,8 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
     :mode (("\\.md\\'" . markdown-mode)
            ("\\.markdown\\'" . markdown-mode))
     :commands (markdown-mode)
-    :config
-    (setq markdown-command "multimarkdown"))
+    :custom
+    (markdown-command "multimarkdown"))
 #+end_src
 ** TOML
 #+begin_src emacs-lisp
@@ -2597,16 +2635,17 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
 #+begin_src emacs-lisp
   (use-package magit
     :ensure t
-    :commands (magit-status git-commit-turn-on-flyspell)
+    :commands (
+               magit-status
+               magit-load-config-extensions
+               magit-auto-revert-mode
+               git-commit-turn-on-flyspell)
     :config
-    (magit-auto-revert-mode 1)
     (defun +kill-magit-buffers ()
       "Kill all magit buffers and restore the window configuration."
       (interactive)
       (magit-restore-window-configuration)
       (mapc #'kill-buffer (magit-mode-get-buffers)))
-    :hook
-    (magit-mode-hook . magit-load-config-extensions)
     :bind (
            :map magit-status-mode-map
            ("q" . +kill-magit-buffers)
@@ -2614,22 +2653,25 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
            ("M-1" . nil)
            ("M-2" . nil)
            ("M-3" . nil)
-           ("M-4" . nil)))
+           ("M-4" . nil))
+    :hook
+    (magit-mode-hook . magit-load-config-extensions)
+    (emacs-startup-hook . magit-auto-revert-mode))
 
   (use-package git-commit ;; part of magit
     :ensure nil
     :config
     (setq git-commit-summary-max-length 72)
-    :hook
-    (git-commit-setup-hook . (lambda ()
-                               (setq-local fill-column 72)
-                               (display-fill-column-indicator-mode t)
-                               (git-commit-turn-on-flyspell)
-                               (evil-insert-state)))
     :bind (
            :map git-commit-mode-map
            ("C-c c" . with-editor-finish)
-           ("C-c k" . with-editor-cancel)))
+           ("C-c k" . with-editor-cancel))
+    :hook
+    (git-commit-setup-hook . (lambda ()
+                               (setq-local fill-column 72)
+                               (display-fill-column-indicator-mode 1)
+                               (git-commit-turn-on-flyspell)
+                               (evil-insert-state))))
 
   (use-package git-modes
     :ensure t)
@@ -2665,7 +2707,7 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
 #+end_src
 * OTHER
 #+begin_src emacs-lisp
-  (defun my/ref-find-definitions-at-mouse (event)
+  (defun +ref-find-definitions-at-mouse (event)
     "Find the definition of identifier at or around mouse click.
   This command is intended to be bound to a mouse event."
     (interactive "e")
@@ -2678,7 +2720,7 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
         (user-error "No identifier here"))))
 
   (unless (fboundp 'xref-find-definitions-at-mouse)
-    (defalias 'xref-find-definitions-at-mouse 'my/xref-find-definitions-at-mouse))
+    (defalias 'xref-find-definitions-at-mouse '+xref-find-definitions-at-mouse))
 #+end_src
 * Postface
 #+begin_src emacs-lisp

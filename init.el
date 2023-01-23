@@ -35,12 +35,14 @@
 (unless (getenv "XDG_CACHE_HOME")
   (setenv "XDG_CACHE_HOME" (expand-file-name "~/.cache")))
 
-(unless (getenv "EMACS_CACHE_DIR")
-  (setenv "EMACS_CACHE_DIR" (expand-file-name "emacs" (getenv "XDG_CACHE_HOME"))))
-
-(defvar user-emacs-cache-directory
-  (getenv "EMACS_CACHE_DIR")
+(defconst user-emacs-cache-directory
+  (let ((env-value (getenv "EMACS_CACHE_DIR")))
+    (if env-value
+        env-value
+      (expand-file-name "emacs" (getenv "XDG_CACHE_HOME"))))
   "Directory for user specific Emacs cache files.")
+
+(setenv "EMACS_CACHE_DIR" user-emacs-cache-directory)
 
 (unless (file-exists-p user-emacs-cache-directory)
   (make-directory user-emacs-cache-directory))
@@ -141,13 +143,13 @@
 
 ;;;; Load settings
 
-(defun my/file-time-less-p (a b)
+(defun +file-time-less-p (a b)
   "Return non-nil if the file modification time for `A' is less than `B'."
   (time-less-p
    (file-attribute-modification-time (file-attributes a))
    (file-attribute-modification-time (file-attributes b))))
 
-(defun my/org-babel-load-file (file-org &optional do-byte-compile)
+(defun +org-babel-load-file (file-org &optional do-byte-compile)
   "Load the given `FILE-ORG' using `org-bable-load-file'.
 Also byte compiles the file and use the cached .elc, if `DO-BYTE-COMPILE'
 evaluates to a non-nil value."
@@ -155,15 +157,15 @@ evaluates to a non-nil value."
     (if (not (file-exists-p file-org))
         (error "Org file '%s' missing" file-org)
       (when (not (and (file-exists-p file-el)
-               (my/file-time-less-p file-org file-el)))
+                      (+file-time-less-p file-org file-el)))
         (progn
           (require 'org)
           (org-babel-tangle-file file-org file-el "emacs-lisp")
           (when do-byte-compile
             (byte-compile-file file-el))))
       (require 'settings (file-name-sans-extension file-el)))))
-      ;; found that one somewhere, shaves off another 200ms during startup.
-      ;; no idea if this has any negative side effects, nothing emerged yet.
+;; found that one somewhere, shaves off another 200ms during startup.
+;; no idea if this has any negative side effects, nothing emerged yet.
 ;;      (let ((file-name-handler-alist nil))
 ;;        (require 'settings (file-name-sans-extension file-el))))))
 
@@ -171,8 +173,8 @@ evaluates to a non-nil value."
 ;; messes up some of the use-package declaration.
 (let ((main-settings (expand-file-name "settings.org" user-emacs-directory))
       (local-settings (expand-file-name "settings-local.org" user-emacs-directory)))
-  (my/org-babel-load-file main-settings)
+  (+org-babel-load-file main-settings)
   (when (file-exists-p local-settings)
-    (my/org-babel-load-file local-settings)))
+    (+org-babel-load-file local-settings)))
 
 ;;; init.el ends here
