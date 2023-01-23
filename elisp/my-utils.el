@@ -1,6 +1,6 @@
-;; utils.el --- Utility functions                    -*- lexical-binding: t; -*-
+;; my-utils.el --- Utility functions                 -*- lexical-binding: t; -*-
 
-;; Copyright (c) 2020-2022 Christoph Göttschkes
+;; Copyright (c) 2020-2023 Christoph Göttschkes
 
 ;; Author: Christoph Göttschkes
 
@@ -25,22 +25,22 @@
 
 ;;; Code:
 
-(defun my/point-in-string-p ()
+(defun +point-in-string-p ()
   "Return non-nil if the point is in a string."
   (interactive)
   (nth 3 (syntax-ppss)))
 
-(defun my/point-in-comment-p ()
+(defun +point-in-comment-p ()
   "Return non-nil if the point is in a comment."
   (interactive)
   (nth 4 (syntax-ppss)))
 
-(defun my/point-in-string-or-comment-p ()
+(defun +point-in-string-or-comment-p ()
   "Return non-nil if the point is in a comment or string."
   (interactive)
-  (or (my/point-in-string-p) (my/point-in-comment-p)))
+  (or (+point-in-string-p) (+point-in-comment-p)))
 
-(defun my/delete-most-recent-window ()
+(defun +delete-most-recent-window ()
   "Delete the most recent window and kill its buffer."
   (interactive)
   (let ((most-recent-window (next-window))

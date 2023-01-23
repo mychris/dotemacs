@@ -302,7 +302,7 @@ This is mostly use-package and local utilities which are used throught the confi
     :ensure nil
     :demand t
     :load-path "elisp"
-    :bind (("C-x 9" . my/delete-most-recent-window)))
+    :bind (("C-x 9" . +delete-most-recent-window)))
 #+end_src
 * Evil
 ** evil - Extensible Vi layer for Emacs.
