@@ -1483,10 +1483,12 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 
   (use-package spacemacs-theme
     :ensure t
+    :pin melpa-stable
     :defer 1)
 
   (use-package solarized-theme
     :ensure t
+    :pin melpa-stable
     :defer 1)
 
   (use-package ample-theme
