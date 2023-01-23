@@ -375,11 +375,11 @@ This is mostly use-package and local utilities which are used throught the confi
     :load-path "elisp"
     :bind
     (:map evil-normal-state-map
-          ("g ;" . evil-goto-last-change-center)
-          ("g ," . evil-goto-last-change-reverse-center)
+          ("g ;" . +evil-goto-last-change-center)
+          ("g ," . +evil-goto-last-change-reverse-center)
           :map evil-motion-state-map
-          ("`" . evil-goto-mark-center)
-          ("'" . evil-gata-mark-line-center)
+          ("`" . +evil-goto-mark-center)
+          ("'" . +evil-goto-mark-line-center)
           ("C-w m" . switch-to-minibuffer-window)))
 #+end_src
 * Interface enhancements
@@ -1210,6 +1210,13 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   (global-set-key (kbd "M-}") #'forward-paragraph-recenter)
   (global-set-key (kbd "M-{") #'backward-paragraph-recenter)
   (global-set-key (kbd "M-i") #'back-to-indentation)
+#+end_src
+** goto-chg - Go to last change
+#+begin_src emacs-lisp
+  (use-package goto-chg
+    :ensure t
+    :commands (goto-last-change
+               goto-last-change-reverse))
 #+end_src
 ** disable-mouse - Disable mouse commands globally
 #+begin_src emacs-lisp
