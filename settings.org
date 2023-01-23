@@ -1516,44 +1516,44 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :ensure nil
     :demand t
     :init
-    (defvar my/font-cycle-list nil
-      "The list of fonts used by `my/font-cycle-step'")
-    (defvar my/font-cycle-list--idx 0
-      "The next index into `my/font-cycle-step'.
-  The element at that index will be used at the next call to `my/font-cycle-step'.")
-    (setq my/font-cycle-list nil)
-    (setq my/font-cycle-list--idx 0)
-    (defun my/font-cycle-step ()
-      "Cycles to the next font defined in `my/font-cycle-list'."
+    (defvar +font-cycle-list nil
+      "The list of fonts used by `+font-cycle-step'")
+    (defvar +font-cycle-list--idx 0
+      "The next index into `+font-cycle-step'.
+  The element at that index will be used at the next call to `+font-cycle-step'.")
+    (setq +font-cycle-list nil)
+    (setq +font-cycle-list--idx 0)
+    (defun +font-cycle-step ()
+      "Cycles to the next font defined in `+font-cycle-list'."
       (interactive)
-      (when (and (display-graphic-p) (not (null (cdr my/font-cycle-list))))
-        (let ((next-font (nth my/font-cycle-list--idx my/font-cycle-list)))
+      (when (and (display-graphic-p) (not (null (cdr +font-cycle-list))))
+        (let ((next-font (nth +font-cycle-list--idx +font-cycle-list)))
           (set-face-attribute 'default nil :font next-font)
           (message "Switching font to %s." next-font)
-          (setq my/font-cycle-list--idx (mod (1+ my/font-cycle-list--idx) (length my/font-cycle-list))))))
+          (setq +font-cycle-list--idx (mod (1+ +font-cycle-list--idx) (length +font-cycle-list))))))
     (when (display-graphic-p)
       (let ((font-list (font-family-list)))
         (when (member "Source Code Pro" font-list)
-          (push "Source Code Pro:size=12:hintstyle=hintfull:autohint=true:antialise=true:rgba=rgb" my/font-cycle-list))
+          (push "Source Code Pro:size=12:hintstyle=hintfull:autohint=true:antialise=true:rgba=rgb" +font-cycle-list))
         (when (member "Hack" font-list)
-          (push "Hack:size=12:hintstyle=hintfull:autohint=true:antialise=true:rgba=rgb" my/font-cycle-list))
+          (push "Hack:size=12:hintstyle=hintfull:autohint=true:antialise=true:rgba=rgb" +font-cycle-list))
         (when (member "Inconsolata" font-list)
-          (push "Inconsolata:size=14:hintstyle=hintfull:autohint=true:antialise=true:rgba=rgb" my/font-cycle-list))
+          (push "Inconsolata:size=14:hintstyle=hintfull:autohint=true:antialise=true:rgba=rgb" +font-cycle-list))
         (when (member "Victor Mono" font-list)
-          (push "Victor Mono:size=12:hintstyel=hintfull:autohint=true:antialise=true:rgba=rgb" my/font-cycle-list))
+          (push "Victor Mono:size=12:hintstyel=hintfull:autohint=true:antialise=true:rgba=rgb" +font-cycle-list))
         (when (member "Fira Code" font-list)
-          (push "Fira Code:size=12:hintstyle=hintfull:autohint=true:antialise=true:rgba=rgb" my/font-cycle-list)))
-      (if (null my/font-cycle-list)
+          (push "Fira Code:size=12:hintstyle=hintfull:autohint=true:antialise=true:rgba=rgb" +font-cycle-list)))
+      (if (null +font-cycle-list)
           (error "Failed to load custom fonts")
-        (my/font-cycle-step)))
-    (defun my/text-scale-reset ()
+        (+font-cycle-step)))
+    (defun +text-scale-reset ()
       (interactive)
       (text-scale-set 0))
     (set-face-background 'glyphless-char "red")
     :bind (("M-<kp-add>" . text-scale-increase)
            ("M-<kp-subtract>" . text-scale-decrease)
-           ("M-<kp-multiply>" . my/font-cycle-step)
-           ("M-<kp-0>" . my/text-scale-reset)))
+           ("M-<kp-multiply>" . +font-cycle-step)
+           ("M-<kp-0>" . +text-scale-reset)))
 #+end_src
 * Modeline
 #+begin_src emacs-lisp
