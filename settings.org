@@ -140,12 +140,27 @@ This is mostly use-package and local utilities which are used throught the confi
     :ensure nil
     :demand t
     :custom
-    (initial-buffer-choice t)
+    (initial-buffer-choice
+     #'(lambda ()
+         ;; On startup, choose the first file-backed buffer as the
+         ;; initial buffer, if one exists.
+         ;; Otherwise, choose the scratch-buffer.
+         (let ((buffers (buffer-list))
+               (result nil))
+           (while buffers
+             (if (buffer-file-name (car buffers))
+                 (setq result (car buffers)
+                       buffers nil)
+               (setq buffers (cdr buffers))))
+           (or result (get-scratch-buffer-create)))))
     (inhibit-startup-message t)
     (inhibit-startup-screen t)
     (inhibit-startup-buffer-menu t)
     :init
-    (setq-default inhibit-x-resources t))
+    (setq-default inhibit-x-resources t)
+    ;; This is a weird one, see
+    ;; https://emacshorrors.com/posts/advertising-your-freedom.html
+    (fset 'display-startup-echo-area-message 'ignore))
 #+end_src
 ** Make sure that UTF-8 is used everywhere.
 #+begin_src emacs-lisp
