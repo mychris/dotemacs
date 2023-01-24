@@ -348,6 +348,7 @@ This is mostly use-package and local utilities which are used throught the confi
     (defun +evil-org-mode-toggle ()
       "Enable/Disable `evil-org-mode' dependent on the status of the
   `org-mode' and `evil-mode'."
+      (interactive)
       (evil-org-mode (if (and (eq major-mode 'org-mode)
                               (bound-and-true-p evil-mode))
                          1 -1)))
@@ -386,6 +387,7 @@ This is mostly use-package and local utilities which are used throught the confi
     :config
     (defun +evil-escape-mode-toggle ()
       "Enable/Disable `evil-escape-mode' dependent on the status of the `evil-mode'."
+      (interactive)
       (evil-escape-mode (if (bound-and-true-p evil-mode) 1 -1)))
     :hook
     (evil-mode-hook . +evil-escape-mode-toggle))
@@ -896,6 +898,7 @@ This is mostly use-package and local utilities which are used throught the confi
     (defun +which-key-posframe-mode-toggle ()
       "Enable/Disable `which-key-posframe-mode' dependent on the status of the
   `which-key-mode'."
+      (interactive)
       (which-key-posframe-mode (if (bound-and-true-p which-key-mode) 1 -1)))
     (defun +which-key-posframe-poshandler (info)
       (let ((centered (posframe-poshandler-frame-center info)))
@@ -2022,6 +2025,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (defun +company-quickhelp-mode-toggle ()
       "Enable/Disable the `company-quickhelp-mode' dependent on the status of the
   `company-mode'."
+      (interactive)
       (company-quickhelp-mode (if (bound-and-true-p company-mode) 1 -1)))
     :hook
     (company-mode-hook . +company-quickhelp-mode-toggle))
@@ -2111,6 +2115,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (defun +flycheck-popup-tip-mode-toggle ()
       "Enable/Disable `flycheck-popup-tip-mode' dependent on the status of the
   `flycheck-mode'."
+      (interactive)
       (flycheck-popup-tip-mode (if (bound-and-true-p flycheck-mode) 1 -1)))
     :hook
     (flycheck-mode-hook . +flycheck-popup-tip-mode-toggle))
