@@ -1529,43 +1529,58 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 * Coloring / themes / fonts
 #+begin_src emacs-lisp
   (use-package all-the-icons
-    :ensure t
-    :defer 1)
+    :ensure t)
 
   (use-package zenburn-theme
-    :ensure t
-    :defer 1)
+    :ensure t)
 
   (use-package spacemacs-theme
     :ensure t
-    :pin melpa-stable
-    :defer 1)
+    :pin melpa-stable)
 
   (use-package solarized-theme
     :ensure t
-    :pin melpa-stable
-    :defer 1)
+    :pin melpa-stable)
 
   (use-package ample-theme
-    :ensure t
-    :defer 1)
+    :ensure t)
 
   (use-package sexy-monochrome-theme
-    :ensure t
-    :defer 1)
+    :ensure t)
 
   (use-package gruber-darker-theme
-    :ensure t
-    :defer 1)
+    :ensure t)
 
   (use-package doom-themes
-    :ensure t
-    :defer 1)
+    :ensure t)
 
   (use-package gruvbox-theme
-    :ensure t
-    :init
-    (load-theme 'gruvbox-dark-soft))
+    :ensure t)
+
+  (use-package custom
+    :ensure nil
+    :commands (switch-theme
+               load-theme
+               enable-theme)
+    :config
+    (defun switch-theme (theme)
+      (interactive
+       (list
+        (intern (completing-read "Switch custom theme: "
+                                 (mapcar #'symbol-name
+                                         (custom-available-themes))))))
+      (unless (custom-theme-name-valid-p theme)
+        (error "Invalid theme name `%s'" theme))
+      (unless (eq theme (car custom-enabled-themes))
+        (mapc #'disable-theme custom-enabled-themes)
+        (if (custom-theme-p theme)
+            (enable-theme theme)
+          (load-theme theme :no-confirm))))
+    :hook
+    (emacs-startup-hook . (lambda ()
+                            (if (display-graphic-p)
+                                (switch-theme 'gruvbox-dark-soft)
+                              (switch-theme 'gruvbox-dark-soft)))))
 
   (use-package face-remap
     :ensure nil
