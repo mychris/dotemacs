@@ -323,30 +323,32 @@ This is mostly use-package and local utilities which are used throught the confi
 #+begin_src emacs-lisp
   (use-package general
     :ensure t
-    :demand t)
+    :demand t
+    :init
+    (general-evil-setup))
 #+end_src
 * Evil
 ** evil - Extensible Vi layer for Emacs.
 #+begin_src emacs-lisp
-          (use-package evil
-            :ensure t
-            :custom
-            (evil-echo-state nil)
-            (evil-want-C-u-scroll t)
-            (evil-want-C-i-jump nil)
-            (evil-undo-system #'undo-tree)
-            :init
-            ;; `evil-collection' assumes that
-            ;;   `evil-want-keybinding' is set to `t'
-            ;;   `evil-want-integration' is set to `nil'
-            ;; before loading `evil' and `evil-collection'
-            ;; See https://github.com/emacs-evil/evil-collection#installation
-            (setq evil-want-integration t)
-            (setq evil-want-keybinding nil)
-            :config
-            (evil-select-search-module 'evil-search-module 'isearch)
-            :hook
-            (emacs-startup-hook . evil-mode))
+  (use-package evil
+    :ensure t
+    :custom
+    (evil-echo-state nil)
+    (evil-want-C-u-scroll t)
+    (evil-want-C-i-jump nil)
+    (evil-undo-system #'undo-tree)
+    :init
+    ;; `evil-collection' assumes that
+    ;;   `evil-want-keybinding' is set to `t'
+    ;;   `evil-want-integration' is set to `nil'
+    ;; before loading `evil' and `evil-collection'
+    ;; See https://github.com/emacs-evil/evil-collection#installation
+    (setq evil-want-integration t)
+    (setq evil-want-keybinding nil)
+    :config
+    (evil-select-search-module 'evil-search-module 'isearch)
+    :hook
+    (emacs-startup-hook . evil-mode))
 #+end_src
 ** evil-org - evil keybindings for org-mode
 #+begin_src emacs-lisp
@@ -423,101 +425,102 @@ This is mostly use-package and local utilities which are used throught the confi
     :ensure nil
     :after (:all evil)
     :load-path "elisp"
-    :bind (
-           :map evil-normal-state-map
-           ("g ;" . +evil-goto-last-change-center)
-           ("g ," . +evil-goto-last-change-reverse-center)
-           :map evil-motion-state-map
-           ("`" . +evil-goto-mark-center)
-           ("'" . +evil-goto-mark-line-center)
-           ("C-w m" . switch-to-minibuffer-window)))
+    :general
+    (:states 'normal
+             "g ;" #'+evil-goto-last-change-center
+             "g ," #'+evil-goto-last-change-reverse-center)
+    (:states 'motion
+             "`" #'+evil-goto-mark-center
+             "'" #'+evil-goto-mark-line-center
+             "C-w m" #'switch-to-minibuffer-window))
 #+end_src
 * Interface enhancements
 ** Minibuffer [built-in]
 #+begin_src emacs-lisp
-    (use-package minibuffer
-      :ensure nil
-      :config
-      (defun switch-to-minibuffer-window ()
-        "Switch to minibuffer window (if active)."
-        (interactive)
-        (when (active-minibuffer-window)
-          (select-frame-set-input-focus (window-frame (active-minibuffer-window)))
-          (select-window (active-minibuffer-window))))
+  (use-package minibuffer
+    :ensure nil
+    :config
+    (defun switch-to-minibuffer-window ()
+      "Switch to minibuffer window (if active)."
+      (interactive)
+      (when (active-minibuffer-window)
+        (select-frame-set-input-focus (window-frame (active-minibuffer-window)))
+        (select-window (active-minibuffer-window))))
 
-      (defun kill-other-buffers ()
-        "Kill all other buffers."
-        (interactive)
-        (mapc 'kill-buffer-save (delq (current-buffer) (buffer-list))))
+    (defun kill-other-buffers ()
+      "Kill all other buffers."
+      (interactive)
+      (mapc 'kill-buffer-save (delq (current-buffer) (buffer-list))))
 
-      ;; https://www.emacswiki.org/emacs/KillingBuffers#toc9
-      (defvar kill-buffer-save-list '("*scratch*" "*Messages*")
-        "A list holding buffer names which should not be killed by `kill-buffer-save'.")
-      (defun kill-buffer-save (&optional buffer-or-name)
-        "Only kill buffers not in the kill-buffer-save-list."
-        (interactive)
-        (or buffer-or-name (setq buffer-or-name (current-buffer)))
-        (if (member
-             (if (bufferp buffer-or-name) (buffer-name buffer-or-name) buffer-or-name)
-             kill-buffer-save-list)
-            (bury-buffer buffer-or-name)
-          (kill-buffer buffer-or-name)))
-      (defun myext-focus-minibuffer-or-completion ()
-        "Focus the active minibuffer or completion window.
-    TODO: needs refactoring."
-        (interactive)
-        (let* ((mini (active-minibuffer-window))
-               (completions (get-window-with-predicate
-                             (lambda (window)
-                               (org-string-match-p
-                                "\\*\\(Completions\\|Embark Collect \\(Live\\|Completions\\)\\)"
-                                (format "%s" window))))))
-          (cond ((and mini (not (minibufferp)))
-                 (select-window mini nil))
-                ((and completions (not (eq (selected-window) completions)))
-                 (select-window completions nil)))))
-      (setq completion-styles '(basic orderless))
-      (setq completion-category-defaults nil)
-      (setq completion-cycle-threshold 5)
-      (setq completion-ignore-case t)
-      (setq completion-category-defaults nil)
-      (setq completion-auto-help nil)
-      (setq read-file-name-completion-ignore-case t)
-      (setq read-buffer-completion-ignore-case t)
-      (setq completion-ignore-case t)
-      (setq enable-recursive-minibuffers t)
-      :bind (("H-f" . myext-focus-minibuffer-or-completion)
-             ("C-x k" . kill-buffer-save)
-             ("C-x K" . kill-other-buffers)
-             ("C-x C-o" . switch-to-minibuffer-window)
-             :map minibuffer-local-map
-             ("<left>" . left-char)
-             ("C-<left>" . left-word)
-             ("<right>" . right-char)
-             ("C-<right>" . right-word)
-             ("C-<kp-7>" . minibuffer-keyboard-quit)
-             :map minibuffer-local-completion-map
-             ("RET" . minibuffer-force-complete-and-exit)
-             ("<tab>" . minibuffer-complete)
-             ("<backtab>" . minibuffer-force-complete)
-             ("M-RET" . exit-minibuffer)
-             :map minibuffer-local-filename-completion-map
-             ("RET" . minibuffer-force-complete-and-exit)))
+    ;; https://www.emacswiki.org/emacs/KillingBuffers#toc9
+    (defvar kill-buffer-save-list '("*scratch*" "*Messages*")
+      "A list holding buffer names which should not be killed by `kill-buffer-save'.")
+    (defun kill-buffer-save (&optional buffer-or-name)
+      "Only kill buffers not in the kill-buffer-save-list."
+      (interactive)
+      (or buffer-or-name (setq buffer-or-name (current-buffer)))
+      (if (member
+           (if (bufferp buffer-or-name) (buffer-name buffer-or-name) buffer-or-name)
+           kill-buffer-save-list)
+          (bury-buffer buffer-or-name)
+        (kill-buffer buffer-or-name)))
+    (defun myext-focus-minibuffer-or-completion ()
+      "Focus the active minibuffer or completion window.
+  TODO: needs refactoring."
+      (interactive)
+      (let* ((mini (active-minibuffer-window))
+             (completions (get-window-with-predicate
+                           (lambda (window)
+                             (org-string-match-p
+                              "\\*\\(Completions\\|Embark Collect \\(Live\\|Completions\\)\\)"
+                              (format "%s" window))))))
+        (cond ((and mini (not (minibufferp)))
+               (select-window mini nil))
+              ((and completions (not (eq (selected-window) completions)))
+               (select-window completions nil)))))
+    (setq completion-styles '(basic orderless))
+    (setq completion-category-defaults nil)
+    (setq completion-cycle-threshold 5)
+    (setq completion-ignore-case t)
+    (setq completion-category-defaults nil)
+    (setq completion-auto-help nil)
+    (setq read-file-name-completion-ignore-case t)
+    (setq read-buffer-completion-ignore-case t)
+    (setq completion-ignore-case t)
+    (setq enable-recursive-minibuffers t)
+    :general
+    ("H-f" #'myext-focus-minibuffer-or-completion)
+    ("C-x k" #'kill-buffer-save)
+    ("C-x K" #'kill-other-buffers)
+    ("C-x C-o" #'switch-to-minibuffer-window)
+    (:keymaps 'minibuffer-local-map
+              "<left>" #'left-char
+              "C-<left>" #'left-word
+              "<right>" #'right-char
+              "C-<right>" #'right-word
+              "C-<kp-7>" #'minibuffer-keyboard-quit)
+    (:keymaps 'minibuffer-local-completion-map
+              "RET" #'minibuffer-force-complete-and-exit
+              "<tab>" #'minibuffer-complete
+              "<backtab>" #'minibuffer-force-complete
+              "M-RET" #'exit-minibuffer)
+    (:keymaps 'minibuffer-local-filename-completion-map
+              "RET" #'minibuffer-force-complete-and-exit))
 
-    (use-package minibuf-eldef
-      :ensure nil
-      :config
-      (setq minibuffer-default-prompt-format " [...]")
-      :hook
-      (emacs-startup-hook . minibuffer-electric-default-mode))
+  (use-package minibuf-eldef
+    :ensure nil
+    :config
+    (setq minibuffer-default-prompt-format " [...]")
+    :hook
+    (emacs-startup-hook . minibuffer-electric-default-mode))
 
-    (use-package mb-depth
-      :ensure nil
-      :config
-      (setq minibuffer-depth-indicator-function
-            (lambda (depth) (format "[%2d] " depth)))
-      :hook
-      (emacs-startup-hook . minibuffer-depth-indicate-mode))
+  (use-package mb-depth
+    :ensure nil
+    :config
+    (setq minibuffer-depth-indicator-function
+          (lambda (depth) (format "[%2d] " depth)))
+    :hook
+    (emacs-startup-hook . minibuffer-depth-indicate-mode))
 #+end_src
 ** autorevert [built-in]
 #+begin_src emacs-lisp
@@ -570,12 +573,13 @@ This is mostly use-package and local utilities which are used throught the confi
       (interactive)
       (call-interactively #'imenu-list-ret-dwim)
       (kill-buffer "*Ilist*"))
-    :bind (("<f7>" . +imenu-list-toggle)
-           :map imenu-list-major-mode-map
-           ("RET" . imenu-list-display-dwim)
-           ("<return>" . imenu-list-display-dwim)
-           ("TAB" . hs-toggle-hiding)
-           ("<tab>" . hs-toggle-hiding))
+    :general
+    ("<f7>" #'+imenu-list-toggle)
+    (:keymaps 'imenu-list-major-mode-map
+              "RET" #'imenu-list-display-dwim
+              "<return>" #'imenu-list-display-dwim
+              "TAB" #'hs-toggle-hiding
+              "<tab>" #'hs-toggle-hiding)
     :hook
     (imenu-list-major-mode-hook . (lambda () (display-line-numbers-mode 0))))
 #+end_src
@@ -589,23 +593,23 @@ This is mostly use-package and local utilities which are used throught the confi
     (vertico-count 10)
     (vertico-resize nil)
     (vertico-cycle t)
-    :bind (
-           :map vertico-map
-           ("<right>" . forward-char)
-           ("<left>" . backward-char)
-           ("<up>" . vertico-previous)
-           ("<down>" . vertico-next)
-           ("C-<up>" . previous-history-element)
-           ("C-<down>" . next-history-element)
-           ("C-f" . forward-char)
-           ("C-b" . backward-char)
-           ("C-p" . vertico-previous)
-           ("C-n" . vertico-next)
-           ("<prior>" . vertico-scroll-up)
-           ("<next>" . vertico-scroll-down)
-           ("M-f" . vertico-quick-insert)
-           ("M-," . vertico-quick-insert)
-           ("M-." . vertico-quick-exit))
+    :general
+    (:keymaps 'vertico-map
+              "<right>" #'forward-char
+              "<left>" #'backward-char
+              "<up>" #'vertico-previous
+              "<down>" #'vertico-next
+              "C-<up>" #'previous-history-element
+              "C-<down>" #'next-history-element
+              "C-f" #'forward-char
+              "C-b" #'backward-char
+              "C-p" #'vertico-previous
+              "C-n" #'vertico-next
+              "<prior>" #'vertico-scroll-up
+              "<next>" #'vertico-scroll-down
+              "M-f" #'vertico-quick-insert
+              "M-," #'vertico-quick-insert
+              "M-." #'vertico-quick-exit)
     :hook
     (emacs-startup-hook . vertico-mode))
 
@@ -613,11 +617,11 @@ This is mostly use-package and local utilities which are used throught the confi
     :ensure nil ;; part of vertico
     :after (:all vertico)
     :commands (vertico-directory-tidy)
-    :bind (
-           :map vertico-map
-           ("RET" . vertico-directory-enter)
-           ("DEL" . vertico-directory-delete-char)
-           ("M-DEL" . vertico-directory-delete-word))
+    :general
+    (:keymaps 'vertico-map
+              "RET" #'vertico-directory-enter
+              "DEL" #'vertico-directory-delete-char
+              "M-DEL" #'vertico-directory-delete-word)
     :hook
     (rfn-eshadow-update-overlay . vertico-directory-tidy))
 
@@ -651,33 +655,35 @@ This is mostly use-package and local utilities which are used throught the confi
     (consult-async-input-debounce 0.5)
     (consult-async-input-throttle 0.8)
     (consult-narrow-key ">")
-    :bind (("M-g l" . consult-goto-line)
-           ("M-g M-l" . consult-goto-line)
-           ("M-X" . consult-mode-command)
-           ("M-s m" . consult-mark)
-           ("M-s i" . consult-imenu)
-           ("M-s y" . consult-yank)
-           ("M-s l" . consult-line)
-           ("M-s g" . consult-ripgrep)
-           ([remap switch-to-buffer] . consult-buffer)
-           ([remap jump-to-register] . consult-register-load)
-           ([remap point-to-register] . consult-register-store)
-           :map consult-narrow-map
-           ("?" . consult-narrow-help)))
+    :general
+    ("M-g l" #'consult-goto-line
+     "M-g M-l" #'consult-goto-line
+     "M-X" #'consult-mode-command
+     "M-s m" #'consult-mark
+     "M-s i" #'consult-imenu
+     "M-s y" #'consult-yank
+     "M-s l" #'consult-line
+     "M-s g" #'consult-ripgrep
+     [remap switch-to-buffer] #'consult-buffer
+     [remap jump-to-register] #'consult-register-load
+     [remap point-to-register] #'consult-register-store)
+    (:keymaps 'consult-narrow-map
+              "?" #'consult-narrow-help))
 
   (use-package consult-lsp
     :ensure t
     :after (:all lsp consult)
-    :bind (
-           :map lsp-mode-map
-           ("M-s S" . consult-lsp-symbols)
-           ("M-s s" . consult-lsp-file-symbols)))
+    :general
+    (:keymaps 'lsp-mode-map
+              "M-s S" #'consult-lsp-symbols
+              "M-s s" #'consult-lsp-file-symbols))
 
   (use-package emacs
     :ensure nil
     :after (:all evil consult)
-    :init
-    (evil-global-set-key 'normal (kbd "g l") #'consult-goto-line))
+    :general
+    (:states 'normal
+             "g l" #'consult-goto-line))
 #+end_src
 ** Marginalia - Enrich existing commands with completion annotations
 #+begin_src emacs-lisp
@@ -713,14 +719,15 @@ This is mostly use-package and local utilities which are used throught the confi
       "Toggle the mark of the candidate at point in an Embark collect buffer."
       (interactive)
       (embark-collect-mark (embark-collect--marked-p)))
-    :bind (("M-g a" . embark-act)
-           ("M-g M-a" . embark-act)
-           :map embark-collect-mode-map
-           ("SPC" . embark-collect-toggle-mark)
-           :map minibuffer-local-map
-           ("M-a" . embark-act)
-           ("M-b" . embark-become)
-           ("M-e" . embark-export)))
+    :general
+    ("M-g a" #'embark-act
+     "M-g M-a" #'embark-act)
+    (:keymaps 'embark-collect-mode-map
+              "SPC" #'embark-collect-toggle-mark)
+    (:keymaps 'minibuffer-local-map
+              "M-a" #'embark-act
+              "M-b" #'embark-become
+              "M-e" #'embark-export))
 
   (use-package embark-consult
     :ensure t
@@ -734,9 +741,9 @@ This is mostly use-package and local utilities which are used throught the confi
     :after (:all embark consult)
     :hook
     (prot-embark-clear-live-buffers . zed-embark-clear-all-collection-buffers)
-    :bind (
-           :map minibuffer-local-completion-map
-           ("C-n" . zed-embark-switch-to-completion-buffer-top)))
+    :general
+    (:keymaps 'minibuffer-local-completion-map
+              "C-n" #'zed-embark-switch-to-completion-buffer-top))
 #+end_src
 ** Orderless - Use space-separated search terms in any order when completing with Icomplete or the default interface
 #+begin_src emacs-lisp
@@ -780,10 +787,10 @@ This is mostly use-package and local utilities which are used throught the confi
           '(my/orderless-literal-style-dispatcher
             my/orderless-initialism-style-dispatcher
             my/orderless-flex-style-dispatcher))
-    :bind (
-           :map minibuffer-local-completion-map
-           ("SPC" . nil)
-           ("?" . nil)))
+    :general
+    (:keymaps 'minibuffer-local-completion-map
+              "SPC" nil
+              "?" nil))
 #+end_src
 ** perspective - switch between named "perspectives" of the editor
 #+begin_src emacs-lisp
@@ -824,14 +831,15 @@ This is mostly use-package and local utilities which are used throught the confi
     (defun persp-kill-current-frame ()
       (interactive)
       (persp-kill (persp-current-name)))
-    :bind (("M-1" . persp-switch-to-frame-1)
-           ("M-2" . persp-switch-to-frame-2)
-           ("M-3" . persp-switch-to-frame-3)
-           ("M-4" . persp-switch-to-frame-4)
-           ("M-5" . persp-switch-to-frame-5)
-           ("M-6" . persp-switch-to-frame-6)
-           ("M-7" . persp-switch-to-frame-7)
-           ("M-0" . persp-kill-current-frame))
+    :general
+    ("M-1" #'persp-switch-to-frame-1
+     "M-2" #'persp-switch-to-frame-2
+     "M-3" #'persp-switch-to-frame-3
+     "M-4" #'persp-switch-to-frame-4
+     "M-5" #'persp-switch-to-frame-5
+     "M-6" #'persp-switch-to-frame-6
+     "M-7" #'persp-switch-to-frame-7
+     "M-0" #'persp-kill-current-frame)
     :hook
     (emacs-startup-hook . persp-mode))
 #+end_src
@@ -841,48 +849,41 @@ This is mostly use-package and local utilities which are used throught the confi
   (use-package help
     :ensure nil
     :commands (help-mode)
-    :bind (
-           :map help-mode-map
-           ("<mouse-8>" . help-go-back)
-           ("<wheel-left>" . help-go-back)
-           ("<mouse-9>" . help-go-forward)
-           ("<wheel-right>" . help-go-forward)))
-  (use-package help
-    :ensure nil
-    :after (:all evil help)
-    :config
-    (evil-define-key 'motion help-mode-map
-      (kbd "<mouse-8>") #'help-go-back
-      (kbd "<wheel-left>") #'help-go-back))
+    :general
+    (:keymaps 'help-mode-map
+              "<mouse-8>" #'help-go-back
+              "<wheel-left>" #'help-go-back
+              "<mouse-9>" #'help-go-forward
+              "<wheel-right>" #'help-go-forward)
+    (:states 'motion
+             :keymaps 'help-mode-map
+             "<mouse-8>" #'help-go-back
+             "<wheel-left>" #'help-go-back))
 #+end_src
 ** info [built-in]
 #+begin_src emacs-lisp
   (use-package info
     :ensure nil
-    :bind (
-           :map Info-mode-map
-           ("TAB" . Info-next-reference)
-           ("<mouse-8>" . Info-history-back)
-           ("<wheel-left>" . Info-history-back)
-           ("<mouse-9>" . Info-history-forward)
-           ("<wheel-right>" . Info-history-forward)))
-
-  (use-package info
-    :ensure nil
-    :after (:all evil info)
-    :config
-    (evil-define-key 'motion Info-mode-map
-      (kbd "<return>") #'Info-follow-nearest-node
-      (kbd "C-t") #'Info-history-back
-      (kbd "C-o") #'Info-history-back
-      (kbd "C-i") #'Info-history-forward
-      (kbd "gj") #'Info-next
-      (kbd "gk") #'Info-prev
-      (kbd "TAB") #'Info-next-reference
-      (kbd "g TAB") #'Info-next-reference
-      (kbd "g]") #'Info-next-reference
-      (kbd "g[") #'Info-prev-reference
-      (kbd "T") #'Info-toc))
+    :general
+    (:keymaps 'Info-mode-map
+              "TAB" #'Info-next-reference
+              "<mouse-8>" #'Info-history-back
+              "<wheel-left>" #'Info-history-back
+              "<mouse-9>" #'Info-history-forward
+              "<wheel-right>" #'Info-history-forward)
+    (:states 'motion
+             :keymaps 'Info-mode-map
+             "<return>" #'Info-follow-nearest-node
+             "C-t" #'Info-history-back
+             "C-o" #'Info-history-back
+             "C-i" #'Info-history-forward
+             "gj" #'Info-next
+             "gk" #'Info-prev
+             "TAB" #'Info-next-reference
+             "g TAB" #'Info-next-reference
+             "g]" #'Info-next-reference
+             "g[" #'Info-prev-reference
+             "T" #'Info-toc))
 #+end_src
 ** man [built-in]
 #+begin_src emacs-lisp
@@ -891,12 +892,12 @@ This is mostly use-package and local utilities which are used throught the confi
     :commands (Man-next-section)
     :custom
     (Man-notify-method 'aggressive)
-    :bind (
-           :map Man-mode-map
-           ([remap Man-next-section] . (lambda (_n)
-                                         (interactive "p" man-common)
-                                         (call-interactively #'Man-next-section)
-                                         (recenter)))))
+    :general
+    (:keymaps 'Man-mode-map
+              [remap Man-next-section] #'(lambda (_n)
+                                           (interactive "p" man-common)
+                                           (call-interactively #'Man-next-section)
+                                           (recenter))))
 #+end_src
 ** which-key - Display available key bindings in popup
 #+begin_src emacs-lisp
@@ -955,23 +956,17 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
                free-key-set-prefix)
     :custom
     (free-keys-modifiers '("" "C" "M" "C-M"))
-    :bind (("C-h C-k" . 'free-keys)
-           :map free-keys-mode-map
-           ("q" . kill-buffer-and-window)))
-
-  (use-package free-keys
-    :ensure nil
-    :after (:all evil free-keys)
-    :defer t
-    :functions (free-key-change-buffer
-                free-key-set-prefix)
-    :config
-    (evil-define-key 'normal 'free-keys-mode-map
-      (kbd "q") #'kill-buffer-and-window
-      (kbd "p") #'free-keys-set-prefix
-      (kbd "b") #'free-keys-change-buffer
-      (kbd "<") #'beginning-of-buffer
-      (kbd ">") #'end-of-buffer))
+    :general
+    ("C-h C-k" #'free-keys)
+    (:keymaps 'free-keys-mode-map
+              "q" #'kill-buffer-and-window)
+    (:states 'normal
+             :keymaps 'free-keys-mode-map
+             "q" #'kill-buffer-and-window
+             "p" #'free-keys-set-prefix
+             "b" #'free-keys-change-buffer
+             "<" #'beginning-of-buffer
+             ">" #'end-of-buffer))
 #+end_src
 ** keyfreq - track command frequencies
 #+begin_src emacs-lisp
@@ -1004,7 +999,8 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
                describe-option-of-type
                describe-file
                describe-keymap)
-    :bind (("C-h K" . describe-keymap)))
+    :general
+    ("C-h K" #'describe-keymap))
 #+end_src
 * File manager
 ** dired [built-in] - directory editor
@@ -1031,20 +1027,20 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (defun +dired-mouse-find-file (event)
       (interactive "e")
       (dired-mouse-find-file event #'find-file #'find-alternate-file))
-    :bind (
-           :map dired-mode-map
-           ("<return>" . +dired-open)
-           ("<up>" . dired-previous-line)
-           ("<down>" . dired-next-line)
-           ("^" . dired-alternate-up-directory)
-           ("o" . +dired-open)
-           ("C-o" . dired-find-file-other-window)
-           ("C-<return>" . dired-find-file-other-window)
-           ("<mouse-2>" . +dired-mouse-find-file)
-           ("<mouse-8>" . dired-alternate-up-directory)
-           ("C-<mouse-2>" . dired-mouse-find-file-other-window)
-           ("C-<mouse-1>" . dired-mouse-find-file-other-window)
-           ("C-<down-mouse-1>" . dired-mouse-find-file-other-window)))
+    :general
+    (:keymaps 'dired-mode-map
+              "<return>" #'+dired-open
+              "<up>" #'dired-previous-line
+              "<down>" #'dired-next-line
+              "^" #'dired-alternate-up-directory
+              "o" #'+dired-open
+              "C-o" #'dired-find-file-other-window
+              "C-<return>" #'dired-find-file-other-window
+              "<mouse-2>" #'+dired-mouse-find-file
+              "<mouse-8>" #'dired-alternate-up-directory
+              "C-<mouse-2>" #'dired-mouse-find-file-other-window
+              "C-<mouse-1>" #'dired-mouse-find-file-other-window
+              "C-<down-mouse-1>" #'dired-mouse-find-file-other-window))
 #+end_src
 ** neotree - A tree plugin like NerdTree for Vim
 #+begin_src emacs-lisp
@@ -1058,13 +1054,14 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (neo-window-fixed-size nil)
     (neo-window-width 55)
     (neo-theme (if (display-graphic-p) 'icons 'arrow))
-    :bind (("<f8>" . neotree-toggle)
-           :map neotree-mode-map
-           ("<C-return>" . neotree-change-root)
-           ("d" . neotree-delete-node)
-           ("<delete>" . neotree-delete-node)
-           ("C-h" . neotree-hidden-file-toggle)
-           ("r" . neotree-rename-node)))
+    :general
+    ("<f8>" #'neotree-toggle)
+    (:keymaps 'neotree-mode-map
+              "<C-return>" #'neotree-change-root
+              "d" #'neotree-delete-node
+              "<delete>" #'neotree-delete-node
+              "C-h" #'neotree-hidden-file-toggle
+              "r" #'neotree-rename-node))
 #+end_src
 ** treemacs - A tree style file explorer package
 #+begin_src emacs-lisp
@@ -1074,10 +1071,11 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
                treemacs-follow-mode)
     :custom
     (treemacs-persist-file (expand-file-name "treemacs-persist" user-emacs-cache-directory))
-    :bind (("<f8>" . treemacs)
-           :map treemacs-mode-map
-           ("<up>" . treemacs-previous-line)
-           ("<down>" . treemacs-next-line))
+    :general
+    ("<f8>" #'treemacs)
+    (:keymaps 'treemacs-mode-map
+              "<up>" #'treemacs-previous-line
+              "<down>" #'treemacs-next-line)
     :hook
     (emacs-startup-hook . treemacs-follow-mode)
     (treemacs-mode-hook . (lambda () (display-line-numbers-mode 0))))
@@ -1106,7 +1104,8 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
                     "~/.emacs.d/init.el"
                     "~/.emacs.d/early-init.el"
                     "~/.Xresources"))
-    :bind (("<escape> <escape> o" . quick-file-access-open-file)))
+    :general
+    ("<escape> <escape> o" #'quick-file-access-open-file))
 #+end_src
 * Visual
 ** whitespace [built-in]
@@ -1154,9 +1153,10 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       "Unhighlight everything that has been previously highlighted."
       (interactive nil hi-lock-mode)
       (unhighlight-regexp t))
-    :bind (("M-s h ." . +highlight-region-or-symbol)
-           ("M-s h ," . +unhighlight-region-or-symbol)
-           ("M-s h U" . +unhighlight-all)))
+    :general
+    ("M-s h ." #'+highlight-region-or-symbol
+     "M-s h ," #'+unhighlight-region-or-symbol
+     "M-s h U" #'+unhighlight-all))
 #+end_src
 ** highlight-thing - Minimalistic minor mode to highlight current thing under point
 #+begin_src emacs-lisp
@@ -1193,13 +1193,13 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
         ((undo-dir (file-name-as-directory
                     (expand-file-name "undo" user-emacs-cache-directory))))
       (unless (file-exists-p undo-dir) (make-directory undo-dir t)))
-    :bind (
-           :map undo-tree-map
-           ([remap undo] . undo-tree-undo)
-           ([remap undo-redo] . undo-tree-redo)
-           ("C-x U" . undo-tree-visualize)
-           :map undo-tree-visualizer-mode-map
-           ("C-x u" . undo-tree-visualize-quit))
+    :general
+    (:keymaps 'undo-tree-map
+              [remap undo] #'undo-tree-undo
+              [remap undo-redo] #'undo-tree-redo
+              "C-x U" #'undo-tree-visualize)
+    (:keymaps 'undo-tree-visualizer-mode-map
+              "C-x u" #'undo-tree-visualize-quit)
     :hook
     (emacs-startup-hook . global-undo-tree-mode))
 #+end_src
@@ -1209,9 +1209,10 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   (use-package expand-region
     :ensure t
     :defer 1
-    :bind (("C-=" . er/expand-region)
-           ("C-+" . er/contract-region)
-           ("M-C-S-SPC" . er/mark-symbol)))
+    :general
+    ("C-=" #'er/expand-region
+     "C-+" #'er/contract-region
+     "M-C-S-SPC" #'er/mark-symbol))
 
 #+end_src
 ** string-inflection - underscore -> UPCASE -> CamelCase -> lowerCamelCase conversion of names
@@ -1235,8 +1236,9 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
         (string-inflection-ruby-style-cycle))
        (t
         (string-inflection-all-cycle))))
-    :bind (("M-u" . string-inflection-upcase)
-           ("M-l" . +string-inflection-cycle-auto-detection)))
+    :general
+    ("M-u" #'string-inflection-upcase
+     "M-l" #'+string-inflection-cycle-auto-detection))
 #+end_src
 ** delsel [built-in] - delete selection if you insert
 #+begin_src emacs-lisp
@@ -1253,10 +1255,10 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :ensure nil
     :custom
     (save-interprogram-paste-before-kill t)
-    :bind
-    (("<XF86Cut>" . clipboard-kill-region)
-     ("<XF86Copy>" . clipboard-kill-ring-save)
-     ("<XF86Paste>" . clipboard-yank)))
+    :general
+    ("<XF86Cut>" #'clipboard-kill-region
+     "<XF86Copy>" #'clipboard-kill-ring-save
+     "<XF86Paste>" #'clipboard-yank))
 #+end_src
 * Movement / Navigation
 #+begin_src emacs-lisp
@@ -1343,8 +1345,9 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :ensure t
     :custom
     (golden-ratio-scroll-highlight-flag nil "Do not highlight current line before/after scroll")
-    :bind (([remap scroll-down-command] . golden-ratio-scroll-screen-down)
-           ([remap scroll-up-command] . golden-ratio-scroll-screen-up))
+    :general
+    ([remap scroll-down-command] #'golden-ratio-scroll-screen-down
+     [remap scroll-up-command] #'golden-ratio-scroll-screen-up)
     :hook
     (golden-ratio-scroll-screen-up-hook . (lambda () (recenter)))
     (golden-ratio-scroll-screen-down-hook . (lambda () (recenter))))
@@ -1360,27 +1363,30 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
                move-text-region
                move-text-region-up
                move-text-region-down)
-    :bind (("M-p" . move-text-up)
-           ("M-n" . move-text-down)))
+    :general
+    ("M-p" #'move-text-up
+     "M-n" #'move-text-down))
 #+end_src
 ** iy-go-to-char.el - Go to next CHAR
 #+begin_src emacs-lisp
   (use-package iy-go-to-char
     :ensure nil ;; Not on melpa.
-    :bind (("M-m" . iy-go-up-to-char)
-           ("M-M" . iy-go-up-to-char-backward))
-    )
+    :general
+    ("M-m" #'iy-go-up-to-char
+     "M-M" #'iy-go-up-to-char-backward))
 #+end_src
 ** Avy - Jump to arbitrary positions in visible text and select text quickly
 #+begin_src emacs-lisp
   (use-package avy
     :ensure t
-    :bind (("M-g g" . avy-goto-line)
-           ("M-g M-g" . avy-goto-line)
-           ("M-g c" . avy-goto-char)
-           ("M-g M-c" . avy-goto-char)
-           ("M-g f" . avy-goto-word-0)
-           ("M-g M-f" . avy-goto-word-0)))
+    :disabled t
+    :general
+    ("M-g g" #'avy-goto-line
+     "M-g M-g" #'avy-goto-line
+     "M-g c" #'avy-goto-char
+     "M-g M-c" #'avy-goto-char
+     "M-g f" #'avy-goto-word-0
+     "M-g M-f" #'avy-goto-word-0))
 #+end_src
 ** smartparens - Automatic insertion, wrapping and paredit-like navigation with user defined pairs.
 #+begin_src emacs-lisp
@@ -1410,8 +1416,9 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
         (sp-end-of-sexp ARG)
         (when (= (point) current-point)
           (forward-sexp ARG))))
-    :bind (([remap backward-sexp] . +sp-beginning-of-sexp)
-           ([remap forward-sexp] . +sp-end-of-sexp))
+    :general
+    ([remap backward-sexp] #'+sp-beginning-of-sexp
+     [remap forward-sexp] #'+sp-end-of-sexp)
     :hook
     (prog-mode-hook . smartparens-mode))
 #+end_src
@@ -1426,21 +1433,23 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (aw-ignored-buffers '("*Ilist*" "*Calc Trail*" " *LV*"))
     :custom-face
     (aw-leading-char-face ((t (:inherit ace-jump-face-foreground :height 3.0))))
-    :bind (([remap other-window] . ace-window)))
+    :general
+    ([remap other-window] #'ace-window))
 #+end_src
 ** multiple-cursors.el - Multiple cursors for Emacs.
 #+begin_src emacs-lisp
   (use-package multiple-cursors
     :ensure t
-    :disabled
+    :disabled t
     :custom
     (mc/list-file (locate-user-emacs-file ".mc-lists.el"))
     (mc/max-cursors nil)
     (mc/always-run-for-all nil)
     (mc/always-repeat-command nil)
-    :bind (("M-C-SPC" . set-rectangular-region-anchor)
-           ("C->" . mc/mark-next-like-this)
-           ("C-<" . mc/mark-previous-like-this)))
+    :general
+    ("M-C-SPC" #'set-rectangular-region-anchor
+     "C->" #'mc/mark-next-like-this
+     "C-<" #'mc/mark-previous-like-this))
 #+end_src
 ** evil-mc - Multiple cursors implementation for evil-mode
 #+begin_src emacs-lisp
@@ -1450,8 +1459,9 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :commands (global-evil-mc-mode)
     :init
     (setq-default evil-mc-one-cursor-show-mode-line-text nil)
-    :bind (("C->" . evil-mc-make-cursor-move-next-line)
-           ("C-<" . evil-mc-make-cursor-move-prev-line))
+    :general
+    ("C->" #'evil-mc-make-cursor-move-next-line
+     "C-<" #'evil-mc-make-cursor-move-prev-line)
     :hook
     (emacs-startup-hook . global-evil-mc-mode))
 #+end_src
@@ -1459,10 +1469,11 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package view
     :ensure nil
-    :bind (("C-`" . view-mode)
-           :map view-mode-map
-           ("n" . next-line)
-           ("p" . previous-line)))
+    :general
+    ("C-`" #'view-mode)
+    (:keymaps 'view-mode-map
+              "n" #'next-line
+              "p" #'previous-line))
 #+end_src
 * Searching
 ** isearch [built-in]
@@ -1481,13 +1492,13 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       search-input)
     (isearch-define-mode-toggle and "^" +isearch-and-regex
       "Turning on and search turns off regexp mode.")
-    :bind (
-           :map isearch-mode-map
-           ("C-g" . isearch-cancel)
-           ("<help>" . nil)
-           ("C-h <help>" . nil)
-           ("<f1> <help>" . nil)
-           ("M-ESC ESC" . nil)))
+    :general
+    (:keymaps 'isearch-mode-map
+              "C-g" #'isearch-cancel
+              "<help>" nil
+              "C-h <help>" nil
+              "<f1> <help>" nil
+              "M-ESC ESC" nil))
 #+end_src
 ** replace / occur [built-in]
 #+begin_src emacs-lisp
@@ -1512,45 +1523,46 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       (let ((window (selected-window)))
         (call-interactively #'occur-mode-goto-occurrence)
         (select-window window)))
-    :bind (("M-%" . query-replace)
-           ("C-%" . replace-string)
-           ("C-M-%" . query-replace-regexp)
-           :map occur-mode-map
-           ("C-a" . +occur-mode-move-beginning-of-line)
-           ("^" . +occur-mode-move-beginnig-of-line)
-           ("S-<return>" . +occur-mode-goto-occurrence-stay-occurrence-buffer)
-           ("q" . kill-buffer-and-window)
-           ("<up>" . previous-line)
-           ("<down>" . next-line)
-           ("j" . next-line)
-           ("k" . previous-line)
-           ([remap next-line] . next-error-no-select)
-           ([remap previous-line] . previous-error-no-select)
-           :map occur-edit-mode-map
-           ("C-a" . +occur-mode-move-beginning-of-line)))
+    :general
+    ("M-%" #'query-replace
+     "C-%" #'replace-string
+     "C-M-%" #'query-replace-regexp)
+    (:keymaps 'occur-mode-map
+              "C-a" #'+occur-mode-move-beginning-of-line
+              "^" #'+occur-mode-move-beginnig-of-line
+              "S-<return>" #'+occur-mode-goto-occurrence-stay-occurrence-buffer
+              "q" #'kill-buffer-and-window
+              "<up>" #'previous-line
+              "<down>" #'next-line
+              "j" #'next-line
+              "k" #'previous-line
+              [remap next-line] #'next-error-no-select
+              [remap previous-line] #'previous-error-no-select)
+    (:keymaps 'occur-edit-mode-map
+              "C-a" #'+occur-mode-move-beginning-of-line))
 #+end_src
 ** grep [built-in]
 #+begin_src emacs-lisp
   (use-package grep
     :ensure nil
-    :bind (
-           :map grep-mode-map
-           ("e" . wgrep-change-to-wgrep-mode)
-           ("C-c '" . wgrep-change-to-wgrep-mode)
-           ("q" . kill-buffer-and-window)))
+    :general
+    (:keymaps 'grep-mode-map
+              "e" #'wgrep-change-to-wgrep-mod
+              "C-c '" #'wgrep-change-to-wgrep-mode
+              "q" #'kill-buffer-and-window))
 #+end_src
 ** wgrep - Writable grep buffer and apply the changes to files
 #+begin_src emacs-lisp
   (use-package wgrep
     :ensure t
     :commands (wgrep-setup wgrep-change-to-wgrep-mode)
-    :bind (
-           :map wgrep-mode-map
-           ("C-x C-s" . nil)
-           ("C-c c" . wgrep-finish-edit)
-           ("C-c k" . wgrep-abort-changes)
-           ("C-c r" . wgrep-remove-change)
-           ("C-c u" . wgrep-remove-all-change)))
+    :general
+    (:keymaps 'wgrep-mode-map
+              "C-x C-s" nil
+              "C-c c" #'wgrep-finish-edit
+              "C-c k" #'wgrep-abort-changes
+              "C-c r" #'wgrep-remove-change
+              "C-c u" #'wgrep-remove-all-change))
 #+end_src
 ** rg - A search tool based on ripgrep
 #+begin_src emacs-lisp
@@ -1567,10 +1579,10 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (rg-command-line-flags nil)
     (rg-buffer-name "ripgrep")
     (rg-ignore-ripgreprc t)
-    :bind (
-           :map rg-mode-map
-           ("C-c '" . wgrep-change-to-wgrep-mode)
-           ("q" . kill-buffer-and-window)))
+    :general
+    (:keymaps 'rg-mode-map
+              "C-c '" #'wgrep-change-to-wgrep-mode
+              "q" #'kill-buffer-and-window))
 
   (use-package rg-menu
     :ensure nil ;; part of rg
@@ -1676,10 +1688,11 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       (interactive)
       (text-scale-set 0))
     (set-face-background 'glyphless-char "red")
-    :bind (("M-<kp-add>" . text-scale-increase)
-           ("M-<kp-subtract>" . text-scale-decrease)
-           ("M-<kp-multiply>" . +font-cycle-step)
-           ("M-<kp-0>" . +text-scale-reset)))
+    :general
+    ("M-<kp-add>" #'text-scale-increase
+     "M-<kp-subtract>" #'text-scale-decrease
+     "M-<kp-multiply>" #'+font-cycle-step
+     "M-<kp-0>" #'+text-scale-reset))
 #+end_src
 * Modeline
 #+begin_src emacs-lisp
@@ -1789,18 +1802,18 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :hook
     (term-mode-hook . (lambda () (display-line-numbers-mode 0)))
     (term-exec-hook . +kill-term-process-sentinel)
-    :bind (
-           :map term-raw-map
-           ("M-1" . nil)
-           ("M-2" . nil)
-           ("M-3" . nil)
-           ("M-4" . nil)
-           ("M-5" . nil)
-           ("M-6" . nil)
-           ("M-7" . nil)
-           ("M-8" . nil)
-           ("M-9" . nil)
-           ("M-0" . nil)))
+    :general
+    (:keymas 'term-raw-map
+             "M-1" nil
+             "M-2" nil
+             "M-3" nil
+             "M-4" nil
+             "M-5" nil
+             "M-6" nil
+             "M-7" nil
+             "M-8" nil
+             "M-9" nil
+             "M-0" nil))
 #+end_src
 * TRAMP
 #+begin_src emacs-lisp
@@ -1822,10 +1835,11 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (projectile-tags-backend 'ggtags)
     (projectile-switch-project-action 'projectile-dired)
     (projectile-ignored-projects `(,user-emacs-directory))
-    :bind (("<escape> <escape> p" . projectile-switch-project)
-           ("C-x p o" . projectile-ripgrep)
-           ("C-x p O" . projectile-grep)
-           ("C-x p t" . projectile-test-project))
+    :general
+    ("<escape> <escape> p" #'projectile-switch-project
+     "C-x p o" #'projectile-ripgrep
+     "C-x p O" #'projectile-grep
+     "C-x p t" #'projectile-test-project)
     :hook
     (emacs-startup-hook . projectile-mode))
 #+end_src
@@ -1953,12 +1967,12 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       (interactive "e")
       (call-interactively #'mouse-set-point)
       (call-interactively #'xref-find-definitions-at-mouse))
-    :bind (
-           :map lsp-mode-map
-           ("C-<down-mouse-1>" . +lsp-find-definition-at-mouse)
-           ("C-<mouse-1>" . +lsp-find-definition-at-mouse)
-           ("<wheel-left>" . xref-go-back)
-           ("<wheel-right>" . xref-go-use))
+    :general
+    (:keymaps 'lsp-mode-map
+              "C-<down-mouse-1>" #'+lsp-find-definition-at-mouse
+              "C-<mouse-1>" #'+lsp-find-definition-at-mouse
+              "<wheel-left>" #'xref-go-back
+              "<wheel-right>" #'xref-go-use)
     :hook
     (lsp-mode-hook . company-mode))
 
@@ -2037,22 +2051,23 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
                                  company-sort-by-occurrence
                                  my/company-sort-yas-first))
     (advice-add 'company-yasnippet--candidates :around #'my/wrap--company-yasnippet--candidates)
-    :bind (([remap c-indent-line-or-region] . company-indent-or-complete-common)
-           ([remap indent-for-tab-command] . company-indent-or-complete-common)
-           :map company-active-map
-           ("C-n" . company-select-next-or-abort)
-           ("C-j" . company-select-next-or-abort)
-           ("C-p" . company-select-previous-or-abort)
-           ("C-k" . company-select-previous-or-abort)
-           ("<return>" . nil)
-           ("RET" . nil)
-           ("<tab>" . company-complete-selection)
-           ("TAB" . company-complete-selection)
-           :map company-search-map
-           ("C-n" . company-select-next-or-abort)
-           ("C-j" . company-select-next-or-abort)
-           ("C-p" . company-select-previous-or-abort)
-           ("C-k" . company-select-previous-or-abort)))
+    :general
+    ([remap c-indent-line-or-region] #'company-indent-or-complete-common
+     [remap indent-for-tab-command] #'company-indent-or-complete-common)
+    (:keymaps 'company-active-map
+              "C-n" #'company-select-next-or-abort
+              "C-j" #'company-select-next-or-abort
+              "C-p" #'company-select-previous-or-abort
+              "C-k" #'company-select-previous-or-abort
+              "<return>" nil
+              "RET" nil
+              "<tab>" #'company-complete-selection
+              "TAB" #'company-complete-selection)
+    (:keymaps 'company-search-map
+              "C-n" #'company-select-next-or-abort
+              "C-j" #'company-select-next-or-abort
+              "C-p" #'company-select-previous-or-abort
+              "C-k" #'company-select-previous-or-abort))
 
   (use-package company-dabbrev-code
     :ensure nil ;; packaged with company
@@ -2179,9 +2194,10 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (next-error-recenter '(4))
     :config
     (which-key-add-key-based-replacements "M-g e" "next-error prefix")
-    :bind (("M-g e n" . next-error)
-           ("M-g e p" . previous-error)
-           ("M-g e b" . next-error-select-buffer)))
+    :general
+    ("M-g e n" #'next-error
+     "M-g e p" #'previous-error
+     "M-g e b" #'next-error-select-buffer))
 #+end_src
 * Programming languages
 ** C/C++
@@ -2220,10 +2236,10 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
      ("->" . ?→)
      ("<=" . ?≦)
      (">=" . ?≧))
-    :bind (
-           :map c-mode-map
-           ("M-h" . my/c-mark-block)
-           ("C-M-h" . c-mark-function))
+    :general
+    (:keymaps 'c-mode-map
+              "M-h" #'my/c-mark-block
+              "C-M-h" #'c-mark-function)
     :hook
     (c-mode-common-hook . +c-mode-setup)
     (c-mode-hook . +c-mode-hook-setup)
@@ -2323,7 +2339,8 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 
   (use-package pp
     :ensure nil
-    :bind (([remap eval-last-sexp] . pp-eval-last-sexp)))
+    :general
+    ([remap eval-last-sexp] #'pp-eval-last-sexp))
 
   (use-package eldoc
     :ensure nil
@@ -2362,9 +2379,10 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :config
     (autoload 'utop-minor-mode "utop" "Minor mode for utop" t)
     (setq utop-command "opam config exec -- dune utop . -- -emacs")
-    :bind ((([remap tuareg-eval-phrase] . utop-eval-phrase)
-            ([remap tuareg-eval-buffer] . utop-eval-buffer)
-            ([remap tuareg-eval-region] . utop-eval-region))))
+    :general
+    ([remap tuareg-eval-phrase] #'utop-eval-phrase
+     [remap tuareg-eval-buffer] #'utop-eval-buffer
+     [remap tuareg-eval-region] #'utop-eval-region))
 
   (use-package dune
     :ensure t)
@@ -2394,29 +2412,30 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       (while (and (not (eq (get-text-property (point) 'face) 'sly-apropos-symbol))
                   (> (point) (point-min)))
         (forward-line -1)))
-    :bind (:map sly-mode-map
-                ("C-c C-d ." . sly-describe-symbol)
-                ("C-c C-d C-." . sly-describe-symbl)
-                :map sly-apropos-mode-map
-                ("n" . sly-apropos-next-symbol)
-                ("p" . sly-apropos-previous-symbol)
-                :map sly-inspector-mode-map
-                ("?" . describe-mode)
-                ("SPC" . scroll-up-command)
-                ("S-SPC" . scroll-down-command)
-                ("DEL" . scroll-down-command)
-                ("TAB" . forward-button)
-                ("<backtab>" . backward-button)
-                ("C-M-i" . backward-button)
-                ("C-c C-c" . sly-button-inspect)
-                ("r" . sly-inspector-next)
-                ("l" . sly-inspector-pop)
-                ("C-c C-f" . sly-inspector-next)
-                ("C-c C-b" . sly-inspector-pop)
-                ("<wheel-left>" . sly-inspector-pop)
-                ("<wheel-right>" . sly-inspector-next)
-                ("<mouse-8>" . sly-inspector-pop)
-                ("<mouse-9>" . sly-inspector-next))
+    :general
+    (:keymaps 'sly-mode-map
+              "C-c C-d ." #'sly-describe-symbol
+              "C-c C-d C-." #'sly-describe-symbl)
+    (:keymaps 'sly-apropos-mode-map
+              "n" #'sly-apropos-next-symbol
+              "p" #'sly-apropos-previous-symbol)
+    (:keymaps 'sly-inspector-mode-map
+              "?" #'describe-mode
+              "SPC" #'scroll-up-command
+              "S-SPC" #'scroll-down-command
+              "DEL" #'scroll-down-command
+              "TAB" #'forward-button
+              "<backtab>" #'backward-button
+              "C-M-i" #'backward-button
+              "C-c C-c" #'sly-button-inspect
+              "r" #'sly-inspector-next
+              "l" #'sly-inspector-pop
+              "C-c C-f" #'sly-inspector-next
+              "C-c C-b" #'sly-inspector-pop
+              "<wheel-left>" #'sly-inspector-pop
+              "<wheel-right>" #'sly-inspector-next
+              "<mouse-8>" #'sly-inspector-pop
+              "<mouse-9>" #'sly-inspector-next)
     :hook
     (sly-mode-hook . company-mode))
 #+end_src
@@ -2443,24 +2462,25 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
       (setq-local company-backends '((company-dabbrev-code :with company-yasnippet company-shell company-shell-env)
                                      (company-shell company-shell-env :with company-yasnippet))))
     (setq sh-basic-offset 4)
-    :bind (:map sh-mode-map
-                ("C-c (" . nil)
-                ("C-c +" . nil)
-                ("C-c :" . nil)
-                ("C-c C-\\" . nil)
-                ("C-c TAB" . nil)
-                ("C-c C-l" . nil)
-                ("C-c C-r" . nil)
-                ("C-c C-c" . nil)
-                ("C-c C-f" . nil)
-                ("C-c C-n" . nil)
-                ("C-c C-o" . nil)
-                ("C-c C-s" . nil)
-                ("C-c C-t" . nil)
-                ("C-c C-u" . nil)
-                ("C-c C-w" . nil)
-                ("C-c C-x" . nil)
-                ("C-c C-z" . nil))
+    :general
+    (:keymaps 'sh-mode-map
+              "C-c (" nil
+              "C-c +" nil
+              "C-c :" nil
+              "C-c C-\\" nil
+              "C-c TAB" nil
+              "C-c C-l" nil
+              "C-c C-r" nil
+              "C-c C-c" nil
+              "C-c C-f" nil
+              "C-c C-n" nil
+              "C-c C-o" nil
+              "C-c C-s" nil
+              "C-c C-t" nil
+              "C-c C-u" nil
+              "C-c C-w" nil
+              "C-c C-x" nil
+              "C-c C-z" nil)
     :hook
     (sh-mode-hook . flycheck-mode)
     (sh-mode-hook . company-mode)
@@ -2616,7 +2636,10 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
         (goto-char beg)
         (dotimes (_ count)
           (+makefile-join-line 1))))
-    (evil-define-key 'normal 'makefile-mode-map (kbd "J") #'+evil-makefile-join))
+    :general
+    (:states 'normal
+             :keymaps 'makefile-mode-map
+             "J" #'+evil-makefile-join))
 #+end_src
 * Markup languages
 ** Org Mode
@@ -2636,13 +2659,13 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
                                  (shell . t)
                                  (python . t)
                                  (perl . t)))
-    :bind (
-           :map org-mode-map
-           ("C-c a" . org-agenda)
-           ("C-c ." . org-time-stamp)
-           ("C-c C-." . org-time-stamp-inactive)
-           :map org-src-mode-map
-           ("C-c C-c" . org-edit-src-exit))
+    :general
+    (:keymaps 'org-mode-map
+              "C-c a" #'org-agenda
+              "C-c ." #'org-time-stamp
+              "C-c C-." #'org-time-stamp-inactive)
+    (:keymaps 'org-src-mode-map
+              "C-c C-c" #'org-edit-src-exit)
     :hook
     (org-mode-hook . abbrev-mode)
     (org-mode-hook . (lambda () (setq indent-tabs-mode nil))))
@@ -2657,11 +2680,11 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
     :ensure nil
     :after (:all org)
     :commands (org-src-mode)
-    :bind (
-           :map org-src-mode-map
-           ("C-c s" . org-edit-src-save)
-           ("C-c c" . org-edit-src-exit)
-           ("C-c k" . org-edit-src-abort)))
+    :general
+    (:keymaps 'org-src-mode-map
+              "C-c s" #'org-edit-src-save
+              "C-c c" #'org-edit-src-exit
+              "C-c k" #'org-edit-src-abort))
 
   (use-package org-superstar
     :ensure t
@@ -2745,14 +2768,14 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
       (interactive)
       (magit-restore-window-configuration)
       (mapc #'kill-buffer (magit-mode-get-buffers)))
-    :bind (
-           :map magit-status-mode-map
-           ("q" . +kill-magit-buffers)
-           :map magit-section-mode-map
-           ("M-1" . nil)
-           ("M-2" . nil)
-           ("M-3" . nil)
-           ("M-4" . nil))
+    :general
+    (:keymaps 'magit-status-mode-map
+              "q" #'+kill-magit-buffers)
+    (:keymaps 'magit-section-mode-map
+              "M-1" nil
+              "M-2" nil
+              "M-3" nil
+              "M-4" nil)
     :hook
     (magit-mode-hook . magit-load-config-extensions)
     (emacs-startup-hook . magit-auto-revert-mode))
@@ -2761,10 +2784,10 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
     :ensure nil
     :custom
     (git-commit-summary-max-length 72)
-    :bind (
-           :map git-commit-mode-map
-           ("C-c c" . with-editor-finish)
-           ("C-c k" . with-editor-cancel))
+    :general
+    (:keymaps 'git-commit-mode-map
+              "C-c c" #'with-editor-finish
+              "C-c k" #'with-editor-cancel)
     :hook
     (git-commit-setup-hook . (lambda ()
                                (setq-local fill-column 72)
@@ -2775,10 +2798,10 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
 
   (use-package git-rebase ;; part of magit
     :ensure nil
-    :bind (
-           :map git-rebase-mode-map
-           ("C-k" . git-rebase-move-line-up)
-           ("C-j" . git-rebase-move-line-down)))
+    :general
+    (:keymaps 'git-rebase-mode-map
+              "C-k" #'git-rebase-move-line-up
+              "C-j" #'git-rebase-move-line-down))
 
   (use-package git-modes
     :ensure t)
@@ -2794,18 +2817,19 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
     (spray-margin-top 1 "Character margin at top of buffer")
     (spray-margin-left 1 "Character margin at left of buffer")
     (spray-ramp 3 "Initial words before ramping up to full speed")
-    :bind (("<f6>" . spray-mode)
-           :map spray-mode-map
-           ("SPC" . spray-start/stop)
-           ("h" . spray-backward-word)
-           ("<left>" . spray-backward-word)
-           ("l" . spray-forward-word)
-           ("<right>" . spray-forward-word)
-           ("f" . spray-faster)
-           ("s" . spray-slower)
-           ("q" . spray-quit)
-           ("RET" . spray-quit)
-           ("<return>" . spray-quit)))
+    :general
+    ("<f6>" #'spray-mode)
+    (:keymaps 'spray-mode-map
+              "SPC" #'spray-start/stop
+              "h" #'spray-backward-word
+              "<left>" #'spray-backward-word
+              "l" #'spray-forward-word
+              "<right>" #'spray-forward-word
+              "f" #'spray-faster
+              "s" #'spray-slower
+              "q" #'spray-quit
+              "RET" #'spray-quit
+              "<return>" #'spray-quit))
 #+end_src
 ** system-packages - functions to manage system packages
 #+begin_src emacs-lisp
