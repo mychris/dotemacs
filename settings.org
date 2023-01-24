@@ -2263,7 +2263,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :ensure nil
     :config
     (defun +elisp-mode-setup ()
-      (setq-local indent-tabs-mode nil)
+      (setq-local indent-tabs-mode t)
       (setq-local fill-column 80)
       (setq-local show-trailing-whitespace t)
       (display-fill-column-indicator-mode 1))
