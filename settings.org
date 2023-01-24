@@ -360,10 +360,15 @@ This is mostly use-package and local utilities which are used throught the confi
   (use-package evil-collection
     :ensure t
     :after (:all evil)
-    :diminish (evil-collection-unimpaired-mode)
     :commands (evil-collection-init)
     :hook
     (evil-mode-hook . evil-collection-init))
+
+  (use-package evil-collection-unimpaired
+    :ensure nil ;; part of evil-collection
+    :after (:all evil-collection)
+    :diminish (evil-collection-unimpaired-mode)
+    :commands (evil-collection-unimpaired-mode))
 #+end_src
 ** evil-escape - Customizable key sequence to escape from insert state and everything else in Emacs.
 #+begin_src emacs-lisp
