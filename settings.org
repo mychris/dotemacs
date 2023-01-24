@@ -318,6 +318,13 @@ This is mostly use-package and local utilities which are used throught the confi
     :load-path "elisp"
     :bind (("C-x 9" . +delete-most-recent-window)))
 #+end_src
+* General
+** general -- Convenience wrappers for keybindings.
+#+begin_src emacs-lisp
+  (use-package general
+    :ensure t
+    :demand t)
+#+end_src
 * Evil
 ** evil - Extensible Vi layer for Emacs.
 #+begin_src emacs-lisp
