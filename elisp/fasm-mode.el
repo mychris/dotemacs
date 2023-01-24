@@ -1,4 +1,4 @@
-;;; fasm-mode.el --- Fasm major mode
+;;; fasm-mode.el --- Fasm major mode                 -*- lexical-binding: t; -*-
 
 ;; Author: Fanael Linithien <fanael4@gmail.com>
 ;; URL: https://github.com/Fanael/fasm-mode
@@ -30,6 +30,10 @@
 ;; LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
 ;; NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 ;; SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+;;; Commentary:
+
+;; A major mode for editing FASM files.
 
 ;;; Code:
 
@@ -64,25 +68,26 @@
   "Offset for FASM mode indentation.")
 
 (defmacro fasm--regexp-from-keywords (&rest keywords)
+  "Create a regexp from the given KEYWORDS."
   (rx-to-string `(and symbol-start (or ,@keywords) symbol-end)))
 
 (defconst fasm-font-lock-keywords
   `(;; Numbers
     (,(rx (and symbol-start
-               (or (and (+ (any "0" "1"))
-                        "b")
-                   (and (any "0-9")
-                        (* (any "0-9" "a-f" "A-F"))
-                        "h")
-                   (and (or "0x" "$")
-                        (+ (any "0-9" "a-f" "A-F")))
-                   (and (+ (any "0-9"))
-                        (? (and "."
-                                (* (any "0-9"))))
-                        (? (and (any "e" "E")
-                                (? (any "+" "-"))
-                                (+ (any "0-9"))))))
-               symbol-end))
+	       (or (and (+ (any "0" "1"))
+			"b")
+		   (and (any "0-9")
+			(* (any "0-9" "a-f" "A-F"))
+			"h")
+		   (and (or "0x" "$")
+			(+ (any "0-9" "a-f" "A-F")))
+		   (and (+ (any "0-9"))
+			(? (and "."
+				(* (any "0-9"))))
+			(? (and (any "e" "E")
+				(? (any "+" "-"))
+				(+ (any "0-9"))))))
+	       symbol-end))
      . font-lock-constant-face)
     ;; Types
     (,(fasm--regexp-from-keywords
@@ -342,22 +347,23 @@
      . font-lock-builtin-face)
     ;; Labels
     (,(rx (and line-start
-               (* (any " " "\t"))
-               (group (and (any "a-z" "A-Z" "0-9" "." "?" "!" "@")
-                           (* (or (syntax word)
-                                  (syntax symbol)))))
-               ":"))
+	       (* (any " " "\t"))
+	       (group (and (any "a-z" "A-Z" "0-9" "." "?" "!" "@")
+			   (* (or (syntax word)
+				  (syntax symbol)))))
+	       ":"))
      1 font-lock-function-name-face)
     ;; Macro names
     (,(rx (and (or "macro" "struct")
-               (+ (any " " "\t"))
-               (group (and (any "a-z" "A-Z" "0-9" "." "?" "!" "@")
-                           (* (or (syntax word)
-                                  (syntax symbol)))))))
+	       (+ (any " " "\t"))
+	       (group (and (any "a-z" "A-Z" "0-9" "." "?" "!" "@")
+			   (* (or (syntax word)
+				  (syntax symbol)))))))
      1 font-lock-function-name-face))
   "Syntax highlighting for FASM mode.")
 
 (defun fasm--get-indent-level (lineoffset)
+  "Return the indention level of the line at LINEOFFSET."
   (save-excursion
     (forward-line (1- lineoffset))
     (back-to-indentation)
@@ -367,10 +373,10 @@
   "Indent according to FASM major mode."
   (interactive)
   (let ((previndent (fasm--get-indent-level 0))
-        (currindent (fasm--get-indent-level 1)))
+	(currindent (fasm--get-indent-level 1)))
     (if (or (> previndent currindent)
-            (memq this-command '(newline-and-indent evil-ret-and-indent)))
-        (indent-to previndent)
+	    (memq this-command '(newline-and-indent evil-ret-and-indent)))
+	(indent-to previndent)
       (indent-to (* fasm-basic-offset (1+ (/ currindent fasm-basic-offset)))))))
 
 ;; Emacs < 24 did not have prog-mode
@@ -378,6 +384,7 @@
   (if (fboundp 'prog-mode) #'prog-mode #'fundamental-mode))
 
 (defmacro fasm--set-local (variable value)
+  "Set the VARIABLE to VALUE locally."
   `(set (make-local-variable ',variable) ,value))
 
 ;;;###autoload
