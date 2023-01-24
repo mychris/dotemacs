@@ -1,4 +1,4 @@
-;;; xmodmap-mode.el --- Major mode for editing .xmodmaprc
+;;; xmodmap-mode.el --- Major mode for editing .xmodmaprc -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 1998, 2001 Stéphane Levant <sun@tuxfamily.org>
 
@@ -36,7 +36,7 @@
 ;;; Code:
 
 (defvar xmodmap-command "xmodmap"
-  "The xmodmap command")
+  "The xmodmap command.")
 
 (defvar xmodmap-mode-hook nil)
 
@@ -56,7 +56,7 @@
   "Local keymap for xmodmap buffers.")
 
 (if xmodmap-map
-  nil
+    nil
   (let ((map (make-keymap)))
     (define-key map "\^c\^c" 'xmodmap-read-current-file)
     (define-key map "\^c\^h" 'xmodmap-man)
@@ -65,15 +65,15 @@
       xmodmap-easy-menu map
       "Menu for Xmodmap mode."
       '("Xmodmap"
-	 ["Read current file" xmodmap-read-current-file t]
-	 ["Start xmodmap command" xmodmap-shell-command t]
-	 ["-" nil t]
-	 ["Xmodmap manual page" xmodmap-man t]))
+	["Read current file" xmodmap-read-current-file t]
+	["Start xmodmap command" xmodmap-shell-command t]
+	["-" nil t]
+	["Xmodmap manual page" xmodmap-man t]))
     (setq xmodmap-map map)))
 
 (defvar xmodmap-font-lock-keywords
   '(( "^!!!.*$" 0 font-lock-title-face t)
-  ( "\\<\\(keycode\\|keysym\\|pointer\\|default\\|remove\\|add\
+    ( "\\<\\(keycode\\|keysym\\|pointer\\|default\\|remove\\|add\
 \\|any\\|clear\\)\\>" 1 font-lock-keyword-face)))
 
 (cond ((not (facep 'font-lock-title-face))
@@ -81,27 +81,27 @@
        (copy-face 'bold 'font-lock-title-face)))
 
 (defun xmodmap-read-current-file (arg)
-  "Lauch xmodmap on the current file"
+  "Lauch xmodmap on the current file or ARG."
   (interactive "P")
   (shell-command
-    (concat xmodmap-command  " "
-      (if arg
-	(read-file-name "File: ")
-	(buffer-file-name (current-buffer))))))
+   (concat xmodmap-command  " "
+	   (if arg
+	       (read-file-name "File: ")
+	     (buffer-file-name (current-buffer))))))
 
 (defun xmodmap-man ()
-  "Display the man page for xmodmap"
+  "Display the man page for xmodmap."
   (interactive)
   (man "xmodmap"))
 
 (defun xmodmap-shell-command ()
-  "Start a xmodmap command"
+  "Start a xmodmap command."
   (interactive)
   (shell-command (concat xmodmap-command  " " (read-string "" "xmodmap "))))
 
 ;;;###autoload
 (defun xmodmap-mode ()
-  "Major mode for editing ~/.xmodmaprc"
+  "Major mode for editing ~/.xmodmaprc."
   (interactive)
   (kill-all-local-variables)
   (set-syntax-table xmodmap-mode-syntax-table)
