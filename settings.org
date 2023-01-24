@@ -17,6 +17,7 @@ This is mostly use-package and local utilities which are used throught the confi
   (require 'diminish)
   (require 'bind-key)
   (require 'my-utils)
+  (require 'general)
 #+end_src
 * Miscellaneous settings
 ** General Emacs configuration
@@ -293,9 +294,9 @@ This is mostly use-package and local utilities which are used throught the confi
     :custom
     (package-enable-at-startup nil) ;; Also configured in early-init.el
     (package-quickstart nil) ;; Also configured in early-init.el
-    :bind (
-           :map package-menu-mode-map
-           ("q" . kill-buffer-and-window)))
+    :general
+    (:keymaps 'package-menu-mode-map
+              "q" #'kill-buffer-and-window))
 #+end_src
 ** GCMH - the Garbage Collector Magic Hack
 #+begin_src emacs-lisp
@@ -316,16 +317,8 @@ This is mostly use-package and local utilities which are used throught the confi
     :ensure nil
     :demand t
     :load-path "elisp"
-    :bind (("C-x 9" . +delete-most-recent-window)))
-#+end_src
-* General
-** general -- Convenience wrappers for keybindings.
-#+begin_src emacs-lisp
-  (use-package general
-    :ensure t
-    :demand t
-    :init
-    (general-evil-setup))
+    :general
+    ("C-x 9" #'+delete-most-recent-window))
 #+end_src
 * Evil
 ** evil - Extensible Vi layer for Emacs.
@@ -763,18 +756,18 @@ This is mostly use-package and local utilities which are used throught the confi
        (consult-location (styles . (basic substring orderless)))))
     :config
     (defun my/orderless-literal-style-dispatcher (pattern _index _total)
-      "Style dispatcher which recognizes patterns which have an '=' as suffix and
-  dispatches those to the orderless-literal style"
+      "Style dispatcher which recognizes patterns which have an \"=\" as suffix and
+  dispatches those to the orderless-literal style."
       (when (string-suffix-p "=" pattern)
         `(orderless-literal . ,(substring pattern 0 -1))))
     (defun my/orderless-initialism-style-dispatcher (pattern _index _total)
-      "Style dispatchter which recognizes patterns which have an ';' as suffix and
-  dispatches those to the orderless-literal style"
+      "Style dispatchter which recognizes patterns which have an \";\" as suffix and
+  dispatches those to the orderless-literal style."
       (when (string-suffix-p ";" pattern)
         `(orderless-initialism . ,(substring pattern 0 -1))))
     (defun my/orderless-flex-style-dispatcher (pattern _index _total)
-      "Style dispatcher which recognizes patterns which have an ',' as suffix and
-  dispatches those to the orderless-flex style"
+      "Style dispatcher which recognizes patterns which have an \",\" as suffix and
+  dispatches those to the orderless-flex style."
       (when (string-suffix-p "," pattern)
         `(orderless-flex . ,(substring pattern 0 -1))))
     (setq orderless-component-separator " +")
@@ -1265,9 +1258,9 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   (defun backward-kill-char-or-word ()
     "Kill characters backward.
   If the characters behind the cursor form a word
-  \(possibly with ablank behind it\), 'backward-kill-word'.
-  If there are multiple blanks, 'delete-horizontal-space',
-  otherwise 'backward-delete-char'"
+  \(possibly with ablank behind it\), `backward-kill-word'.
+  If there are multiple blanks, `delete-horizontal-space',
+  otherwise `backward-delete-char'"
     (interactive)
     (cond
      ((looking-back "[[:word:]][[:blank:]]?" 1)
@@ -1292,16 +1285,16 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 
   (defun forward-paragraph-recenter (&optional arg)
     "Move forward to end of paragraph and center point using `recenter'.
-  With argument `ARG', do it `ARG' times; a negative argument `ARG' = -N means
+  With argument ARG, do it ARG times; a negative argument ARG = -N means
   move backward N paragraphs."
     (interactive "^p")
     (call-interactively #'forward-paragraph)
     (recenter nil t))
 
   (defun backward-paragraph-recenter (&optional arg)
-    "Move backward to start of paragraph and center point using `recnter'.
+    "Move backward to start of paragraph and center point using `recenter'.
 
-  a negative argument `ARG' = -N means move forward N paragraphs."
+  a negative argument ARG = -N means move forward N paragraphs."
     (interactive "^p")
     (call-interactively #'backward-paragraph)
     (recenter nil t))

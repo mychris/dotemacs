@@ -140,6 +140,9 @@
   ;; Quit the use-package-report window and kill the buffer as well.
   (define-key use-package-statistics-mode-map ["q"] #'kill-buffer-and-window))
 
+(require 'general)
+(general-evil-setup)
+
 ;;;; Load settings
 
 (defun +file-time-less-p (a b)
