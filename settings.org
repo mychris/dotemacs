@@ -2635,11 +2635,12 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
 #+begin_src emacs-lisp
   (use-package magit
     :ensure t
-    :commands (
-               magit-status
+    :commands (magit-status
+               magit-commit
                magit-load-config-extensions
                magit-auto-revert-mode
-               git-commit-turn-on-flyspell)
+               git-commit-turn-on-flyspell
+               magit-process-git)
     :config
     (defun +kill-magit-buffers ()
       "Kill all magit buffers and restore the window configuration."
