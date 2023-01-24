@@ -4,13 +4,13 @@
 
 ;; Emacs configuration file.
 ;; Does some basic setup (primarily for use-package)
-;; and then loads the custom settings from the settings.org mode file.
+;; and then loads the custom settings from the settings.org file.
 ;; Do not edit settings.el manually.
 ;; The file is generated from the settings.org file, if required.
 
 ;;; Code:
 
-;;;; Customization information
+;;;; Check supported emacs version and system
 
 (when (version< emacs-version "27")
   (error "Emacs version < 27 no supported"))
@@ -18,13 +18,16 @@
 (when (not (member system-type '(gnu/linux)))
   (error "Unsupported operating system %s" system-type))
 
+;;;; Customization information
+
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (when (file-exists-p custom-file)
   (load custom-file))
 
 ;;;; Custom load-path
 
-(add-to-list 'load-path (file-name-as-directory (expand-file-name "elisp" user-emacs-directory)))
+(add-to-list 'load-path (file-name-as-directory
+			 (expand-file-name "elisp" user-emacs-directory)))
 
 ;;;; Make sure some environment variables are set
 
@@ -34,13 +37,13 @@
 (defconst user-emacs-cache-directory
   (let ((env-value (getenv "EMACS_CACHE_DIR")))
     (if env-value
-	env-value
-      (expand-file-name "emacs" (getenv "XDG_CACHE_HOME"))))
+	(file-name-as-directory env-value)
+      (file-name-as-directory (expand-file-name "emacs" (getenv "XDG_CACHE_HOME")))))
   "Directory for user specific Emacs cache files.")
 
 (setenv "EMACS_CACHE_DIR" user-emacs-cache-directory)
 
-(unless (file-exists-p user-emacs-cache-directory)
+(unless (file-directory-p user-emacs-cache-directory)
   (make-directory user-emacs-cache-directory))
 
 ;;;; Setup native compilation
@@ -145,25 +148,26 @@
    (file-attribute-modification-time (file-attributes a))
    (file-attribute-modification-time (file-attributes b))))
 
-(defun +org-babel-load-file (file-org &optional do-byte-compile)
-  "Load the given `FILE-ORG' using `org-bable-load-file'.
-Also byte compiles the file and use the cached .elc, if `DO-BYTE-COMPILE'
-evaluates to a non-nil value."
-  (let* ((file-el (concat (file-name-sans-extension file-org) ".el")))
-    (if (not (file-exists-p file-org))
-	(error "Org file '%s' missing" file-org)
-      (when (not (and (file-exists-p file-el)
-		      (+file-time-less-p file-org file-el)))
-	(progn
-	  (require 'org)
-	  (org-babel-tangle-file file-org file-el "emacs-lisp")
-	  (when do-byte-compile
-	    (byte-compile-file file-el))))
-      (require 'settings (file-name-sans-extension file-el)))))
-;; found that one somewhere, shaves off another 200ms during startup.
-;; no idea if this has any negative side effects, nothing emerged yet.
-;;      (let ((file-name-handler-alist nil))
-;;        (require 'settings (file-name-sans-extension file-el))))))
+(defun +org-babel-load-file (file-org-path &optional do-byte-compile)
+  "Load the given `FILE-ORG-PATH' using `org-bable-load-file'.
+The file is also byte-compiled, if `DO-BYTE-COMPILE' evaluates to a non-nil
+value."
+  (let* ((file-el-name (concat (file-name-base file-org-path) ".el"))
+	 (file-el-path (expand-file-name file-el-name user-emacs-cache-directory))
+	 (file-elc-path (byte-compile-dest-file file-el-path)))
+    (if (not (file-exists-p file-org-path))
+	(error "Org file '%s' not found" file-org-path)
+      (when (not (and (file-exists-p file-el-path)
+		      (+file-time-less-p file-org-path file-el-path)))
+	(when (file-exists-p file-elc-path)
+	  (delete-file file-elc-path))
+	(require 'org)
+	(org-babel-tangle-file file-org-path file-el-path "emacs-lisp")
+	(when do-byte-compile
+	  (let ((comp-result (byte-compile-file file-el-path)))
+	    (unless comp-result
+	      (message "Failed to byte compile '%s'" file-el-path)))))
+      (require 'settings (file-name-sans-extension file-el-path)))))
 
 ;; For now, do not byte compile the settings files. For some reason, this
 ;; messes up some of the use-package declaration.
