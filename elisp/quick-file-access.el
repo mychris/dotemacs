@@ -1,6 +1,6 @@
-;;; quick-file-access.el --- Quickly access important files
+;;; quick-file-access.el --- Quickly access important files -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2020-2021 Christoph Göttschkes
+;; Copyright (C) 2020-2023 Christoph Göttschkes
 
 ;; Author: Christoph Göttschkes
 
@@ -22,8 +22,8 @@
 ;;; Commentary:
 
 ;; Functions to open important files.  This package exists so it is easier
-;; to group the key bindings in one use-package declaration and to give
-;; make the key-binding easier to inspect by packages like which-key.
+;; to group the key bindings in one use-package declaration and to make the
+;; key-binding easier to inspect by packages like which-key.
 
 ;;; Code:
 
@@ -44,23 +44,23 @@
   `(or
     (called-interactively-p 'interactive)
     (setq quick-file-access--history
-          (if (seq-position file quick-file-access-file-list)
-              (cons ,file (delete ,file quick-file-access--history))
-            (cons ,file quick-file-access--history)))))
+	  (if (seq-position file quick-file-access-file-list)
+	      (cons ,file (delete ,file quick-file-access--history))
+	    (cons ,file quick-file-access--history)))))
 
 (defun quick-file-access-completing-read ()
-  "Completing-read the 'quick-file-access-file-list'."
+  "Completing-read the `quick-file-access-file-list'."
   (completing-read
    "quick-file-access: "
    (lambda (string pred action)
      (if (eq action 'metadata)
-         '(metadata (category . file))
+	 '(metadata (category . file))
        (complete-with-action
-        action quick-file-access-file-list string pred)))
+	action quick-file-access-file-list string pred)))
    nil 0 nil 'quick-file-access--history nil))
 
 (defun quick-file-access-open-file (file)
-  "Open FILE, or complete it from the 'quick-file-access-file-list'."
+  "Open FILE, or complete it from the `quick-file-access-file-list'."
   (interactive
    (list (quick-file-access-completing-read)))
   (unless file
