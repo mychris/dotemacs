@@ -944,10 +944,12 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (keyfreq-buffer "*keyfreq-show*")
     (keyfreq-file (expand-file-name "keyfreq.hist" user-emacs-cache-directory))
     (keyfreq-file-lock (expand-file-name "keyfreq.hist.lock" user-emacs-cache-directory))
-    (keyfreq-excluded-commands
+    :config
+    (setq keyfreq-excluded-commands
      '(self-insert-command
        org-self-insert-command
        mwheel-scroll
+       mouse-drag-region
        mouse-set-point))
     :hook
     (emacs-startup-hook . keyfreq-mode)
