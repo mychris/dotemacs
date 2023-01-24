@@ -2656,6 +2656,8 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
                magit-auto-revert-mode
                git-commit-turn-on-flyspell
                magit-process-git)
+    :functions (magit-restore-window-configuration
+                magit-mode-get-buffers)
     :config
     (defun +kill-magit-buffers ()
       "Kill all magit buffers and restore the window configuration."
@@ -2676,8 +2678,8 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
 
   (use-package git-commit ;; part of magit
     :ensure nil
-    :config
-    (setq git-commit-summary-max-length 72)
+    :custom
+    (git-commit-summary-max-length 72)
     :bind (
            :map git-commit-mode-map
            ("C-c c" . with-editor-finish)
@@ -2688,6 +2690,13 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
                                (display-fill-column-indicator-mode 1)
                                (git-commit-turn-on-flyspell)
                                (evil-insert-state))))
+
+  (use-package git-rebase ;; part of magit
+    :ensure nil
+    :bind (
+           :map git-rebase-mode-map
+           ("C-k" . git-rebase-move-line-up)
+           ("C-j" . git-rebase-move-line-down)))
 
   (use-package git-modes
     :ensure t)
