@@ -5,7 +5,7 @@
 ;; Author: Christoph Göttschkes
 ;; Maintainer: Christoph Göttschkes
 ;; Created: 21 Jan 2023
-;; Modified: 22 Jan 2023
+;; Modified: 24 Jan 2023
 ;; Version: 0.1
 ;; Keywords: convenience extension tools
 
@@ -40,7 +40,6 @@
 ;;; Code:
 
 (require 'use-package-core)
-(require 'cl-lib)
 
 (defun use-package-prettify--normalize-rules-list (name input)
   "Normalize the INPUT pseudo-alist describing prettifying rules.
@@ -57,29 +56,24 @@ Otherwise, \"-mode\" is appended to the key.
 This is also true for the given NAME, which is used if an element does not
 define a key."
   (let (result)
-    (cl-loop for element in input
-             do
-             (let* ((mode
-                     (if (symbolp (car element))
-                         (car element)
-                       name))
-                    (norm-mode
-                     (cond
-                      ((string= (symbol-name mode) "c-mode-common")
-                       mode)
-                      ((string-suffix-p "-hook" (symbol-name mode))
-                       (intern
-                        (string-remove-suffix "-hook" (symbol-name mode))))
-                      ((string-suffix-p "-mode" (symbol-name mode))
-                       mode)
-                      (t
-                       (intern (concat (symbol-name mode) "-mode")))))
-                    (rules
-                     (if (symbolp (car element))
-                         (cdr element)
-                       element)))
-               (setf (alist-get norm-mode result)
-                     (append rules (alist-get norm-mode result)))))
+    (while input
+      (let ((element (car input)))
+	(let* ((mode (if (symbolp (car element)) (car element) name))
+	       (norm-mode
+		(cond
+		 ((string= (symbol-name mode) "c-mode-common")
+		  mode)
+		 ((string-suffix-p "-hook" (symbol-name mode))
+		  (intern
+		   (string-remove-suffix "-hook" (symbol-name mode))))
+		 ((string-suffix-p "-mode" (symbol-name mode))
+		  mode)
+		 (t
+		  (intern (concat (symbol-name mode) "-mode")))))
+	       (rules (if (symbolp (car element)) (cdr element) element)))
+	  (setf (alist-get norm-mode result)
+		(append rules (alist-get norm-mode result))))
+	(setq input (cdr input))))
     result))
 
 (defun use-package-prettify--normalize (name-symbol _keyword args)
@@ -98,16 +92,16 @@ associated with, NAME-SYMBOL is used."
   (use-package-concat
    (use-package-process-keywords name-symbol rest state)
    (cl-loop for arg in args
-            collect
-            (let ((mode (car arg))
-                  (rules (cdr arg)))
-              (backquote
-               (add-hook
-                (quote ,(intern (concat (symbol-name mode) "-hook")))
-                (lambda ()
-                  (setq prettify-symbols-alist
-                        (append prettify-symbols-alist (quote ,rules)))
-                  (prettify-symbols-mode t))))))))
+	    collect
+	    (let ((mode (car arg))
+		  (rules (cdr arg)))
+	      (backquote
+	       (add-hook
+		(quote ,(intern (concat (symbol-name mode) "-hook")))
+		(lambda ()
+		  (setq prettify-symbols-alist
+			(append prettify-symbols-alist (quote ,rules)))
+		  (prettify-symbols-mode t))))))))
 
 ;;;###autoload
 (defalias 'use-package-normalize/:prettify 'use-package-prettify--normalize)
