@@ -34,7 +34,7 @@
 (defconst user-emacs-cache-directory
   (let ((env-value (getenv "EMACS_CACHE_DIR")))
     (if env-value
-        env-value
+	env-value
       (expand-file-name "emacs" (getenv "XDG_CACHE_HOME"))))
   "Directory for user specific Emacs cache files.")
 
@@ -77,18 +77,18 @@
 (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
 (setq package-archives
       '(("gnu-elpa" . "https://elpa.gnu.org/packages/")
-        ("gnu-elpa-devel" . "https://elpa.gnu.org/devel/")
-        ("nongnu-elpa" . "https://elpa.nongnu.org/nongnu/")
-        ("nongnu-elpa-devel" . "https://elpa.nongnu.org/nongnu-devel/")
-        ("melpa-stable" . "https://stable.melpa.org/packages/")
-        ("melpa" . "https://melpa.org/packages/"))
+	("gnu-elpa-devel" . "https://elpa.gnu.org/devel/")
+	("nongnu-elpa" . "https://elpa.nongnu.org/nongnu/")
+	("nongnu-elpa-devel" . "https://elpa.nongnu.org/nongnu-devel/")
+	("melpa-stable" . "https://stable.melpa.org/packages/")
+	("melpa" . "https://melpa.org/packages/"))
       package-archive-priorities
       '(("gnu-elpa" . 10)
-        ("gnu-elpa-devel" . 9)
-        ("nongnu-elpa" . 8)
-        ("nongnu-elpa-devel" . 7)
-        ("melpa-stable" . 6)
-        ("melpa" . 5)))
+	("gnu-elpa-devel" . 9)
+	("nongnu-elpa" . 8)
+	("nongnu-elpa-devel" . 7)
+	("melpa-stable" . 6)
+	("melpa" . 5)))
 (setq package-quickstart-file (expand-file-name "package-quickstart.el" user-emacs-cache-directory))
 (package-initialize)
 (when (not package-archive-contents)
@@ -151,14 +151,14 @@ Also byte compiles the file and use the cached .elc, if `DO-BYTE-COMPILE'
 evaluates to a non-nil value."
   (let* ((file-el (concat (file-name-sans-extension file-org) ".el")))
     (if (not (file-exists-p file-org))
-        (error "Org file '%s' missing" file-org)
+	(error "Org file '%s' missing" file-org)
       (when (not (and (file-exists-p file-el)
-                      (+file-time-less-p file-org file-el)))
-        (progn
-          (require 'org)
-          (org-babel-tangle-file file-org file-el "emacs-lisp")
-          (when do-byte-compile
-            (byte-compile-file file-el))))
+		      (+file-time-less-p file-org file-el)))
+	(progn
+	  (require 'org)
+	  (org-babel-tangle-file file-org file-el "emacs-lisp")
+	  (when do-byte-compile
+	    (byte-compile-file file-el))))
       (require 'settings (file-name-sans-extension file-el)))))
 ;; found that one somewhere, shaves off another 200ms during startup.
 ;; no idea if this has any negative side effects, nothing emerged yet.
