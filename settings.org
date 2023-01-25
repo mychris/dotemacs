@@ -314,6 +314,8 @@ This is mostly use-package and local utilities which are used throught the confi
   (use-package gcmh
     :ensure t
     :diminish (gcmh-mode)
+    :commands (gcmh-mode)
+    :functions (gcmh-idle-garbage-collect)
     :custom
     (gcmh-idle-delay 'auto)
     (gcmh-auto-idle-delay-factor 10)
