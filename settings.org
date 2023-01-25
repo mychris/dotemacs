@@ -255,8 +255,8 @@ This is mostly use-package and local utilities which are used throught the confi
 ** Line numbers
 #+begin_src emacs-lisp
   (use-package display-line-numbers
+    :disabled t ;; For now, try to life without it, performance degradation is sometimes too bad.
     :ensure nil
-    :disabled ;; For now, try to life without it, performance degradation is sometimes too bad.
     :diminish (display-line-numbers-mode)
     :commands (display-line-numbers-mode
                global-display-line-numbers-mode)
@@ -1066,8 +1066,8 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 ** neotree - A tree plugin like NerdTree for Vim
 #+begin_src emacs-lisp
   (use-package neotree
+    :disabled t
     :ensure t
-    :disabled
     :commands (neotree-toggle)
     :custom
     (neo-smart-open t)
@@ -1352,7 +1352,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 ** disable-mouse - Disable mouse commands globally
 #+begin_src emacs-lisp
   (use-package disable-mouse
-    :disabled
+    :disabled t
     :ensure t
     :diminish (disable-mouse-mode)
     :commands (disable-mouse-mode
@@ -1413,8 +1413,8 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 ** Avy - Jump to arbitrary positions in visible text and select text quickly
 #+begin_src emacs-lisp
   (use-package avy
-    :ensure t
     :disabled t
+    :ensure t
     :general
     (emacs-map
       "M-g g" #'avy-goto-line
@@ -1477,8 +1477,8 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 ** multiple-cursors.el - Multiple cursors for Emacs.
 #+begin_src emacs-lisp
   (use-package multiple-cursors
-    :ensure t
     :disabled t
+    :ensure t
     :custom
     (mc/list-file (locate-user-emacs-file ".mc-lists.el"))
     (mc/max-cursors nil)
