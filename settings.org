@@ -329,7 +329,6 @@ This is mostly use-package and local utilities which are used throught the confi
   (use-package my-utils
     :ensure nil
     :demand t
-    :load-path "elisp"
     :commands (+delete-most-recent-window)
     :general
     (emacs-map
@@ -430,7 +429,6 @@ This is mostly use-package and local utilities which are used throught the confi
   (use-package my-evil-commands
     :ensure nil
     :after (:all evil)
-    :load-path "elisp"
     :general
     (evil-nmap
       "g ;" #'+evil-goto-last-change-center
@@ -1023,7 +1021,6 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package help-fns+
     :ensure nil
-    :load-path "elisp"
     :commands (describe-buffer
                describe-command
                describe-option
@@ -1133,7 +1130,6 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package quick-file-access
     :ensure nil
-    :load-path "elisp"
     :commands (quick-file-access-open-file)
     :config
     (setq-default quick-file-access-file-list
@@ -2064,7 +2060,6 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 
   (use-package lsp-maybe
     :ensure nil
-    :load-path "elisp"
     :commands (lsp-maybe lsp-maybe-add-predicate))
 #+end_src
 ** ggtags - emacs frontend to GNU Global source code tagging system
