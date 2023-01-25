@@ -328,6 +328,7 @@ This is mostly use-package and local utilities which are used throught the confi
     :ensure nil
     :demand t
     :load-path "elisp"
+    :commands (+delete-most-recent-window)
     :general
     (emacs-map
       "C-x 9" #'+delete-most-recent-window))

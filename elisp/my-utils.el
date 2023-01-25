@@ -40,6 +40,7 @@
   (interactive)
   (or (+point-in-string-p) (+point-in-comment-p)))
 
+;;;###autoload
 (defun +delete-most-recent-window ()
   "Delete the most recent window and kill its buffer."
   (interactive)
