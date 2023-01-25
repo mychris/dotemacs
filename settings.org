@@ -936,6 +936,7 @@ This is mostly use-package and local utilities which are used throught the confi
     (which-key-min-display-lines 7)
     (which-key-use-C-h-commands t)
     (which-key-show-early-on-C-h t)
+    (which-key-compute-remaps t)
     :hook
     (emacs-startup-hook . which-key-mode))
 
