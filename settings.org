@@ -952,12 +952,12 @@ This is mostly use-package and local utilities which are used throught the confi
     :after (:all which-key)
     :commands (which-key-posframe-mode
                +which-key-posframe-mode-toggle)
-    :functions (posframe-poshandler-frame-center)
     :custom
     (which-key-posframe-font nil)
     (which-key-posframe-poshandler #'+which-key-posframe-poshandler)
     (which-key-posframe-border-width 2)
     :config
+    (declare-function posframe-poshandler-frame-center "posframe")
     (defun +which-key-posframe-mode-toggle ()
       "Enable/Disable `which-key-posframe-mode' dependent on the status of the
   `which-key-mode'."
