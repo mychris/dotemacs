@@ -348,8 +348,7 @@ This is mostly use-package and local utilities which are used throught the confi
 ** evil-org - evil keybindings for org-mode
 #+begin_src emacs-lisp
   (use-package evil-org
-    :ensure t
-    :pin melpa
+    :ensure (evil-org :pin melpa)
     :after (:all evil org)
     :diminish (evil-org-mode)
     :commands (evil-org-mode
@@ -1201,7 +1200,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 ** undo-tree - Treat undo history as a tree
 #+begin_src emacs-lisp
   (use-package undo-tree
-    :ensure t
+    :ensure (undo-tree :pin gnu-elpa-devel)
     :diminish (undo-tree-mode)
     :commands (global-undo-tree-mode
                unto-tree-visualize
@@ -1491,17 +1490,25 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 ** evil-mc - Multiple cursors implementation for evil-mode
 #+begin_src emacs-lisp
   (use-package evil-mc
-    :ensure t
+    :ensure (evil-mc :pin melpa)
     :after (:all evil)
-    :commands (global-evil-mc-mode)
+    :diminish (evil-mc-mode)
+    :commands (global-evil-mc-mode
+               +global-evil-mc-mode-toggle)
     :init
-    (setq-default evil-mc-one-cursor-show-mode-line-text nil)
+    ;; (setq-default evil-mc-one-cursor-show-mode-line-text nil)
+    :config
+    (defun +global-evil-mc-mode-toggle ()
+      "Enable/Disable `evil-mc-mode' globally in every buffer dependent an the
+  status of the `evil-mode'."
+      (interactive)
+      (global-evil-mc-mode (if (bound-and-true-p evil-mode) 1 -1)))
     :general
     (emacs-map
       "C->" #'evil-mc-make-cursor-move-next-line
       "C-<" #'evil-mc-make-cursor-move-prev-line)
     :hook
-    (emacs-startup-hook . global-evil-mc-mode))
+    (evil-mode-hook . +global-evil-mc-mode-toggle))
 #+end_src
 ** view.el [built-in] - peruse file or buffer without editing
 #+begin_src emacs-lisp
@@ -1649,12 +1656,10 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :ensure t)
 
   (use-package spacemacs-theme
-    :ensure t
-    :pin melpa-stable)
+    :ensure (spacemacs-theme :pin melpa-stable))
 
   (use-package solarized-theme
-    :ensure t
-    :pin melpa-stable)
+    :ensure (solarized-theme :pin melpa-stable))
 
   (use-package ample-theme
     :ensure t)
