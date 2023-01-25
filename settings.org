@@ -242,6 +242,8 @@ This is mostly use-package and local utilities which are used throught the confi
   (use-package recentf
     :ensure nil
     :diminish (recentf-mode)
+    :commands (recentf-mode
+               recentf-cleanup)
     :custom
     (recentf-save-file (expand-file-name "recentf" user-emacs-cache-directory))
     (recentf-save-file-modes #o600)
@@ -249,7 +251,9 @@ This is mostly use-package and local utilities which are used throught the confi
     (recentf-exclude '("\\.gz" "\\.xz" "\\.zip" "/elpa/" "/ssh:" "/sudo:"))
     (recentf-auto-cleanup 60)
     :hook
-    (recentf-mode-hook . recentf-cleanup)
+    (recentf-mode-hook . (lambda ()
+                           (run-with-idle-timer 5 nil (lambda ()
+                                                        (recentf-cleanup)))))
     (after-init-hook . recentf-mode))
 #+end_src
 ** Line numbers
