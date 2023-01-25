@@ -102,6 +102,10 @@
   (package-refresh-contents)
   (package-install 'use-package))
 
+(unless (package-installed-p 'general)
+  (package-refresh-contents)
+  (package-install 'general))
+
 (unless (package-installed-p 'diminish)
   (package-refresh-contents)
   (package-install 'diminish))
