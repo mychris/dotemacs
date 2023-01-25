@@ -1544,17 +1544,19 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   (use-package isearch
     :ensure nil
     :config
+    (eval-when-compile (require 'isearch))
     (setq search-highlight t)
     (setq search-whitespace-regexp ".*?")
     (setq isearch-lax-whitespace t)
     (setq isearch-regexp-lax-whitespace nil)
     (setq isearch-lazy-count t)
     (setq isearch-lazy-highlight t)
-    (defun +isearch-and-regex (search-input &optional _lax)
-      (message search-input)
-      search-input)
-    (isearch-define-mode-toggle and "^" +isearch-and-regex
-      "Turning on and search turns off regexp mode.")
+    (eval-and-compile
+      (defun +isearch-and-regex (search-input &optional _lax)
+        (message search-input)
+        search-input)
+      (isearch-define-mode-toggle and "^" +isearch-and-regex
+        "Turning on and search turns off regexp mode."))
     :general
     (emacs-map 'isearch-mode-map
       "C-g" #'isearch-cancel
