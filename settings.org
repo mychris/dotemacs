@@ -810,6 +810,7 @@ This is mostly use-package and local utilities which are used throught the confi
 #+begin_src emacs-lisp
   ;; TODO: cleanup! persp-mode and perspective are two different packages!
   (use-package perspective
+    :disabled t
     :ensure t
     :commands (persp-mode
                persp-switch
