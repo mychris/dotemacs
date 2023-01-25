@@ -1658,7 +1658,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   (use-package zenburn-theme
     :ensure t)
 
-  (use-package spacemacs-theme
+  (use-package spacemacs-common
     :ensure (spacemacs-theme :pin melpa-stable))
 
   (use-package solarized-theme
