@@ -1357,19 +1357,20 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :diminish (disable-mouse-mode)
     :commands (disable-mouse-mode
                disable-mouse-global-mode
-               disable-mouse-in-keymap)
+               disable-mouse-in-keymap
+               +disable-mouse-in-evil-mode)
+    :config
+    (defun +disable-mouse-in-evil-mode ()
+      (interactive)
+      (when (bound-and-true-p evil-made)
+        (mapc #'disable-mouse-in-keymap
+              (list evil-motion-state-map
+                    evil-normal-state-map
+                    evil-visual-state-map
+                    evil-insert-state-map))))
     :hook
-    (emacs-startup-hook . disable-mouse-global-mode))
-
-  (use-package emacs
-    :ensure nil
-    :after (:all evil disable-mouse)
-    :init
-    (mapc #'disable-mouse-in-keymap
-          (list evil-motion-state-map
-                evil-normal-state-map
-                evil-visual-state-map
-                evil-insert-state-map)))
+    (emacs-startup-hook . disable-mouse-global-mode)
+    (evil-mode-hook . +disable-mouse-in-evil-mode))
 #+end_src
 ** golden-ratio-scroll-screen - Scroll half screen down or up, and highlight current line
 #+begin_src emacs-lisp
