@@ -1829,7 +1829,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (dolist (event '(mouse-event-p
                      mouse-movement-p
                      mwheel-scroll))
-      (add-to-list 'keycast-substitute-alist `(,event nil))))
+      (add-to-list 'keycast-substitute-alist `(,event "." "Mouse…"))))
 #+end_src
 * Shells
 ** shell [built-in] - specialized comint.el for running the shell
