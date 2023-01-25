@@ -160,20 +160,20 @@
 ;;;; Load settings
 
 (defun +file-time-less-p (a b)
-  "Return non-nil if the file modification time for `A' is less than `B'."
+  "Return non-nil if the file modification time for A is less than B."
   (time-less-p
    (file-attribute-modification-time (file-attributes a))
    (file-attribute-modification-time (file-attributes b))))
 
 (defun +org-babel-load-file (file-org-path &optional do-byte-compile)
-  "Load the given `FILE-ORG-PATH' using `org-bable-load-file'.
-The file is also byte-compiled, if `DO-BYTE-COMPILE' evaluates to a non-nil
+  "Load the given FILE-ORG-PATH using `org-bable-load-file'.
+The file is also byte-compiled, if DO-BYTE-COMPILE evaluates to a non-nil
 value."
   (let* ((file-el-name (concat (file-name-base file-org-path) ".el"))
 	 (file-el-path (expand-file-name file-el-name user-emacs-cache-directory))
 	 (file-elc-path (byte-compile-dest-file file-el-path)))
     (if (not (file-exists-p file-org-path))
-	(error "Org file '%s' not found" file-org-path)
+	(error "init.el: Org file '%s' not found" file-org-path)
       (when (not (and (file-exists-p file-el-path)
 		      (+file-time-less-p file-org-path file-el-path)))
 	(when (file-exists-p file-elc-path)
@@ -181,10 +181,9 @@ value."
 	(require 'org)
 	(org-babel-tangle-file file-org-path file-el-path "emacs-lisp")
 	(when do-byte-compile
-	  (let ((comp-result (byte-compile-file file-el-path)))
-	    (unless comp-result
-	      (message "Failed to byte compile '%s'" file-el-path)))))
-      (require 'settings (file-name-sans-extension file-el-path)))))
+	  (unless (byte-compile-file file-el-path)
+	    (error "init.el: Failed to byte compile '%s'" file-el-path)))))
+    (require 'settings (file-name-sans-extension file-el-path))))
 
 ;; For now, do not byte compile the settings files. For some reason, this
 ;; messes up some of the use-package declaration.
