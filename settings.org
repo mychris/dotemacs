@@ -1332,7 +1332,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   (global-set-key [C-mouse-8] 'previous-buffer)
   (global-set-key [C-mouse-9] 'next-buffer)
 
-  (defun forward-paragraph-recenter (&optional arg)
+  (defun forward-paragraph-recenter (&optional _arg)
     "Move forward to end of paragraph and center point using `recenter'.
   With argument ARG, do it ARG times; a negative argument ARG = -N means
   move backward N paragraphs."
@@ -1340,7 +1340,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (call-interactively #'forward-paragraph)
     (recenter nil t))
 
-  (defun backward-paragraph-recenter (&optional arg)
+  (defun backward-paragraph-recenter (&optional _arg)
     "Move backward to start of paragraph and center point using `recenter'.
 
   a negative argument ARG = -N means move forward N paragraphs."
