@@ -2951,7 +2951,7 @@ Build with a prefix of /opt/emacs. Need to create a .desktop file in ~/.local/sh
   $ git pull
   $ bash autogen.sh
   $ emacs -nw -q --batch --eval '(message "%s" system-configuration-options)' 2>&1 |xargs bash configure
-  # --with-cairo --with-harfbuzz --with-modules --with-x-toolkit=gtk3 --with-xft --with-sound=alsa --with-imagemagick --with-json --with-mailutils --with-tree-sitter --with-small-ja-dic --without-compress-install --enable-link-time-optimization --with-native-compilation=aot --prefix=/opt/emacs 'CFLAGS=-mtune=native -march=native -O3 -pipe -fomit-frame-pointer --param=ssp-buffer-size=4 -fno-plt' CPPFLAGS=-D_FORTIFY_SOURCE=2 LDFLAGS=-Wl,-O2,--sort-common,--as-needed,-z,relro,-z,now
+  # --with-cairo --with-harfbuzz --with-modules --with-x-toolkit=gtk3 --with-xft --with-sound=alsa --with-imagemagick --with-json --with-mailutils --with-tree-sitter --with-small-ja-dic --without-compress-install --with-native-compilation=aot --prefix=/opt/emacs 'CFLAGS=-mtune=native -march=native -O2 -g3 -pipe -fomit-frame-pointer --param=ssp-buffer-size=4 -fno-plt' CPPFLAGS=-D_FORTIFY_SOURCE=2 LDFLAGS=-Wl,--sort-common,--as-needed,-z,relro,-z,now
   $ make NATIVE_FULL_AOT=1 -j16
   $ sudo make install
 #+end_src
