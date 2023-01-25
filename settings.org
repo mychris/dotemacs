@@ -202,7 +202,7 @@ This is mostly use-package and local utilities which are used throught the confi
     (save-place-file (expand-file-name "saveplace" user-emacs-cache-directory))
     (save-place-forget-unreadable-files t)
     :hook
-    (emacs-startup-hook . save-place-mode))
+    (after-init-hook . save-place-mode))
 #+end_src
 ** Backups
 #+begin_src emacs-lisp
@@ -244,10 +244,13 @@ This is mostly use-package and local utilities which are used throught the confi
     :diminish (recentf-mode)
     :custom
     (recentf-save-file (expand-file-name "recentf" user-emacs-cache-directory))
-    (recentf-max-saved-items 200)
+    (recentf-save-file-modes #o600)
+    (recentf-max-saved-items 1024)
     (recentf-exclude '("\\.gz" "\\.xz" "\\.zip" "/elpa/" "/ssh:" "/sudo:"))
+    (recentf-auto-cleanup 60)
     :hook
-    (emacs-startup-hook . recentf-mode))
+    (recentf-mode-hook . recentf-cleanup)
+    (after-init-hook . recentf-mode))
 #+end_src
 ** Line numbers
 #+begin_src emacs-lisp
@@ -2843,7 +2846,7 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
       "M-4" nil)
     :hook
     (magit-mode-hook . magit-load-config-extensions)
-    (emacs-startup-hook . magit-auto-revert-mode))
+    (after-init-hook . magit-auto-revert-mode))
 
   (use-package git-commit ;; part of magit
     :ensure nil
