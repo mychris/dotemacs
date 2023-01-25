@@ -2223,7 +2223,6 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       :error-list-face 'flycheck-error-list-info)
     :hook
     (lsp-mode-hook . flycheck-mode)
-    (emacs-lisp-mode-hook . flycheck-mode)
     (org-src-mode-hook . (lambda ()
                            (setq-local flycheck-disabled-checkers
                                        '(emacs-lisp-checkdoc)))))
@@ -2393,7 +2392,9 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       (setq-local indent-tabs-mode t)
       (setq-local fill-column 80)
       (setq-local show-trailing-whitespace t)
-      (display-fill-column-indicator-mode 1))
+      (display-fill-column-indicator-mode 1)
+      (flycheck-mode 1)
+      (company-mode 1))
     :hook
     (elisp-mode-hook . +elisp-mode-setup)
     (emacs-lisp-mode-hook . +elisp-mode-setup))
