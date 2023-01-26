@@ -569,7 +569,7 @@ This is mostly use-package and local utilities which are used throught the confi
     (imenu-after-jump-hook . recenter-top-bottom))
 
   (use-package imenu-list
-    :ensure t
+    :ensure (imenu-list :pin melpa)
     :after (:all imenu)
     :defer t
     :commands (imenu-list)
