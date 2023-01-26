@@ -101,6 +101,7 @@ associated with, NAME-SYMBOL is used."
 		(lambda ()
 		  (setq prettify-symbols-alist
 			(append prettify-symbols-alist (quote ,rules)))
+		  (setq-local prettify-symbols-unprettify-at-point 'right-edge)
 		  (prettify-symbols-mode t))))))))
 
 ;;;###autoload
