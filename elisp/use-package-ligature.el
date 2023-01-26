@@ -55,7 +55,8 @@
 ;; To provide different ligatures for different modes within one `use-package',
 ;; multiple lists can be providid.
 ;;
-;; The `ligature-mode' will be enabled automatically for each given mode.
+;; A hook to enable the `ligature-mode' will be added automatically for each
+;; given mode.
 
 ;;; Code:
 
@@ -79,64 +80,80 @@ If the given mode does not end with -mode, it will be appended."
      (concat mode "-mode")))))
 
 (defun use-package-ligature--normalize-ligatures (name-symbol arg)
-  ""
+  "Normalizes one list of ligature definition.
+ARG holds the list of the ligatures, which can be prepended by a single mode,
+or a list of modes the ligatures belong to.  If no mode is present in the ARG
+list, NAME-SYMBOL is used as the mode for the given ligatures.
+
+The result is a list of ligature lists.  Each ligature list contians the mode
+the ligatures belong to as its first element.  If multiple modes are given in
+the given ARG, the returned list contains multiple elements, one for each mode."
   (let ((ligatures nil)
-	(modes nil)
-	(result nil))
-    (while arg
-      (cond
-       ((null (car arg))
-	(use-package-ligature--error
-	 "Nil in ligature list"))
-       ((proper-list-p (car arg))
-	(setq modes (append modes (car arg))))
-       ((symbolp (car arg))
-	(unless ligatures
-	  (use-package-ligature--error
-	   "Ligatures should be strings"))
-	(push (car arg) (use-package-ligature--normalize-mode modes)))
-       ((stringp (car arg))
-	(push (car arg) ligatures))
-       (t
-	(use-package-ligature--error
-	 "Ligatures should be strings")))
-      (setq arg (cdr arg)))
+	(modes nil))
+    (cl-loop for elem in arg
+	     do
+	     (cond
+	      ((null elem)
+	       (use-package-ligature--error
+		"Nil in ligature list"))
+	      ((listp elem)
+	       (setq modes (append elem modes)))
+	      ((symbolp elem)
+	       (if (null ligatures)
+		   (push (use-package-ligature--normalize-mode elem) modes)
+		 (use-package-ligature--error
+		  "Mode symbols must be in the beginning of the ligature list")))
+	      ((stringp elem)
+	       (push elem ligatures))
+	      (t
+	       (use-package-ligature--error
+		"Ligatures should be strings"))))
     (unless modes
       (push (use-package-ligature--normalize-mode name-symbol) modes))
     (setf modes (cl-remove-duplicates modes))
-    (while modes
-      (push (cons (car modes) ligatures) result)
-      (setq modes (cdr modes)))
-  result))
+    (cl-loop for elem in modes
+	     collect
+	     (cons elem ligatures))))
 
-(defun use-package-ligature--normalize (name-symbol keyword args)
-  ""
-  (let ((rest (if (null (cdr args))
-		  nil
-		(use-package-ligature--normalize name-symbol keyword (cdr args))))
-	(head (car args)))
-    (if (not head)
-	rest
-      (cons (use-package-ligature--normalize-ligatures name-symbol head) rest))))
-
-(use-package-ligature--normalize-ligatures 'cc-mode '(("==" "=>")))
-(use-package-ligature--normalize 'cc-mode nil '(("==" "=>") ("=<")))
+(defun use-package-ligature--normalize (name-symbol _keyword args)
+  "Hook for `use-package' to normalize the given ARGS for the :ligature keyword.
+NAME-SYMBOL describes the package for which the ligatures are defined and will
+be used, if no modes are given in a ligature list.
+See `use-package-ligature--normalize-mode'."
+  (let (result)
+    (while args
+      (let ((ligatures-for-modes (use-package-ligature--normalize-ligatures
+				  name-symbol
+				  (car args))))
+	(while ligatures-for-modes
+	  (let* ((ligatures (cdr (car ligatures-for-modes)))
+		 (mode (car (car ligatures-for-modes))))
+	    (if (not (assq mode result))
+		(push (cons mode ligatures) result)
+	      (setf (alist-get mode result)
+		    (append ligatures (alist-get mode result)))))
+	  (setq ligatures-for-modes (cdr ligatures-for-modes))))
+      (setq args (cdr args)))
+    result))
 
 (defun use-package-ligature--handler (name-symbol _keyword args rest state)
-  ""
+  "Generate the `ligature-set-ligatures' invocations for the `:ligature' KEYWORD.
+ARGS, REST, and STATE are prepared by `use-package-normalize/:ligatures'.
+IF a ligature list does not specify any mode, NAME-SYMBOL will be used."
   (use-package-concat
    (use-package-process-keywords name-symbol rest state)
-   (cl-loop for arg in args
-	    collect
-	    (let ((mode (car arg))
-		  (rules (cdr arg)))
-	      (backquote
-	       (add-hook
-		(quote ,(intern (concat (symbol-name mode) "-hook")))
-		(lambda ()
-		  (setq prettify-symbols-alist
-			(append prettify-symbols-alist (quote ,rules)))
-		  (setq-local prettify-symbols-unprettify-at-point 'right-edge)
+   `((eval-after-load 'ligature
+       (progn
+	 (require 'ligature)
+	 ,@(mapcar #'(lambda (ligature-list)
+		       `(ligature-set-ligatures ',(car ligature-list)
+						',(cdr ligature-list)))
+		   args)))
+     ,@(mapcar #'(lambda (ligature-list)
+		   `(add-hook ',(intern (concat (symbol-name (car ligature-list))
+						"-hook"))
+			      #'ligature-mode))
+	       args))))
 
 ;;;###autoload
 (defalias 'use-package-normalize/:ligatures 'use-package-ligature--normalize)
@@ -147,6 +164,5 @@ If the given mode does not end with -mode, it will be appended."
 (add-to-list 'use-package-keywords :ligatures t)
 
 (provide 'use-package-ligature)
-
 
 ;;; use-package-ligature.el ends here
