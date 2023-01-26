@@ -148,11 +148,12 @@ This is mostly use-package and local utilities which are used throught the confi
     (inhibit-startup-message t)
     (inhibit-startup-screen t)
     (inhibit-startup-buffer-menu t)
-    :init
-    (setq-default inhibit-x-resources t)
+    :preface
     ;; This is a weird one, see
     ;; https://emacshorrors.com/posts/advertising-your-freedom.html
-    (fset 'display-startup-echo-area-message 'ignore))
+    (fset 'display-startup-echo-area-message 'ignore)
+    :init
+    (setq-default inhibit-x-resources t))
 #+end_src
 ** Make sure that UTF-8 is used everywhere.
 #+begin_src emacs-lisp
@@ -175,7 +176,6 @@ This is mostly use-package and local utilities which are used throught the confi
   (use-package savehist
     :ensure nil
     :delight (savehist-mode)
-    :commands (savehist-mode)
     :custom
     (savehist-file (expand-file-name "savehist" user-emacs-cache-directory))
     (history-length 1000)
@@ -373,19 +373,8 @@ This is mostly use-package and local utilities which are used throught the confi
     :ensure (evil-org :pin melpa)
     :after (:all evil org)
     :delight (evil-org-mode)
-    :commands (evil-org-mode
-               +evil-org-mode-toggle)
-    :config
-    (defun +evil-org-mode-toggle ()
-      "Enable/Disable `evil-org-mode' dependent on the status of the
-  `org-mode' and `evil-mode'."
-      (interactive)
-      (evil-org-mode (if (and (eq major-mode 'org-mode)
-                              (bound-and-true-p evil-mode))
-                         1 -1)))
     :hook
-    (org-mode-hook . +evil-org-mode-toggle)
-    (evil-mode-hook . +evil-org-mode-toggle))
+    (org-mode-hook . evil-org-mode))
 #+end_src
 ** evil-collection - A set of keybindings for Evil mode
 #+begin_src emacs-lisp
@@ -403,21 +392,13 @@ This is mostly use-package and local utilities which are used throught the confi
   (use-package evil-escape
     :ensure t
     :after (:all evil)
-    :demand t
     :delight (evil-escape-mode)
-    :commands (evil-escape-mode
-               +evil-escape-mode-toggle)
     :custom
     (evil-escape-key-sequence "jk")
     (evil-escape-delay 0.1)
     (evil-escape-unodered-key-sequence nil)
-    :config
-    (defun +evil-escape-mode-toggle ()
-      "Enable/Disable `evil-escape-mode' dependent on the status of the `evil-mode'."
-      (interactive)
-      (evil-escape-mode (if (bound-and-true-p evil-mode) 1 -1)))
     :hook
-    (evil-mode-hook . +evil-escape-mode-toggle))
+    (evil-mode-hook . evil-escape-mode))
 #+end_src
 ** evil-easymotion
 #+begin_src emacs-lisp
@@ -450,6 +431,8 @@ This is mostly use-package and local utilities which are used throught the confi
 #+begin_src emacs-lisp
   (use-package minibuffer
     :ensure nil
+    :custom
+    (minibuffer-default-prompt-format " [...]")
     :config
     (defun switch-to-minibuffer-window ()
       "Switch to minibuffer window (if active)."
@@ -524,16 +507,13 @@ This is mostly use-package and local utilities which are used throught the confi
 
   (use-package minibuf-eldef
     :ensure nil
-    :config
-    (setq minibuffer-default-prompt-format " [...]")
     :hook
     (emacs-startup-hook . minibuffer-electric-default-mode))
 
   (use-package mb-depth
     :ensure nil
-    :config
-    (setq minibuffer-depth-indicator-function
-          (lambda (depth) (format "[%2d] " depth)))
+    :custom
+    (minibuffer-depth-indicator-function (lambda (depth) (format "[%2d] " depth)))
     :hook
     (emacs-startup-hook . minibuffer-depth-indicate-mode))
 #+end_src
@@ -542,7 +522,7 @@ This is mostly use-package and local utilities which are used throught the confi
   (use-package autorevert
     :ensure nil
     :delight (auto-revert-mode
-               global-auto-revert-mode)
+              global-auto-revert-mode)
     :custom
     (auto-revert-verbose t)
     :hook
@@ -553,7 +533,7 @@ This is mostly use-package and local utilities which are used throught the confi
   (use-package imenu
     :ensure nil
     :hook
-    (imenu-after-jump-hook . recenter-top-bottom))
+    (imenu-after-jump-hook . (lambda () (recenter-top-bottom))))
 
   (use-package imenu-list
     :ensure (imenu-list :pin melpa)
