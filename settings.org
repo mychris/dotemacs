@@ -1983,9 +1983,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (abbrev-file-name (expand-file-name "abbrev_defs" user-emacs-directory))
     (only-global-abbrevs nil "Enable mode-specific abbrevs")
     (abbrev-all-caps nil)
-    (abbrev-suggest nil "Do not suggest using an abbrev in the echo area")
-    :config
-    (quietly-read-abbrev-file abbrev-file-name))
+    (abbrev-suggest nil "Do not suggest using an abbrev in the echo area"))
 #+end_src
 ** paren [built-in] - highlight matching paren
 #+begin_src emacs-lisp
