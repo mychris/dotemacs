@@ -2419,17 +2419,26 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package elisp-mode
     :ensure nil
+    :commands (emacs-lisp-mode)
     :config
-    (defun +elisp-mode-setup ()
+    (defun +emacs-lisp-mode-setup ()
       (setq-local indent-tabs-mode t)
       (setq-local fill-column 80)
       (setq-local show-trailing-whitespace t)
       (display-fill-column-indicator-mode 1)
       (flycheck-mode 1)
       (company-mode 1))
+    :prettify
+    (emacs-lisp-mode
+     ("<=" . ?≦)
+     (">=" . ?≧)
+     ("t" . ?𝕋)
+     ("pi" . ?π)
+     ("use-package" . ?📦)
+     ("lambda" . (?\s (Br . Bl) ?\s (Bc . Bc) ?λ))
+     ("defun" . (?\s (Br . Bl) ?\s (Bc . Bc) ?ƒ)))
     :hook
-    (elisp-mode-hook . +elisp-mode-setup)
-    (emacs-lisp-mode-hook . +elisp-mode-setup))
+    (emacs-lisp-mode-hook . +emacs-lisp-mode-setup))
 
   (use-package pp
     :ensure nil
@@ -2747,6 +2756,11 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
                                  (shell . t)
                                  (python . t)
                                  (perl . t)))
+    :prettify
+    (org-mode
+     ("[ ]" . ?☐)
+     ("[X]" . ?☑)
+     ("[-]" . ?❍))
     :general
     (emacs-map
       'org-mode-map
