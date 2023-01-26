@@ -14,7 +14,7 @@ This is mostly use-package and local utilities which are used throught the confi
   (eval-when-compile
     (require 'use-package))
   (require 'use-package-ligature)
-  (require 'diminish)
+  (require 'delight)
   (require 'bind-key)
   (require 'my-utils)
   (require 'general)
@@ -174,7 +174,7 @@ This is mostly use-package and local utilities which are used throught the confi
 #+begin_src emacs-lisp
   (use-package savehist
     :ensure nil
-    :diminish (savehist-mode)
+    :delight (savehist-mode)
     :commands (savehist-mode)
     :custom
     (savehist-file (expand-file-name "savehist" user-emacs-cache-directory))
@@ -188,7 +188,7 @@ This is mostly use-package and local utilities which are used throught the confi
 #+begin_src emacs-lisp
   (use-package saveplace
     :ensure nil
-    :diminish (save-place-mode)
+    :delight (save-place-mode)
     :custom
     (save-place-file (expand-file-name "saveplace" user-emacs-cache-directory))
     (save-place-forget-unreadable-files t)
@@ -232,7 +232,7 @@ This is mostly use-package and local utilities which are used throught the confi
 #+begin_src emacs-lisp
   (use-package recentf
     :ensure nil
-    :diminish (recentf-mode)
+    :delight (recentf-mode)
     :commands (recentf-mode
                recentf-cleanup)
     :custom
@@ -252,7 +252,7 @@ This is mostly use-package and local utilities which are used throught the confi
   (use-package display-line-numbers
     :disabled t ;; For now, try to life without it, performance degradation is sometimes too bad.
     :ensure nil
-    :diminish (display-line-numbers-mode)
+    :delight (display-line-numbers-mode)
     :commands (display-line-numbers-mode
                global-display-line-numbers-mode)
     :custom
@@ -321,7 +321,7 @@ This is mostly use-package and local utilities which are used throught the confi
 #+begin_src emacs-lisp
   (use-package gcmh
     :ensure t
-    :diminish (gcmh-mode)
+    :delight (gcmh-mode)
     :commands (gcmh-mode)
     :functions (gcmh-idle-garbage-collect)
     :custom
@@ -372,7 +372,7 @@ This is mostly use-package and local utilities which are used throught the confi
   (use-package evil-org
     :ensure (evil-org :pin melpa)
     :after (:all evil org)
-    :diminish (evil-org-mode)
+    :delight (evil-org-mode)
     :commands (evil-org-mode
                +evil-org-mode-toggle)
     :config
@@ -392,12 +392,11 @@ This is mostly use-package and local utilities which are used throught the confi
   (use-package evil-collection
     :ensure t
     :after (:all evil)
-    :commands (evil-collection-init
-               evil-collection-unimpaired-mode)
+    :commands (evil-collection-init)
     :hook
     (evil-mode-hook . (lambda ()
                         (evil-collection-init)
-                        (diminish 'evil-collection-unimpaired-mode))))
+                        (delight 'evil-collection-unimpaired-mode nil "evil-collection-unimpaired"))))
 #+end_src
 ** evil-escape - Customizable key sequence to escape from insert state and everything else in Emacs.
 #+begin_src emacs-lisp
@@ -405,7 +404,7 @@ This is mostly use-package and local utilities which are used throught the confi
     :ensure t
     :after (:all evil)
     :demand t
-    :diminish (evil-escape-mode)
+    :delight (evil-escape-mode)
     :commands (evil-escape-mode
                +evil-escape-mode-toggle)
     :custom
@@ -542,7 +541,7 @@ This is mostly use-package and local utilities which are used throught the confi
 #+begin_src emacs-lisp
   (use-package autorevert
     :ensure nil
-    :diminish (auto-revert-mode
+    :delight (auto-revert-mode
                global-auto-revert-mode)
     :custom
     (auto-revert-verbose t)
@@ -936,7 +935,7 @@ This is mostly use-package and local utilities which are used throught the confi
 #+begin_src emacs-lisp
   (use-package which-key
     :ensure t
-    :diminish (which-key-mode)
+    :delight (which-key-mode)
     :commands (which-key-mode
                which-key-add-key-based-replacements
                which-key-add-major-mode-key-based-replacements
@@ -1154,7 +1153,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package whitespace
     :ensure nil
-    :diminish (whitespace-mode)
+    :delight (whitespace-mode)
     :commands (whitespace-mode)
     :custom
     (whitespace-style '(face tab-mark))
@@ -1166,7 +1165,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   (use-package hi-lock
     :ensure nil
     :demand t
-    :diminish (hi-lock-mode)
+    :delight (hi-lock-mode)
     :config
     (defun +highlight-region-or-symbol (&optional face)
       "Highlight occurences of either the currently region or the symbol at point."
@@ -1206,7 +1205,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   (use-package highlight-thing
     :ensure t
     :demand t
-    :diminish (highlight-thing-mode)
+    :delight (highlight-thing-mode)
     :commands (highlight-thing-mode
                global-hightlight-thing-mode)
     :custom
@@ -1220,7 +1219,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package undo-tree
     :ensure (undo-tree :pin gnu-elpa-devel)
-    :diminish (undo-tree-mode)
+    :delight (undo-tree-mode)
     :commands (global-undo-tree-mode
                unto-tree-visualize
                unto-tree-undo)
@@ -1367,7 +1366,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   (use-package disable-mouse
     :disabled t
     :ensure t
-    :diminish (disable-mouse-mode)
+    :delight (disable-mouse-mode)
     :commands (disable-mouse-mode
                disable-mouse-global-mode
                disable-mouse-in-keymap
@@ -1442,7 +1441,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package smartparens
     :ensure t
-    :diminish (smartparens-mode)
+    :delight (smartparens-mode)
     :commands (smartparens-mode
                sp-beginning-of-sexp
                sp-end-of-sexp)
@@ -1509,7 +1508,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   (use-package evil-mc
     :ensure (evil-mc :pin melpa)
     :after (:all evil)
-    :diminish (evil-mc-mode)
+    :delight (evil-mc-mode)
     :commands (global-evil-mc-mode
                +global-evil-mc-mode-toggle)
     :init
@@ -1799,7 +1798,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 
   (use-package telephone-line
     :ensure t
-    :diminish (telephone-line-mode)
+    :delight (telephone-line-mode)
     :custom
     (telephone-line-height 24)
     (telephone-line-primary-left-separator 'telephone-line-cubed-left)
@@ -1906,7 +1905,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package projectile
     :ensure t
-    :diminish (projectile-mode)
+    :delight (projectile-mode)
     :commands (projectile-mode)
     :custom
     (projectile-cache-file (expand-file-name "projectile.cache" user-emacs-cache-directory))
@@ -1934,7 +1933,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package abbrev
     :ensure nil
-    :diminish (abbrev-mode)
+    :delight (abbrev-mode)
     :commands (abbrev-mode
                edit-abbrevs-mode
                read-abbrev-file
@@ -1974,7 +1973,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package autoinsert
     :ensure nil
-    :diminish (auto-insert-mode)
+    :delight (auto-insert-mode)
     :commands (auto-insert-mode
                define-auto-insert)
     :custom
@@ -2030,7 +2029,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package yasnippet
     :ensure t
-    :diminish (yas-minor-mode)
+    :delight (yas-minor-mode)
     :commands (yas-minor-mode
                yas-reload-all
                yas-expand-snippet)
@@ -2096,13 +2095,13 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package ggtags
     :ensure t
-    :diminish (ggtags-mode))
+    :delight (ggtags-mode))
 #+end_src
 ** company - Modular text completion framework
 #+begin_src emacs-lisp
   (use-package company
     :ensure t
-    :diminish (company-mode)
+    :delight (company-mode)
     :custom
     (company-tooltip-align-annotations t)
     (company-minimum-prefix-length 1)
@@ -2201,7 +2200,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   (use-package flycheck
     :ensure t
     :defer 1
-    :diminish (flycheck-mode)
+    :delight (flycheck-mode)
     :commands (flycheck-mode)
     :functions (flycheck-define-error-level)
     :config
@@ -2442,7 +2441,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 
   (use-package eldoc
     :ensure nil
-    :diminish (eldoc-mode)
+    :delight (eldoc-mode)
     :hook
     (emacs-startup-hook . global-eldoc-mode))
 #+end_src
@@ -2783,7 +2782,7 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
   (use-package org-superstar
     :ensure t
     :after (:all org)
-    :diminish (org-superstar-mode)
+    :delight (org-superstar-mode)
     :commands (org-superstar-mode)
     :custom
     (org-superstar-remove-leading-stars t)

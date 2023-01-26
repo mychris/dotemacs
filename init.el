@@ -106,17 +106,12 @@
   (package-refresh-contents)
   (package-install 'general))
 
-(unless (package-installed-p 'diminish)
-  (package-refresh-contents)
-  (package-install 'diminish))
-
 (unless (package-installed-p 'delight)
   (package-refresh-contents)
   (package-install 'delight))
 
 (eval-when-compile
   (require 'cl-lib))
-(require 'diminish)
 (require 'delight)
 (require 'bind-key)
 (require 'my-utils)
