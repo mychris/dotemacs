@@ -689,7 +689,9 @@ This is mostly use-package and local utilities which are used throught the confi
       [remap point-to-register] #'consult-register-store)
     (emacs-map
       'consult-narrow-map
-      "?" #'consult-narrow-help))
+      "?" #'consult-narrow-help)
+    (evil-nmap
+      "g l" #'consult-goto-line))
 
   (use-package consult-lsp
     :ensure t
@@ -699,13 +701,6 @@ This is mostly use-package and local utilities which are used throught the confi
       'lsp-mode-map
       "M-s S" #'consult-lsp-symbols
       "M-s s" #'consult-lsp-file-symbols))
-
-  (use-package emacs
-    :ensure nil
-    :after (:all evil consult)
-    :general
-    (evil-nmap
-      "g l" #'consult-goto-line))
 #+end_src
 ** Marginalia - Enrich existing commands with completion annotations
 #+begin_src emacs-lisp
