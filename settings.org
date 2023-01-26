@@ -13,7 +13,6 @@ This is mostly use-package and local utilities which are used throught the confi
   ;;; Code:
   (eval-when-compile
     (require 'use-package))
-  (require 'use-package-prettify)
   (require 'diminish)
   (require 'bind-key)
   (require 'my-utils)
@@ -2358,13 +2357,6 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       (display-fill-column-indicator-mode) 
       (setq-local indent-tabs-mode nil))
     (lsp-maybe-add-predicate 'c-mode #'lsp-maybe-active-if-compile-commands-in-projectile-root)
-    :prettify
-    (c-mode-common
-     ("!=" . ?≠)
-     ("==" . ?⩵)
-     ("->" . ?→)
-     ("<=" . ?≦)
-     (">=" . ?≧))
     :general
     (emacs-map
       'c-mode-map
@@ -2466,15 +2458,6 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       (display-fill-column-indicator-mode 1)
       (flycheck-mode 1)
       (company-mode 1))
-    :prettify
-    (emacs-lisp-mode
-     ("<=" . ?≦)
-     (">=" . ?≧)
-     ("t" . ?𝕋)
-     ("pi" . ?π)
-     ("use-package" . ?📦)
-     ("lambda" . (?\s (Br . Bl) ?\s (Bc . Bc) ?λ))
-     ("defun" . (?\s (Br . Bl) ?\s (Bc . Bc) ?ƒ)))
     :hook
     (emacs-lisp-mode-hook . +emacs-lisp-mode-setup))
 
@@ -2794,11 +2777,6 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
                                  (shell . t)
                                  (python . t)
                                  (perl . t)))
-    :prettify
-    (org-mode
-     ("[ ]" . ?☐)
-     ("[X]" . ?☑)
-     ("[-]" . ?❍))
     :general
     (emacs-map
       'org-mode-map
