@@ -1765,7 +1765,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+end_src
 * Modeline
 #+begin_src emacs-lisp
-  (use-package emacs
+  (use-package simple
     :ensure nil
     :init
     (setq-default mode-line-percent-position '(-3 "%p"))
