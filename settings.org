@@ -2635,22 +2635,6 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
     :commands (makefile-mode)
     :functions (+makefile-mode-setup)
     :config
-    (defun +makefile-mode-setup ()
-      (setq-local tab-width 8)
-      (setq-local indent-tabs-mode t)
-      (setq-local fill-column 132)
-      (setq-local show-trailing-whitespace t)
-      (setq-local makefile-space 'trailing-whitespace)
-      (display-fill-column-indicator-mode 1))
-    :hook
-    (makefile-mode-hook . +makefile-mode-setup))
-
-  ;; TODO: put this into its own package
-  (use-package emacs
-    :ensure nil
-    :after (:all evil make-mode)
-    :commands (+makefile-join-line)
-    :config
     (defun +makefile-join-line (&optional arg beg end)
       "Join this line to previous in a makefile specific way.
   With prefix ARG, join the current line to the following line.
@@ -2703,20 +2687,29 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
                  (looking-at "#"))
             (delete-char 1)))
           (fixup-whitespace))))
-
-    (evil-define-operator +evil-makefile-join (beg end)
-      "Join the selected lines in a makefile specific way."
-      :motion evil-line
-      (let ((count (count-lines beg end)))
-        (when (> count 1)
-          (setq count (1- count)))
-        (goto-char beg)
-        (dotimes (_ count)
-          (+makefile-join-line 1))))
-    :general
-    (evil-nmap
-      'makefile-mode-map
-      "J" #'+evil-makefile-join))
+    (defun +makefile-mode-setup ()
+      (setq-local tab-width 8)
+      (setq-local indent-tabs-mode t)
+      (setq-local fill-column 132)
+      (setq-local show-trailing-whitespace t)
+      (setq-local makefile-space 'trailing-whitespace)
+      (display-fill-column-indicator-mode 1))
+    (with-eval-after-load 'evil
+      (evil-define-operator +evil-makefile-join (beg end)
+        "Join the selected lines in a makefile specific way."
+        :motion evil-line
+        (let ((count (count-lines beg end)))
+          (when (> count 1)
+            (setq count (1- count)))
+          (goto-char beg)
+          (dotimes (_ count)
+            (+makefile-join-line 1))))
+      :general
+      (evil-nmap
+        'makefile-mode-map
+        "J" #'+evil-makefile-join))
+    :hook
+    (makefile-mode-hook . +makefile-mode-setup))
 #+end_src
 * Markup languages
 ** Org Mode
