@@ -296,6 +296,26 @@ This is mostly use-package and local utilities which are used throught the confi
     :demand t
     :ensure t)
 #+end_src
+** font-utils - Utilities for Unicode characters
+#+begin_src emacs-lisp
+  (use-package font-utils
+    :ensure t
+    :demand t
+    :custom
+    (font-utils-less-feedback nil)
+    (font-utils-use-persistent-storage "font-utils")
+    (font-utils-use-memory-cache t))
+#+end_src
+** ucs-utils - Utilities for Unicode characters
+#+begin_src emacs-lisp
+  (use-package ucs-utils
+    :ensure t
+    :demand t
+    :custom
+    (ucs-utils-trade-memory-for-speed t)
+    (ucs-utils-use-persistent-storage "ucs-utils")
+    (ucs-utils-hide-numbered-cjk-ideographs t))
+#+end_src
 ** package [built-in] - Simple package system for Emacs
 #+begin_src emacs-lisp
   (use-package package
@@ -1732,7 +1752,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
           (message "Switching font to %s." next-font)
           (setq +font-cycle-list--idx (mod (1+ +font-cycle-list--idx) (length +font-cycle-list))))))
     (when (display-graphic-p)
-      (let ((font-list (font-family-list)))
+      (let ((font-list (font-utils-list-names)))
         (when (member "Source Code Pro" font-list)
           (push "Source Code Pro:size=12:hintstyle=hintfull:autohint=true:antialise=true:rgba=rgb" +font-cycle-list))
         (when (member "Hack" font-list)
