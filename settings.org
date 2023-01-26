@@ -345,18 +345,18 @@ This is mostly use-package and local utilities which are used throught the confi
 * Evil
 ** evil - Extensible Vi layer for Emacs.
 #+begin_src emacs-lisp
-  ;; `evil-collection' assumes that
-  ;;   `evil-want-keybinding' is set to `t'
-  ;;   `evil-want-integration' is set to `nil'
-  ;; before loading `evil' and `evil-collection'
-  ;; See https://github.com/emacs-evil/evil-collection#installation
-  ;; With byte-code compilation turned on, it doesn't work if it is
-  ;; specified in the :init section
-  (eval-and-compile
-    (setq evil-want-integration t)
-    (setq evil-want-keybinding nil))
   (use-package evil
     :ensure t
+    :preface
+    ;; `evil-collection' assumes that
+    ;;   `evil-want-keybinding' is set to `t'
+    ;;   `evil-want-integration' is set to `nil'
+    ;; before loading `evil' and `evil-collection'
+    ;; See https://github.com/emacs-evil/evil-collection#installation
+    ;; With byte-code compilation turned on, it doesn't work if it is
+    ;; specified in the :init section
+    (setq evil-want-integration t)
+    (setq evil-want-keybinding nil)
     :custom
     (evil-echo-state nil)
     (evil-want-C-u-scroll t)
