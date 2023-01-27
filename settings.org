@@ -832,7 +832,6 @@ This is mostly use-package and local utilities which are used throught the confi
 #+end_src
 ** perspective - switch between named "perspectives" of the editor
 #+begin_src emacs-lisp
-  ;; TODO: cleanup! persp-mode and perspective are two different packages!
   (use-package perspective
     :disabled t
     :ensure t
@@ -841,11 +840,11 @@ This is mostly use-package and local utilities which are used throught the confi
                persp-kill
                persp-current-name)
     :custom
+    (persp-show-modestring t)
+    (persp-modestring-short t)
     (persp-initial-frame-name "001")
-    (persp-auto-resume-time 0)
+    (persp-suppress-no-prefix-key-warning t)
     :config
-    ;; TODO: look into the new behaviour
-    (setq persp-suppress-no-prefix-key-warning t)
     (defun persp-switch-to-frame-1 ()
       (interactive)
       (persp-switch "001"))
@@ -872,14 +871,14 @@ This is mostly use-package and local utilities which are used throught the confi
       (persp-kill (persp-current-name)))
     :general
     (emacs-map
-      "M-1" #'persp-switch-to-frame-1
-      "M-2" #'persp-switch-to-frame-2
-      "M-3" #'persp-switch-to-frame-3
-      "M-4" #'persp-switch-to-frame-4
-      "M-5" #'persp-switch-to-frame-5
-      "M-6" #'persp-switch-to-frame-6
-      "M-7" #'persp-switch-to-frame-7
-      "M-0" #'persp-kill-current-frame)
+      "M-1" '(persp-switch-to-frame-1 :no-autoload t)
+      "M-2" '(persp-switch-to-frame-2 :no-autoload t)
+      "M-3" '(persp-switch-to-frame-3 :no-autoload t)
+      "M-4" '(persp-switch-to-frame-4 :no-autoload t)
+      "M-5" '(persp-switch-to-frame-5 :no-autoload t)
+      "M-6" '(persp-switch-to-frame-6 :no-autoload t)
+      "M-7" '(persp-switch-to-frame-7 :no-autoload t)
+      "M-0" '(persp-kill-current-frame :no-autoload t))
     :hook
     (emacs-startup-hook . persp-mode))
 #+end_src
@@ -1829,7 +1828,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (emacs-startup-hook . column-number-mode))
 
   (use-package telephone-line
-    :ensure t
+    :ensure (telephone-line :pin melpa)
     :delight (telephone-line-mode)
     :custom
     (telephone-line-height 24)
