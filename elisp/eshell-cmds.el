@@ -28,6 +28,7 @@
 
 ;;; Code:
 
+(require 'em-alias)
 (require 'em-dirs)
 
 (defun eshell/cd. ()
@@ -68,6 +69,87 @@
   "Alias for cd ../../../../../../../.."
   (eshell/cd.......)
   (eshell/cd ".."))
+
+(defun eshell/command (&rest args)
+  "Execute a simple command or display information about commands.
+
+Runs COMMAND with ARGS suppressing eshell function lookup, or display
+information about the specified COMMANDs.  Can be used to invoke commands
+on disk when a function with the same name exists.
+
+Options:
+      -v    print a description of COMMAND
+      -V    print a more verbose description of each COMMAND"
+  (let ((opt-v nil)
+	(opt-V nil)
+	(command nil)
+	(command-args nil))
+    ;; parse the arguments
+    (while args
+      (let ((arg (car args)))
+	(setq args (cdr args))
+	(cond
+	 ((string= "--" arg)
+	  ;; stop parsing options
+	  (if (null command)
+	      (setq command (car args)
+		    command-args (cdr args))
+	    (setq command-args (append command-args args)))
+	  (setq args nil))
+	 ((string-prefix-p "-" arg)
+	  (let ((options (string-to-list (substring arg 1))))
+	    (while options
+	      (cond
+	       ((equal (car options) ?v)
+		(setq opt-v t))
+	       ((equal (car options) ?V)
+		(setq opt-V t))
+	       (t
+		(error (format "command: -%s: invalid option" (car options)))))
+	      (setq options (cdr options)))))
+	 (t
+	  (if (null command)
+	      (setq command arg)
+	    (push arg command-args))))))
+    ;; process the options and print command/execute command
+    (cond
+     ((or opt-V opt-v)
+      (let* ((alias (eshell-lookup-alias command))
+	     (command-symbol (intern (concat "eshell/" command)))
+	     (fun (symbol-function command-symbol))
+	     (fun-def fun))
+	(cond
+	 ((and alias opt-v)
+	  (format "alias %s '%s'" (car alias) (string-join (cdr alias) " ")))
+	 ((and alias opt-V)
+	  (format "%s is aliased to `%s'" (car alias) (string-join (cdr alias) " ")))
+	 ((and fun opt-v)
+	  (format "%s" command))
+	 ((and fun opt-V )
+	  (while (symbolp fun-def)
+	    (setq fun-def (symbol-function fun-def)))
+	  (format "%s is a %s defined in %s\n%s"
+		  command
+		  (if (symbolp fun)
+		      (format "function aliased to %s" (symbol-name fun))
+		    "function")
+		  (symbol-file command-symbol)
+		  (if (not (listp fun-def))
+		      (pp fun-def)
+		    (with-temp-buffer
+		      (pp-emacs-lisp-code fun-def)
+		      (buffer-substring-no-properties (point-min) (point-max))))))
+	 (t
+	  (let ((external (locate-file command (eshell-get-path))))
+	    (if (not external)
+		(error (format "command: %s: not found" command))
+	      (if opt-v
+		  (format "%s" external)
+		(format "%s is %s" command external))))))))
+     (t
+      (eshell-command-result (concat (char-to-string eshell-explicit-command-char)
+				     command)
+			     command-args)))))
 
 (provide 'eshell-cmds)
 
