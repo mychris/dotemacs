@@ -28,8 +28,13 @@ This is mostly use-package and local utilities which are used throught the confi
   (use-package emacs
     :ensure nil
     :demand t
+    :custom
+    (blink-cursor-mode nil)
+    (global-hl-line-mode t)
+    (visible-bell t)
+    (large-file-warning-threshold (* 100 1024 1024))
+    (initial-major-mode 'text-mode)
     :init
-    (setq large-file-warning-threshold (* 100 1000 1000))
     (setq frame-title-format
           '("Emacs - "
             (:eval (if (buffer-file-name)
@@ -37,67 +42,68 @@ This is mostly use-package and local utilities which are used throught the confi
                      "%b"))
             (:eval (when (buffer-modified-p)
                      " ↯"))))
-    (setq visible-bell t)
-    (setq initial-major-mode 'text-mode)
     (defalias 'yes-or-no-p 'y-or-n-p)
     (put 'narrow-to-region 'disabled nil)
     (put 'upcase-region 'disabled nil)
     (put 'downcase-region 'disabled nil)
     (put 'dired-find-alternate-file 'disabled nil)
     (put 'overwrite-mode 'disabled t)
-    (global-unset-key (kbd "C-z")) ;; Use C-z as a prefix key.
-    (global-unset-key (kbd "<help>"))
-    (global-unset-key (kbd "C-h <help>"))
-    (global-unset-key (kbd "<f1> <help>"))
-    (global-unset-key (kbd "<find>"))
-    (global-unset-key (kbd "<open>"))
-    (global-unset-key (kbd "<clear>"))
-    (global-unset-key (kbd "<f16>"))
-    (global-unset-key (kbd "<f18>"))
-    (global-unset-key (kbd "<f20>"))
-    (global-unset-key (kbd "C-x C-z"))
-    (global-unset-key (kbd "C-h g")) ;; Who needs that?
-    (global-unset-key (kbd "<f1> g"))
-    (global-unset-key (kbd "C-h n"))
-    (global-unset-key (kbd "C-h C-n"))
-    (global-unset-key (kbd "<f1> n"))
-    (global-unset-key (kbd "<f1> C-n"))
-    (global-unset-key (kbd "<f1> 4 i"))
-    (global-unset-key (kbd "C-h 4 i"))
-    (define-key global-map (kbd "<menu>") iso-transl-ctl-x-8-map)
-    (define-key iso-transl-ctl-x-8-map (kbd "<menu>") #'execute-extended-command)
-    (global-unset-key (kbd "M-`")) ;; tmm-menubar
-    (global-unset-key (kbd "<f10>")) ;; menu-bar-open
-    (global-unset-key (kbd "C-<f10>")) ;; buffer-menu-open
-    (global-unset-key (kbd "C-x i")) ;; insert-file
-    (global-unset-key (kbd "M-<"))
-    (global-set-key (kbd "M-C-{") #'beginning-of-buffer)
-    (global-unset-key (kbd "M->"))
-    (global-set-key (kbd "M-C-}") #'end-of-buffer)
-    :hook
-    (emacs-startup-hook . (lambda () (blink-cursor-mode -1)))
-    (emacs-startup-hook . global-hl-line-mode))
+    :general
+    (emacs-map
+      "C-z" nil ;; Use C-z as a prefix key.
+      "<help>" nil
+      "C-h <help>" nil
+      "<f1> <help>" nil
+      "<find>" nil
+      "<open>" nil
+      "<clear>" nil
+      "<f16>" nil
+      "<f18>" nil
+      "<f20>" nil
+      "C-x C-z" nil
+      "C-h g" nil ;; Who needs that?
+      "<f1> g" nil
+      "C-h n" nil
+      "C-h C-n" nil
+      "<f1> n" nil
+      "<f1> C-n" nil
+      "<f1> 4 i" nil
+      "C-h 4 i" nil
+      "M-`" nil ;; tmm-menubar
+      "<f10>" nil ;; menu-bar-open
+      "C-<f10>" nil ;; buffer-menu-open
+      "C-x i" nil ;; insert-file
+      "M-<" nil
+      "M-C-{" '(beginning-of-buffer :no-autoload t)
+      "M->" nil
+      "M-C-}" '(end-of-buffer :no-autoload t)
+    (emacs-map
+      "<menu>" iso-transl-ctl-x-8-map)
+    (emacs-map
+      'iso-transl-ctl-x-8-map
+      "<menu>" '(execute-extended-command :no-autoload t))))
 
   (use-package emacs
     :ensure nil
     :demand t
-    :init
-    (global-unset-key (kbd "<up>"))
-    (global-unset-key (kbd "C-<up>"))
-    (global-unset-key (kbd "M-<up>"))
-    (global-unset-key (kbd "C-M-<up>"))
-    (global-unset-key (kbd "<down>"))
-    (global-unset-key (kbd "C-<down>"))
-    (global-unset-key (kbd "M-<down>"))
-    (global-unset-key (kbd "C-M-<down>"))
-    (global-unset-key (kbd "<left>"))
-    (global-unset-key (kbd "C-<left>"))
-    (global-unset-key (kbd "M-<left>"))
-    (global-unset-key (kbd "C-M-<left>"))
-    (global-unset-key (kbd "<right>"))
-    (global-unset-key (kbd "<C-right>"))
-    (global-unset-key (kbd "<M-right>"))
-    (global-unset-key (kbd "<C-M-right>")))
+    :general
+    (emacs-map
+      "<up>" nil
+      "C-<up>" nil
+      "M-<up>" nil
+      "C-M-<up>" nil
+      "<down>" nil
+      "C-<down>" nil
+      "M-<down>" nil
+      "C-M-<down>" nil
+      "<left>" nil
+      "C-<left>" nil
+      "M-<left>" nil
+      "C-M-<left>" nil
+      "<right>" nil
+      "<C-right>" nil
+      "<M-right>" nil
+      "<C-M-right>" nil))
 
   (use-package cua-base
     :ensure nil
@@ -176,6 +182,8 @@ This is mostly use-package and local utilities which are used throught the confi
   (use-package savehist
     :ensure nil
     :delight (savehist-mode)
+    :preface
+    (eval-and-compile (defvar user-emacs-cache-directory)) ;; from init.el
     :custom
     (savehist-file (expand-file-name "savehist" user-emacs-cache-directory))
     (history-length 1000)
@@ -189,18 +197,23 @@ This is mostly use-package and local utilities which are used throught the confi
   (use-package saveplace
     :ensure nil
     :delight (save-place-mode)
+    :preface
+    (eval-and-compile (defvar user-emacs-cache-directory)) ;; from init.el
     :custom
     (save-place-file (expand-file-name "saveplace" user-emacs-cache-directory))
     (save-place-forget-unreadable-files t)
     :hook
     (after-init-hook . save-place-mode))
 #+end_src
-** Backups
+** Backups and auto-save
 #+begin_src emacs-lisp
   (use-package files
     :ensure nil
     :demand t
+    :preface
+    (eval-and-compile (defvar user-emacs-cache-directory)) ;; from init.el
     :init
+    ;; backups
     (let
         ((backup-dir (file-name-as-directory (expand-file-name "backups" user-emacs-cache-directory))))
       (unless (file-exists-p backup-dir) (make-directory backup-dir t))
@@ -209,17 +222,11 @@ This is mostly use-package and local utilities which are used throught the confi
       (setq-default delete-old-versions t)
       (setq-default kept-new-versions 5)
       (setq-default kept-old-versions 2)
-      (setq-default create-lockfiles nil)))
-#+end_src
-** Auto-save
-#+begin_src emacs-lisp
-  (use-package files
-    :ensure nil
-    :demand t
-    :init
+      (setq-default create-lockfiles nil))
+    ;; auto-save
     (let
         ((auto-save-dir (file-name-as-directory (expand-file-name "auto-save" user-emacs-cache-directory)))
-         (auto-save-list-dir (file-name-as-directory(expand-file-name "auto-save-list" user-emacs-cache-directory))))
+         (auto-save-list-dir (file-name-as-directory (expand-file-name "auto-save-list" user-emacs-cache-directory))))
       (unless (file-exists-p auto-save-dir) (make-directory auto-save-dir t))
       (unless (file-exists-p auto-save-list-dir) (make-directory auto-save-list-dir t))
       (setq-default auto-save-file-name-transforms `((".*" ,auto-save-dir t)))
@@ -235,14 +242,24 @@ This is mostly use-package and local utilities which are used throught the confi
     :delight (recentf-mode)
     :commands (recentf-mode
                recentf-cleanup)
+    :preface
+    (eval-and-compile (defvar user-emacs-cache-directory)) ;; from init.el
     :custom
     (recentf-save-file (expand-file-name "recentf" user-emacs-cache-directory))
     (recentf-save-file-modes #o600)
     (recentf-max-saved-items 1024)
-    (recentf-exclude '("\\.gz" "\\.xz" "\\.zip" "/elpa/" "/ssh:" "/sudo:"))
+    (recentf-exclude '(;; compressed files and archives
+                       "\\.tar$" "\\.tbz2$" "\\.tbz$" "\\.tgz$" 
+                       "\\.bz2$" "\\.bz$" "\\.gz$" "\\.gzip$" "\\.xz$" "\\.zpaq$"
+                       "\\.lz$" "\\.lrz$" "\\.lzo$" "\\.lzma$" "\\.shar$" "\\.kgb$"
+                       "\\.zip$" "\\.Z$" "\\.7z$" "\\.rar$"
+                       ;; TRAMP paths
+                       "^/sudo:" "^/ssh:"))
     (recentf-auto-cleanup 60)
     :hook
     (recentf-mode-hook . (lambda ()
+                           ;; run a cleanup at startup and use `recentf-auto-cleanup'
+                           ;; to cleanup every now and then
                            (run-with-idle-timer 5 nil (lambda ()
                                                         (recentf-cleanup)))))
     (after-init-hook . recentf-mode))
@@ -315,7 +332,7 @@ This is mostly use-package and local utilities which are used throught the confi
     :general
     (emacs-map
       'package-menu-mode-map
-      "q" #'kill-buffer-and-window))
+      "q" '(kill-buffer-and-window :no-autoload t)))
 #+end_src
 ** GCMH - the Garbage Collector Magic Hack
 #+begin_src emacs-lisp
@@ -383,8 +400,9 @@ This is mostly use-package and local utilities which are used throught the confi
     :after (:all evil)
     :commands (evil-collection-init)
     :hook
+    (evil-mode-hook . evil-collection-init)
     (evil-mode-hook . (lambda ()
-                        (evil-collection-init)
+                        ;; delight this mode in :delight doesn't work because the file is not in the load path
                         (delight 'evil-collection-unimpaired-mode nil "evil-collection-unimpaired"))))
 #+end_src
 ** evil-escape - Customizable key sequence to escape from insert state and everything else in Emacs.
@@ -408,9 +426,10 @@ This is mostly use-package and local utilities which are used throught the confi
     :demand t
     :functions (evilem-default-keybindings)
     :hook
-    (emacs-startup-hook . (lambda ()
-                            (when (fboundp 'evilem-default-keybindings)
-                              (evilem-default-keybindings "SPC")))))
+    (evil-mode-hook . (lambda ()
+                        (when (and (bound-and-true-p evil-mode)
+                                   (fboundp 'evilem-default-keybindings))
+                          (evilem-default-keybindings "SPC")))))
 #+end_src
 ** my-evil-commands - Additional evil commands
 #+begin_src emacs-lisp
@@ -424,7 +443,7 @@ This is mostly use-package and local utilities which are used throught the confi
     (evil-mmap
       "`" #'+evil-goto-mark-center
       "'" #'+evil-goto-mark-line-center
-      "C-w m" #'switch-to-minibuffer-window))
+      "C-w m" '(switch-to-minibuffer-window :no-autoload t)))
 #+end_src
 * Interface enhancements
 ** Minibuffer [built-in]
@@ -434,14 +453,14 @@ This is mostly use-package and local utilities which are used throught the confi
     :custom
     (minibuffer-default-prompt-format " [...]")
     :config
-    (defun switch-to-minibuffer-window ()
+    (defun +switch-to-minibuffer-window ()
       "Switch to minibuffer window (if active)."
       (interactive)
       (when (active-minibuffer-window)
         (select-frame-set-input-focus (window-frame (active-minibuffer-window)))
         (select-window (active-minibuffer-window))))
 
-    (defun kill-other-buffers ()
+    (defun +kill-other-buffers ()
       "Kill all other buffers."
       (interactive)
       (mapc 'kill-buffer-save (delq (current-buffer) (buffer-list))))
@@ -449,7 +468,7 @@ This is mostly use-package and local utilities which are used throught the confi
     ;; https://www.emacswiki.org/emacs/KillingBuffers#toc9
     (defvar kill-buffer-save-list '("*scratch*" "*Messages*")
       "A list holding buffer names which should not be killed by `kill-buffer-save'.")
-    (defun kill-buffer-save (&optional buffer-or-name)
+    (defun +kill-buffer-save (&optional buffer-or-name)
       "Only kill buffers not in the kill-buffer-save-list."
       (interactive)
       (or buffer-or-name (setq buffer-or-name (current-buffer)))
@@ -458,7 +477,7 @@ This is mostly use-package and local utilities which are used throught the confi
            kill-buffer-save-list)
           (bury-buffer buffer-or-name)
         (kill-buffer buffer-or-name)))
-    (defun myext-focus-minibuffer-or-completion ()
+    (defun +focus-minibuffer-or-completion ()
       "Focus the active minibuffer or completion window.
   TODO: needs refactoring."
       (interactive)
@@ -484,12 +503,14 @@ This is mostly use-package and local utilities which are used throught the confi
     (setq enable-recursive-minibuffers t)
     :general
     (emacs-map
-      "H-f" #'myext-focus-minibuffer-or-completion
-      "C-x k" #'kill-buffer-save
-      "C-x K" #'kill-other-buffers
-      "C-x C-o" #'switch-to-minibuffer-window)
+      :no-autoload t
+      "H-f" #'+focus-minibuffer-or-completion
+      "C-x k" #'+kill-buffer-save
+      "C-x K" #'+kill-other-buffer
+      "C-x C-o" #'+switch-to-minibuffer-window)
     (emacs-map
       'minibuffer-local-map
+      :no-autoload t
       "<left>" #'left-char
       "C-<left>" #'left-word
       "<right>" #'right-char
@@ -521,8 +542,9 @@ This is mostly use-package and local utilities which are used throught the confi
 #+begin_src emacs-lisp
   (use-package autorevert
     :ensure nil
-    :delight (auto-revert-mode
-              global-auto-revert-mode)
+    :delight (auto-revert-mode)
+    :commands (auto-revert-mode
+               global-auto-revert-mode)
     :custom
     (auto-revert-verbose t)
     :hook
@@ -532,6 +554,7 @@ This is mostly use-package and local utilities which are used throught the confi
 #+begin_src emacs-lisp
   (use-package imenu
     :ensure nil
+    :commands (imenu)
     :hook
     (imenu-after-jump-hook . (lambda () (recenter-top-bottom))))
 
@@ -570,13 +593,14 @@ This is mostly use-package and local utilities which are used throught the confi
       (kill-buffer "*Ilist*"))
     :general
     (emacs-map
+      :no-autoload t
       "<f7>" #'+imenu-list-toggle)
     (emacs-map
       'imenu-list-major-mode-map
       "RET" #'imenu-list-display-dwim
       "<return>" #'imenu-list-display-dwim
-      "TAB" #'hs-toggle-hiding
-      "<tab>" #'hs-toggle-hiding)
+      "TAB" '(hs-toggle-hiding :no-autoload t)
+      "<tab>" '(hs-toggle-hiding :no-autoload t))
     :hook
     (imenu-list-major-mode-hook . (lambda () (display-line-numbers-mode 0))))
 #+end_src
@@ -584,6 +608,7 @@ This is mostly use-package and local utilities which are used throught the confi
 #+begin_src emacs-lisp
   (use-package vertico
     :ensure t
+    :delight (vertico-mode)
     :commands (vertico-mode)
     :custom
     (vertico-scroll-margin 0)
@@ -593,14 +618,14 @@ This is mostly use-package and local utilities which are used throught the confi
     :general
     (emacs-map
       'vertico-map
-      "<right>" #'forward-char
-      "<left>" #'backward-char
+      "<right>" '(forward-char :no-autoload t)
+      "<left>" '(backward-char :no-autoload t)
       "<up>" #'vertico-previous
       "<down>" #'vertico-next
-      "C-<up>" #'previous-history-element
-      "C-<down>" #'next-history-element
-      "C-f" #'forward-char
-      "C-b" #'backward-char
+      "C-<up>" '(previous-history-element :no-autoload t)
+      "C-<down>" '(next-history-element :no-autoload t)
+      "C-f" '(forward-char :no-autoload t)
+      "C-b" '(backward-char :no-autoload t)
       "C-p" #'vertico-previous
       "C-n" #'vertico-next
       "<prior>" #'vertico-scroll-up
@@ -627,16 +652,16 @@ This is mostly use-package and local utilities which are used throught the confi
   (use-package vertico-multiform
     :ensure nil ;; part of vertico
     :after (:all vertico)
+    :delight (vectico-multiform-mode)
     :commands (vertico-multiform-mode)
-    :config
-    (setq vertico-multiform-commands
-          '((consult-line buffer)
-            (consult-imenu reverse buffer)))
-    (setq vertico-multiform-categories
-          '((imenu (:not indexed mouse))
-            (symbol (vertico-sort-function . vertico-sort-alpha))))
+    :custom
+    (vertico-multiform-commands '((consult-line buffer)
+                                  (consult-imenu reverse buffer)))
+    (vertico-multiform-categories '((imenu (:not indexed mouse))
+                                    (symbol (vertico-sort-function . vertico-sort-alpha))))
     :hook
-    (emacs-startup-hook . vertico-multiform-mode))
+    (vertico-mode-hook . (lambda ()
+                           (vertico-multiform-mode (if (bound-and-true-p vertico-mode) 1 -1)))))
 #+end_src
 ** Consult - Consulting completing-read
 #+begin_src emacs-lisp
@@ -646,8 +671,8 @@ This is mostly use-package and local utilities which are used throught the confi
     :functions (consult-completion-in-region
                 consult-register-format)
     :config
-    (setq-default completion-in-region-function #'consult-completion-in-region)
-    (setq-default register-preview-function #'consult-register-format)
+    (setq-default completion-in-region-function #'consult-completion-in-region
+                  register-preview-function #'consult-register-format)
     :custom
     (consult-line-numbers-widen t)
     (consult-async-min-input 3)
@@ -660,18 +685,30 @@ This is mostly use-package and local utilities which are used throught the confi
       "M-g M-l" #'consult-goto-line
       "M-X" #'consult-mode-command
       "M-s m" #'consult-mark
-      "M-s i" #'consult-imenu
-      "M-s y" #'consult-yank
+      "M-s y" #'consult-yank-from-kill-ring
       "M-s l" #'consult-line
       "M-s g" #'consult-ripgrep
-      [remap switch-to-buffer] #'consult-buffer
-      [remap jump-to-register] #'consult-register-load
-      [remap point-to-register] #'consult-register-store)
+      [remap switch-to-buffer] #'consult-buffer)
     (emacs-map
       'consult-narrow-map
       "?" #'consult-narrow-help)
     (evil-nmap
-      "g l" #'consult-goto-line))
+      "g l" #'consult-goto-line)
+    :hook
+    (embark-collect-mode-hook . consult-preview-at-point-mode))
+
+  (use-package consult-imenu
+    :ensure nil ;; part of consult
+    :general
+    (emacs-map
+      "M-s i" #'consult-imenu))
+
+  (use-package consult-register
+    :ensure nil ;; part of consult
+    :general
+    (emacs-map
+      [remap jump-to-register] #'consult-register-load
+      [remap point-to-register] #'consult-register-store))
 
   (use-package consult-lsp
     :ensure t
@@ -687,11 +724,14 @@ This is mostly use-package and local utilities which are used throught the confi
   (use-package marginalia
     :ensure t
     :commands (marginalia-mode)
+    :custom
+    (marginalia-max-relative-age 0)
     :config
-    (setq-default marginalia-annotators
-                  '(marginalia-annotators-heavy
-                    marginalia-annotators-light))
-    (setq-default marginalia-max-relative-age 0)
+    ;; something changed in marginalia
+    ;; TODO: refactor
+    ;(setq-default marginalia-annotators
+    ;              '(marginalia-annotators-heavy
+    ;                marginalia-annotators-light))
     :hook
     (emacs-startup-hook . marginalia-mode))
 #+end_src
@@ -712,7 +752,7 @@ This is mostly use-package and local utilities which are used throught the confi
     ;;        (which-key--show-keymap "Embark" map nil nil 'no-paging)
     ;;        #'which-key--hide-popup-ignore-command)
     ;;      embark-become-indicator embark-action-indicator)
-    (defun embark-collect-toggle-mark ()
+    (defun +embark-collect-toggle-mark ()
       "Toggle the mark of the candidate at point in an Embark collect buffer."
       (interactive)
       (embark-collect-mark (embark-collect--marked-p)))
@@ -722,7 +762,7 @@ This is mostly use-package and local utilities which are used throught the confi
       "M-g M-a" #'embark-act)
     (emacs-map
       'embark-collect-mode-map
-      "SPC" #'embark-collect-toggle-mark)
+      "SPC" '(+embark-collect-toggle-mark :no-autoload t))
     (emacs-map
       'minibuffer-local-map
       "M-a" #'embark-act
@@ -732,15 +772,11 @@ This is mostly use-package and local utilities which are used throught the confi
   (use-package embark-consult
     :ensure t
     :after (:all embark consult)
-    :demand t
-    :hook
-    (embark-collect-mode-hook . consult-preview-at-point-mode))
+    :demand t)
 
   (use-package zed-embark
     :ensure nil
     :after (:all embark consult)
-    :hook
-    (prot-embark-clear-live-buffers . zed-embark-clear-all-collection-buffers)
     :general
     (emacs-map
       'minibuffer-local-completion-map
@@ -864,6 +900,14 @@ This is mostly use-package and local utilities which are used throught the confi
       'help-mode-map
       "<mouse-8>" #'help-go-back
       "<wheel-left>" #'help-go-back))
+
+  (use-package help-fns
+    :ensure nil
+    :commands (describe-keymap
+               describe-command)
+    :general
+    (emacs-map
+      "C-h K" #'describe-keymap))
 #+end_src
 ** info [built-in]
 #+begin_src emacs-lisp
@@ -925,6 +969,8 @@ This is mostly use-package and local utilities which are used throught the confi
     (which-key-use-C-h-commands t)
     (which-key-show-early-on-C-h t)
     (which-key-compute-remaps t)
+    :config
+    (which-key-add-key-based-replacements "M-g e" "next-error prefix")
     :hook
     (emacs-startup-hook . which-key-mode))
 
@@ -932,24 +978,21 @@ This is mostly use-package and local utilities which are used throught the confi
     :if (and (window-system) (version<= "26.1" emacs-version))
     :ensure t
     :after (:all which-key)
-    :commands (which-key-posframe-mode
-               +which-key-posframe-mode-toggle)
+    :delight (which-key-posframe-mode)
+    :commands (which-key-posframe-mode)
     :custom
     (which-key-posframe-font nil)
     (which-key-posframe-poshandler #'+which-key-posframe-poshandler)
     (which-key-posframe-border-width 2)
-    :config
+    :preface
     (declare-function posframe-poshandler-frame-center "posframe")
-    (defun +which-key-posframe-mode-toggle ()
-      "Enable/Disable `which-key-posframe-mode' dependent on the status of the
-  `which-key-mode'."
-      (interactive)
-      (which-key-posframe-mode (if (bound-and-true-p which-key-mode) 1 -1)))
+    :config
     (defun +which-key-posframe-poshandler (info)
       (let ((centered (posframe-poshandler-frame-center info)))
         (cons (car centered) (/ (cdr centered) 2 ))))
     :hook
-    (which-key-mode-hook . +which-key-posframe-mode-toggle))
+    (which-key-mode-hook . (lambda ()
+                             (which-key-posframe-mode (if (bound-and-true-p which-key-mode) 1 -1)))))
 #+end_src
 ** free-keys - Show free keybindings for modkeys or prefixes
 I found the ~free-keys~ documentation a bit confusing in the beginning.
@@ -959,7 +1002,6 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package free-keys
     :ensure t
-    :defer t
     :commands (free-keys
                free-key-change-buffer
                free-key-set-prefix)
@@ -970,31 +1012,32 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       "C-h C-k" #'free-keys)
     (emacs-map
       'free-keys-mode-map
-      "q" #'kill-buffer-and-window)
+      "q" '(kill-buffer-and-window :no-autoload t))
     (evil-nmap
       'free-keys-mode-map
-      "q" #'kill-buffer-and-window
+      "q" '(kill-buffer-and-window :no-autoload t)
       "p" #'free-keys-set-prefix
       "b" #'free-keys-change-buffer
-      "<" #'beginning-of-buffer
-      ">" #'end-of-buffer))
+      "<" '(beginning-of-buffer :no-autoload t)
+      ">" '(end-of-buffer :no-autoload t)))
 #+end_src
 ** keyfreq - track command frequencies
 #+begin_src emacs-lisp
   (use-package keyfreq
     :ensure t
-    :commands (keyfreq-mode keyfreq-autosave-mode)
+    :commands (keyfreq-mode
+               keyfreq-autosave-mode)
     :custom
     (keyfreq-buffer "*keyfreq-show*")
     (keyfreq-file (expand-file-name "keyfreq.hist" user-emacs-cache-directory))
     (keyfreq-file-lock (expand-file-name "keyfreq.hist.lock" user-emacs-cache-directory))
     :config
-    (setq keyfreq-excluded-commands
-          '(self-insert-command
-            org-self-insert-command
-            mwheel-scroll
-            mouse-drag-region
-            mouse-set-point))
+    (setq-default keyfreq-excluded-commands
+                  '(self-insert-command
+                    org-self-insert-command
+                    mwheel-scroll
+                    mouse-drag-region
+                    mouse-set-point))
     :hook
     (emacs-startup-hook . keyfreq-mode)
     (emacs-startup-hook . keyfreq-autosave-mode))
@@ -1004,27 +1047,28 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   (use-package help-fns+
     :ensure nil
     :commands (describe-buffer
-               describe-command
                describe-option
                describe-option-of-type
-               describe-file
-               describe-keymap)
-    :general
-    (emacs-map
-      "C-h K" #'describe-keymap))
+               describe-file))
 #+end_src
 * File manager
 ** dired [built-in] - directory editor
 #+begin_src emacs-lisp
   (use-package dired
     :ensure nil
+    :commands (dired
+               dired-other-window
+               dired-other-frame
+               dired-other-tab
+               dired-jump
+               dired-jump-other-window)
     :custom
     (dired-listing-switches "-AblGh --group-directories-first")
-    :init
-    (defun dired-alternate-up-directory ()
-      "In Dired, visit the parent directory via `find-alternate-file'.
+    :config
+    (defun +dired-alternate-up-directory ()
+        "In Dired, visit the parent directory via `find-alternate-file'.
   This kills the Dired buffer, then visits the parent directory."
-      (interactive)
+        (interactive)
       (find-alternate-file ".."))
     (defun +dired-open ()
       "In Dired, visit the file or directory named on this line.
@@ -1041,15 +1085,15 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :general
     (emacs-map
       'dired-mode-map
-      "<return>" #'+dired-open
+      "<return>" '(+dired-open :no-autoload t)
       "<up>" #'dired-previous-line
       "<down>" #'dired-next-line
-      "^" #'dired-alternate-up-directory
-      "o" #'+dired-open
+      "^" '(+dired-alternate-up-directory :no-autoload t)
+      "o" '(+dired-open :no-autoload t)
       "C-o" #'dired-find-file-other-window
       "C-<return>" #'dired-find-file-other-window
-      "<mouse-2>" #'+dired-mouse-find-file
-      "<mouse-8>" #'dired-alternate-up-directory
+      "<mouse-2>" '(+dired-mouse-find-file :no-autoload t)
+      "<mouse-8>" '(+dired-alternate-up-directory :no-autoload t)
       "C-<mouse-2>" #'dired-mouse-find-file-other-window
       "C-<mouse-1>" #'dired-mouse-find-file-other-window
       "C-<down-mouse-1>" #'dired-mouse-find-file-other-window))
@@ -1141,6 +1185,8 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :ensure nil
     :demand t
     :delight (hi-lock-mode)
+    :commands (hil-lock-mode
+               global-hi-lock-mode)
     :config
     (defun +highlight-region-or-symbol (&optional face)
       "Highlight occurences of either the currently region or the symbol at point."
@@ -1171,15 +1217,19 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       (unhighlight-regexp t))
     :general
     (emacs-map
+      'hi-lock-map
+      :no-autoload t
       "M-s h ." #'+highlight-region-or-symbol
       "M-s h ," #'+unhighlight-region-or-symbol
-      "M-s h U" #'+unhighlight-all))
+      "M-s h U" #'+unhighlight-all
+      "M-s h q" #'+unhighlight-all)
+    :hook
+    (emacs-startup-hook . global-hi-lock-mode))
 #+end_src
 ** highlight-thing - Minimalistic minor mode to highlight current thing under point
 #+begin_src emacs-lisp
   (use-package highlight-thing
     :ensure t
-    :demand t
     :delight (highlight-thing-mode)
     :commands (highlight-thing-mode
                global-hightlight-thing-mode)
@@ -1223,17 +1273,18 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (emacs-startup-hook . global-undo-tree-mode))
 #+end_src
 * Editing
-** expand-region - Increas the selected region by semantic units
+** expand-region - Increase selected region by semantic units
 #+begin_src emacs-lisp
   (use-package expand-region
     :ensure t
-    :defer 1
+    :commands (er/expand-region
+               er/contract-region
+               er/mark-symbol)
     :general
     (emacs-map
       "C-=" #'er/expand-region
       "C-+" #'er/contract-region
       "M-C-S-SPC" #'er/mark-symbol))
-
 #+end_src
 ** string-inflection - underscore -> UPCASE -> CamelCase -> lowerCamelCase conversion of names
 #+begin_src emacs-lisp
@@ -1259,7 +1310,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :general
     (emacs-map
       "M-u" #'string-inflection-upcase
-      "M-l" #'+string-inflection-cycle-auto-detection))
+      "M-l" '(+string-inflection-cycle-auto-detection :no-autoloads t)))
 #+end_src
 ** delsel [built-in] - delete selection if you insert
 #+begin_src emacs-lisp
@@ -1272,7 +1323,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 * Kill-ring
 ** System clipboard integration
 #+begin_src emacs-lisp
-  (use-package simple
+  (use-package menu-bar
     :ensure nil
     :custom
     (save-interprogram-paste-before-kill t)
@@ -1321,6 +1372,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       (recenter nil t))
     :general
     (emacs-map
+      :no-autoload t
       "M-d" #'backward-kill-char-or-word
       [mouse-8] #'pop-tag-mark
       [C-mouse-8] #'previous-buffer
@@ -1401,8 +1453,9 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 ** Avy - Jump to arbitrary positions in visible text and select text quickly
 #+begin_src emacs-lisp
   (use-package avy
-    :disabled t
     :ensure t
+    :custom
+    (avy-keys (list ?h ?t ?n ?s ?d ?u ?e ?o ?a))
     :general
     (emacs-map
       "M-g g" #'avy-goto-line
@@ -1442,6 +1495,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
           (forward-sexp ARG))))
     :general
     (emacs-map
+      :no-autoload t
       [remap backward-sexp] #'+sp-beginning-of-sexp
       [remap forward-sexp] #'+sp-end-of-sexp)
     :hook
@@ -1451,7 +1505,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package ace-window
     :ensure t
-    :defer t
+    :commands (ace-window)
     :custom
     (aw-keys '(?1 ?2 ?3 ?4 ?5 ?6 ?7 ?8 ?9))
     (aw-background nil)
@@ -1484,32 +1538,28 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :ensure (evil-mc :pin melpa)
     :after (:all evil)
     :delight (evil-mc-mode)
-    :commands (global-evil-mc-mode
-               +global-evil-mc-mode-toggle)
+    :commands (global-evil-mc-mode)
     :init
     ;; (setq-default evil-mc-one-cursor-show-mode-line-text nil)
-    :config
-    (defun +global-evil-mc-mode-toggle ()
-      "Enable/Disable `evil-mc-mode' globally in every buffer dependent an the
-  status of the `evil-mode'."
-      (interactive)
-      (global-evil-mc-mode (if (bound-and-true-p evil-mode) 1 -1)))
     :general
     (emacs-map
       "C->" #'evil-mc-make-cursor-move-next-line
       "C-<" #'evil-mc-make-cursor-move-prev-line)
     :hook
-    (evil-mode-hook . +global-evil-mc-mode-toggle))
+    (evil-mode-hook . (lambda ()
+                        (global-evil-mc-mode (if (bound-and-true-p evil-mode) 1 -1)))))
 #+end_src
 ** view.el [built-in] - peruse file or buffer without editing
 #+begin_src emacs-lisp
   (use-package view
     :ensure nil
+    :commands (view-mode)
     :general
     (emacs-map
       "C-`" #'view-mode)
     (emacs-map
       'view-mode-map
+      :no-autoload t
       "n" #'next-line
       "p" #'previous-line))
 #+end_src
@@ -1572,7 +1622,10 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       'occur-mode-map
       "C-a" #'+occur-mode-move-beginning-of-line
       "^" #'+occur-mode-move-beginnig-of-line
-      "S-<return>" #'+occur-mode-goto-occurrence-stay-occurrence-buffer
+      "S-<return>" #'+occur-mode-goto-occurrence-stay-occurrence-buffer)
+    (emacs-map
+      'occur-mode-map
+      :no-autoload t
       "q" #'kill-buffer-and-window
       "<up>" #'previous-line
       "<down>" #'next-line
@@ -1592,22 +1645,27 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (emacs-map
       'grep-mode-map
       "e" #'wgrep-change-to-wgrep-mod
-      "C-c '" #'wgrep-change-to-wgrep-mode
-      "q" #'kill-buffer-and-window))
+      "q" '(kill-buffer-and-window :no-autoload t)))
 #+end_src
 ** wgrep - Writable grep buffer and apply the changes to files
 #+begin_src emacs-lisp
   (use-package wgrep
     :ensure t
-    :commands (wgrep-setup wgrep-change-to-wgrep-mode)
+    :commands (wgrep-setup
+               wgrep-change-to-wgrep-mode)
     :general
+    (emacs-map
+      'grep-mode-map
+      "C-c '" #'wgrep-change-to-wgrep-mode)
     (emacs-map
       'wgrep-mode-map
       "C-x C-s" nil
       "C-c c" #'wgrep-finish-edit
       "C-c k" #'wgrep-abort-changes
       "C-c r" #'wgrep-remove-change
-      "C-c u" #'wgrep-remove-all-change))
+      "C-c u" #'wgrep-remove-all-change)
+    :hook
+    (rg-mode-hook . wgrep-rg-setup))
 #+end_src
 ** rg - A search tool based on ripgrep
 #+begin_src emacs-lisp
@@ -1627,6 +1685,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :general
     (emacs-map
       'rg-mode-map
+      :no-autoload t
       "C-c '" #'wgrep-change-to-wgrep-mode
       "q" #'kill-buffer-and-window))
 
@@ -1636,9 +1695,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 
   (use-package wgrep-rg
     :ensure nil ;; part of rg
-    :commands (wgrep-rg-setup)
-    :hook
-    (rg-mode-hook . wgrep-rg-setup))
+    :commands (wgrep-rg-setup))
 #+end_src
 * Coloring / themes / fonts
 #+begin_src emacs-lisp
