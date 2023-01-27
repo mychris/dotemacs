@@ -562,17 +562,18 @@ This is mostly use-package and local utilities which are used throught the confi
     :ensure (imenu-list :pin melpa)
     :after (:all imenu)
     :defer t
-    :commands (imenu-list)
+    :commands (imenu-list
+               imenu-list-minor-mode
+               imenu-list-show
+               imenu-list-quit-window)
     :functions (imenu-list-ret-dwim
                 imenu-list-resize-window
-                imenu-list-update
-                imenu-list-show
-                imenu-list-quit-window)
+                imenu-list-update)
     :custom
     (imenu-list-idle-update-delay 0.5)
     (imenu-list-position 'right)
     (imenu-list-buffer-name "*Ilist*")
-    :config
+    :init
     (defun +imenu-list-toggle ()
       "Open the imenu-list buffer."
       (interactive)
