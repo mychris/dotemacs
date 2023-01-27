@@ -1893,17 +1893,21 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 
   (use-package esh-mode
     :ensure nil
+    :preface
+    (defvar-local +eshell-last-directory-cache nil)
     :hook
     (eshell-post-command-hook . (lambda ()
-                                  (require 'vc-git)
-                                  (require 'vc-hg)
-                                  (cond
-                                   ((vc-git-root default-directory)
-                                    (vc-mode-line default-directory 'Git))
-                                   ((vc-hg-root default-directory)
-                                    (vc-mode-line default-directory 'Hg))
-                                   (t
-                                    (setq vc-mode nil))))))
+                                  (when (or (null +eshell-last-directory-cache)
+                                            (not (string= +eshell-last-directory-cache default-directory)))
+                                    (require 'vc-git)
+                                    (require 'vc-hg)
+                                    (cond
+                                     ((vc-git-root default-directory)
+                                      (vc-mode-line default-directory 'Git))
+                                     ((vc-hg-root default-directory)
+                                      (vc-mode-line default-directory 'Hg))
+                                     (t
+                                      (setq vc-mode nil)))))))
 
   (use-package em-hist
     :ensure nil
