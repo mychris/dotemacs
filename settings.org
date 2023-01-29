@@ -625,17 +625,37 @@ This is mostly use-package and local utilities which are used throught the confi
       "<down>" #'vertico-next
       "C-<up>" '(previous-history-element :no-autoload t)
       "C-<down>" '(next-history-element :no-autoload t)
+      "C-<return>" #'vertico-exit-input
+      "<backspace>" #'delete-backward-char
+      "C-<backspace>" #'vertico-directory-delete-word
       "C-f" '(forward-char :no-autoload t)
       "C-b" '(backward-char :no-autoload t)
       "C-p" #'vertico-previous
+      "C-k" #'vertico-previous
       "C-n" #'vertico-next
+      "C-j" #'vertico-next
       "<prior>" #'vertico-scroll-up
+      "C-u" #'vertico-scroll-up
       "<next>" #'vertico-scroll-down
-      "M-f" #'vertico-quick-insert
-      "M-," #'vertico-quick-insert
-      "M-." #'vertico-quick-exit)
+      "C-d" #'vertico-scroll-down)
     :hook
     (emacs-startup-hook . vertico-mode))
+
+  (use-package vertico-quick
+    :ensure nil
+    :after (:all vertico)
+    :custom
+    (vertico-quick1 "aoeuid")
+    (vertico-quick2 "htns")
+    :commands (vertico-quick-insert
+	       vertico-quick-exit
+	       vertico-quick-jump)
+    :general
+    (emacs-map
+      'vertico-map
+      "M-f" #'vertico-quick-insert
+      "M-," #'vertico-quick-insert
+      "M-." #'vertico-quick-exit))
 
   (use-package vertico-directory
     :ensure nil ;; part of vertico
@@ -644,9 +664,9 @@ This is mostly use-package and local utilities which are used throught the confi
     :general
     (emacs-map
       'vertico-map
-      "RET" #'vertico-directory-enter
-      "DEL" #'vertico-directory-delete-char
-      "M-DEL" #'vertico-directory-delete-word)
+      "<return>" #'vertico-directory-enter
+      "<backspace>" #'vertico-directory-delete-char
+      "M-<backspace>" #'vertico-directory-delete-word)
     :hook
     (rfn-eshadow-update-overlay . vertico-directory-tidy))
 
@@ -657,12 +677,12 @@ This is mostly use-package and local utilities which are used throught the confi
     :commands (vertico-multiform-mode)
     :custom
     (vertico-multiform-commands '((consult-line buffer)
-                                  (consult-imenu reverse buffer)))
+				  (consult-imenu reverse buffer)))
     (vertico-multiform-categories '((imenu (:not indexed mouse))
-                                    (symbol (vertico-sort-function . vertico-sort-alpha))))
+				    (symbol (vertico-sort-function . vertico-sort-alpha))))
     :hook
     (vertico-mode-hook . (lambda ()
-                           (vertico-multiform-mode (if (bound-and-true-p vertico-mode) 1 -1)))))
+			   (vertico-multiform-mode (if (bound-and-true-p vertico-mode) 1 -1)))))
 #+end_src
 ** Consult - Consulting completing-read
 #+begin_src emacs-lisp
