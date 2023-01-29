@@ -18,9 +18,6 @@ This is mostly use-package and local utilities which are used throught the confi
   (require 'bind-key)
   (require 'my-utils)
   (require 'general)
-
-  ;;; From init.el
-  (defvar user-emacs-cache-directory)
 #+end_src
 * Miscellaneous settings
 ** General Emacs configuration
@@ -116,6 +113,8 @@ This is mostly use-package and local utilities which are used throught the confi
   (use-package nsm
     :ensure nil
     :demand t
+    :preface
+    (eval-and-compile (defvar user-emacs-cache-directory)) ;; from init.el
     :custom
     (nsm-settings-file (expand-file-name "network-security.data" user-emacs-cache-directory))
     (network-security-level 'high))
@@ -132,6 +131,8 @@ This is mostly use-package and local utilities which are used throught the confi
 
   (use-package desktop
     :ensure nil
+    :preface
+    (eval-and-compile (defvar user-emacs-cache-directory)) ;; from init.el
     :custom
     (desktop-auto-save-timeout 300)
     (desktop-path (list (file-name-as-directory user-emacs-cache-directory)))
@@ -1047,6 +1048,8 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :ensure t
     :commands (keyfreq-mode
                keyfreq-autosave-mode)
+    :preface
+    (eval-and-compile (defvar user-emacs-cache-directory)) ;; from init.el
     :custom
     (keyfreq-buffer "*keyfreq-show*")
     (keyfreq-file (expand-file-name "keyfreq.hist" user-emacs-cache-directory))
@@ -1147,6 +1150,8 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :ensure t
     :commands (treemacs
                treemacs-follow-mode)
+    :preface
+    (eval-and-compile (defvar user-emacs-cache-directory)) ;; from init.el
     :custom
     (treemacs-persist-file (expand-file-name "treemacs-persist" user-emacs-cache-directory))
     :general
@@ -1268,6 +1273,8 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :commands (global-undo-tree-mode
                unto-tree-visualize
                unto-tree-undo)
+    :preface
+    (eval-and-compile (defvar user-emacs-cache-directory)) ;; from init.el
     :custom
     (undo-tree-auto-save-history t)
     (undo-tree-history-directory-alist
@@ -1954,6 +1961,8 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   (use-package em-hist
     :ensure nil
     :after (:all esh-mode)
+    :preface
+    (eval-and-compile (defvar user-emacs-cache-directory)) ;; from init.el
     :config
     (setq-default eshell-history-file-name (expand-file-name "eshell-history" user-emacs-cache-directory))
     (setq-default eshell-hist-ignoredups t)
@@ -1998,6 +2007,8 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package tramp
     :ensure nil
+    :preface
+    (eval-and-compile (defvar user-emacs-cache-directory)) ;; from init.el
     :custom
     (tramp-persistency-file-name (expand-file-name "tramp" user-emacs-cache-directory)))
 #+end_src
@@ -2008,6 +2019,8 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :ensure t
     :delight (projectile-mode)
     :commands (projectile-mode)
+    :preface
+    (eval-and-compile (defvar user-emacs-cache-directory)) ;; from init.el
     :custom
     (projectile-cache-file (expand-file-name "projectile.cache" user-emacs-cache-directory))
     (projectile-known-projects-file (expand-file-name "projectile-bookmarks.eld" user-emacs-cache-directory))
@@ -2154,6 +2167,8 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   (use-package lsp-mode
     :ensure t
     :commands (lsp)
+    :preface
+    (eval-and-compile (defvar user-emacs-cache-directory)) ;; from init.el
     :custom
     (lsp-keymap-prefix "s-g")
     (lsp-session-file (expand-file-name "lsp-session-v1" user-emacs-cache-directory))
