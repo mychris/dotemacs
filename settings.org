@@ -1483,7 +1483,9 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       "M-g c" #'avy-goto-char
       "M-g M-c" #'avy-goto-char
       "M-g f" #'avy-goto-word-0
-      "M-g M-f" #'avy-goto-word-0))
+      "M-g M-f" #'avy-goto-word-0)
+    (evil-nmap
+      "M-f" #'avy-goto-line))
 #+end_src
 ** smartparens - Automatic insertion, wrapping and paredit-like navigation with user defined pairs.
 #+begin_src emacs-lisp
