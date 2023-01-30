@@ -257,6 +257,10 @@ This is mostly use-package and local utilities which are used throught the confi
                        ;; TRAMP paths
                        "^/sudo:" "^/ssh:"))
     (recentf-auto-cleanup 60)
+    :config
+    (advice-add #'recentf-cleanup :after #'(lambda (&rest _ignored)
+                                             ;; Don't show the message in the bottom of the screen
+                                             (message nil)))
     :hook
     (recentf-mode-hook . (lambda ()
                            ;; run a cleanup at startup and use `recentf-auto-cleanup'
@@ -910,6 +914,10 @@ This is mostly use-package and local utilities which are used throught the confi
   (use-package help
     :ensure nil
     :commands (help-mode)
+    :config
+    (advice-add #'help-window-display-message :after #'(lambda (&rest _ignored)
+                                               ;; Don't show the message in the bottom of the screen
+                                               (message nil)))
     :general
     (emacs-map
       'help-mode-map
