@@ -720,6 +720,7 @@ This is mostly use-package and local utilities which are used throught the confi
       "M-s y" #'consult-yank-from-kill-ring
       "M-s l" #'consult-line
       "M-s g" #'consult-ripgrep
+      "M-s f" #'consult-find
       [remap switch-to-buffer] #'consult-buffer)
     (emacs-map
       'consult-narrow-map
