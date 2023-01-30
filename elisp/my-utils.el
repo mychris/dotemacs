@@ -38,7 +38,7 @@
   (nth 4 (syntax-ppss)))
 
 (defun +point-in-string-or-comment-p ()
-  "Return non-nil if the point is in a comment or string."
+  "Return non-nil if the point is in a comment or a string."
   (interactive)
   (or (+point-in-string-p) (+point-in-comment-p)))
 
@@ -47,9 +47,50 @@
   "Delete the most recent window and kill its buffer."
   (interactive)
   (let ((most-recent-window (next-window))
-        (most-recent-buffer (next-buffer)))
+	(most-recent-buffer (next-buffer)))
     (kill-buffer most-recent-buffer)
     (delete-window most-recent-window)))
+
+;; Detect OS and distribution, at least for systems I use.
+
+(defun +linuxp ()
+  "Return non-nil if the OS is any GNU/Linux distribution."
+  (eq system-type 'gnu/linux))
+
+(defun +linux-archp ()
+  "Return non-nil if the OS is the Arch Linux GNU/Linux distribution."
+  (and (+linuxp)
+       (condition-case nil
+	   ;; Check the output of lsb_release
+	   (with-temp-buffer
+	     (let ((exit-code (call-process "lsb_release" nil (current-buffer) nil "-i"))
+		   (output (string-trim (buffer-string))))
+	       (and (= 0 exit-code)
+		    (string-match-p "ID:[[:space:]]+Arch$" output))))
+	 (error
+	  (condition-case nil
+	      ;; Check the content of os-release
+	      (with-temp-buffer
+		(insert-file-contents "/etc/os-release")
+		(if (not (re-search-forward "^ID="))
+		    nil
+		  (string= "arch"
+			   (string-trim (buffer-substring-no-properties
+					 (point)
+					 (line-end-position))))))
+	    (error
+	     ;; Finally, check for distro specific release file
+	     (file-exists-p "/etc/arch-release")))))
+       t))
+
+(defmacro +with-system (type &rest body)
+  "Execute BODY if running an the system TYPE.
+TYPE can be one of:
+* `linux'       for any GNU/Linux distribution.
+* `linux-arch'  for the GNU/Linux distribution Arch Linux."
+  (let ((test-fun (intern (concat "+" (symbol-name type) "p"))))
+    `(when (and (fboundp #',test-fun) (funcall #',test-fun))
+       ,@body)))
 
 (provide 'my-utils)
 
