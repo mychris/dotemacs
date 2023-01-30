@@ -25,6 +25,8 @@
 
 ;;; Code:
 
+(require 'subr-x)
+
 (defun +point-in-string-p ()
   "Return non-nil if the point is in a string."
   (interactive)
