@@ -53,13 +53,13 @@
 
 ;; Detect OS and distribution, at least for systems I use.
 
-(defun +linuxp ()
+(defun +linux-p ()
   "Return non-nil if the OS is any GNU/Linux distribution."
   (eq system-type 'gnu/linux))
 
-(defun +linux-archp ()
+(defun +linux-arch-p ()
   "Return non-nil if the OS is the Arch Linux GNU/Linux distribution."
-  (and (+linuxp)
+  (and (+linux-p)
        (condition-case nil
 	   ;; Check the output of lsb_release
 	   (with-temp-buffer
@@ -83,12 +83,40 @@
 	     (file-exists-p "/etc/arch-release")))))
        t))
 
+(defun +linux-debian-p ()
+  "Return non-nil if the OS is the Debian GNU/Linux distribution."
+  (and (+linux-p)
+       (condition-case nil
+	   ;; Check the output of lsb_release
+	   (with-temp-buffer
+	     (let ((exit-code (call-process "lsb_release" nil (current-buffer) nil "-i"))
+		   (output (string-trim (buffer-string))))
+	       (and (= 0 exit-code)
+		    (string-match-p "ID:[[:space:]]+Debian$" output))))
+	 (error
+	  (condition-case nil
+	      ;; Check the content of os-release
+	      (with-temp-buffer
+		(insert-file-contents "/etc/os-release")
+		(if (not (re-search-forward "^ID="))
+		    nil
+		  (string= "debian"
+			   (string-trim (buffer-substring-no-properties
+					 (point)
+					 (line-end-position))))))
+	    (error
+	     ;; Finally, check for distro specific version file
+	     (file-exists-p "/etc/debian_version")))))
+       t))
+
+(+linux-debian-p)
+
 (defmacro +with-system (type &rest body)
   "Execute BODY if running an the system TYPE.
 TYPE can be one of:
 * `linux'       for any GNU/Linux distribution.
 * `linux-arch'  for the GNU/Linux distribution Arch Linux."
-  (let ((test-fun (intern (concat "+" (symbol-name type) "p"))))
+  (let ((test-fun (intern (concat "+" (symbol-name type) "-p"))))
     `(when (and (fboundp #',test-fun) (funcall #',test-fun))
        ,@body)))
 
