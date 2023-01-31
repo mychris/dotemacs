@@ -109,16 +109,47 @@
 	     (file-exists-p "/etc/debian_version")))))
        t))
 
-(+linux-debian-p)
-
 (defmacro +with-system (type &rest body)
   "Execute BODY if running an the system TYPE.
 TYPE can be one of:
-* `linux'       for any GNU/Linux distribution.
-* `linux-arch'  for the GNU/Linux distribution Arch Linux."
+* `linux'         for any GNU/Linux distribution.
+* `linux-arch'    for the GNU/Linux distribution Arch Linux.
+* `linux-debian'  for the GNU/Linux distribution Debian."
   (let ((test-fun (intern (concat "+" (symbol-name type) "-p"))))
     `(when (and (fboundp #',test-fun) (funcall #',test-fun))
        ,@body)))
+
+;; Window urgency hint
+
+(defun +frame-urgency-hint-set-x11 (frame arg)
+  "Set the X11 urgency hint for the given FRAME to ARG.
+If ARG is nil, unset the urgency hint, otherwise set it."
+  (let* ((wm-flag-urgent #x100)
+	 (wm-hints (append (x-window-property "WM_HINTS" frame "WM_HINTS" nil nil t) nil))
+	 (flags (or (car wm-hints) 0))
+	 (flags (if arg (logior flags wm-flag-urgent)
+		  (logand flags (lognot wm-flag-urgent)))))
+    (if wm-hints
+	(setcar wm-hints flags)
+      (setq wm-hints (list flags)))
+    (x-change-window-property "WM_HINTS" wm-hints frame "WM_HINTS" 32 t nil)))
+
+;;;###autoload
+(defun +frame-urgency-hint (&optional arg)
+  "Mark/Unmark the current Emacs frame as urgent.
+
+Without any ARG, or if ARG is nil, mark the frame, otherwise unmark it."
+  (interactive "P")
+  (let* ((frame (selected-frame))
+	 (current-window-system (window-system frame)))
+    (cond
+     ((null current-window-system)
+      ;; There is such thing for a real terminal
+      )
+     ((eq current-window-system 'x)
+      (+frame-urgency-hint-set-x11 frame arg))
+     (t (warn "+frame-urgency-hint unavailable for the %s window system"
+	      (symbol-name current-window-system))))))
 
 (provide 'my-utils)
 
