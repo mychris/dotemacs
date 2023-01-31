@@ -713,12 +713,14 @@ This is mostly use-package and local utilities which are used throught the confi
     (consult-narrow-key ">")
     :general
     (emacs-map
-      "M-g l" #'consult-goto-line
-      "M-g M-l" #'consult-goto-line
+      "M-g ;" #'consult-goto-line
+      "M-g :" #'consult-goto-line
+      "M-g l" #'consult-line
+      "M-g s" #'consult-isearch-history
+      "M-g m" #'consult-mark
+      [remap imenu] #'consult-imenu
       "M-X" #'consult-mode-command
-      "M-s m" #'consult-mark
       "M-s y" #'consult-yank-from-kill-ring
-      "M-s l" #'consult-line
       "M-s g" #'consult-ripgrep
       "M-s f" #'consult-find
       [remap switch-to-buffer] #'consult-buffer)
@@ -1008,7 +1010,7 @@ This is mostly use-package and local utilities which are used throught the confi
     :config
     (which-key-add-key-based-replacements "M-g e" "next-error prefix")
     :hook
-    (emacs-startup-hook . which-key-mode))
+    (after-init-hook . which-key-mode))
 
   (use-package which-key-posframe
     :if (and (window-system) (version<= "26.1" emacs-version))
@@ -1259,10 +1261,10 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (emacs-map
       'hi-lock-map
       :no-autoload t
-      "M-s h ." #'+highlight-region-or-symbol
-      "M-s h ," #'+unhighlight-region-or-symbol
-      "M-s h U" #'+unhighlight-all
-      "M-s h q" #'+unhighlight-all)
+      "M-g h ." #'+highlight-region-or-symbol
+      "M-g h ," #'+unhighlight-region-or-symbol
+      "M-g h U" #'+unhighlight-all
+      "M-g h q" #'+unhighlight-all)
     :hook
     (emacs-startup-hook . global-hi-lock-mode))
 #+end_src
@@ -2045,6 +2047,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :general
     (emacs-map
       "<escape> <escape> p" #'projectile-switch-project
+      "M-s p" #'projectile-switch-project
       "C-x p o" #'projectile-ripgrep
       "C-x p O" #'projectile-grep
       "C-x p t" #'projectile-test-project)
