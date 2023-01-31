@@ -468,7 +468,7 @@ This is mostly use-package and local utilities which are used throught the confi
     (defun +kill-other-buffers ()
       "Kill all other buffers."
       (interactive)
-      (mapc 'kill-buffer-save (delq (current-buffer) (buffer-list))))
+      (mapc #'+kill-buffer-save (delq (current-buffer) (buffer-list))))
 
     ;; https://www.emacswiki.org/emacs/KillingBuffers#toc9
     (defvar kill-buffer-save-list '("*scratch*" "*Messages*")
