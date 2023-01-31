@@ -78,9 +78,7 @@
 			   (string-trim (buffer-substring-no-properties
 					 (point)
 					 (line-end-position))))))
-	    (error
-	     ;; Finally, check for distro specific release file
-	     (file-exists-p "/etc/arch-release")))))
+	    (error nil))))
        t))
 
 (defun +linux-debian-p ()
@@ -104,9 +102,31 @@
 			   (string-trim (buffer-substring-no-properties
 					 (point)
 					 (line-end-position))))))
-	    (error
-	     ;; Finally, check for distro specific version file
-	     (file-exists-p "/etc/debian_version")))))
+	    (error nil))))
+       t))
+
+(defun +linux-ubuntu-p ()
+  "Return non-nil if the OS is the Ubuntu GNU/Linux distribution."
+  (and (+linux-p)
+       (condition-case nil
+	   ;; Check the output of lsb_release
+	   (with-temp-buffer
+	     (let ((exit-code (call-process "lsb_release" nil (current-buffer) nil "-i"))
+		   (output (string-trim (buffer-string))))
+	       (and (= 0 exit-code)
+		    (string-match-p "ID:[[:space:]]+Ubuntu$" output))))
+	 (error
+	  (condition-case nil
+	      ;; Check the content of os-release
+	      (with-temp-buffer
+		(insert-file-contents "/etc/os-release")
+		(if (not (re-search-forward "^ID="))
+		    nil
+		  (string= "ubuntu"
+			   (string-trim (buffer-substring-no-properties
+					 (point)
+					 (line-end-position))))))
+	    (error nil))))
        t))
 
 (defmacro +with-system (type &rest body)
