@@ -387,7 +387,14 @@ This is mostly use-package and local utilities which are used throught the confi
     :config
     (evil-select-search-module 'evil-search-module 'isearch)
     :hook
-    (emacs-startup-hook . evil-mode))
+    (emacs-startup-hook . evil-mode)
+    :general
+    (evil-emap
+      :keymaps '(gdb-breakpoints-mode-map
+                 gdb-registers-mode-map
+                 gdb-locals-mode-map
+                 gdb-frames-mode-map)
+      "C-w" '(:keymap evil-window-map)))
 #+end_src
 ** evil-org - evil keybindings for org-mode
 #+begin_src emacs-lisp
@@ -2432,6 +2439,11 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       "M-g e n" #'next-error
       "M-g e p" #'previous-error
       "M-g e b" #'next-error-select-buffer))
+#+end_src
+** gdb-mi [built-in] - User Interface for running GDB
+#+begin_src emacs-lisp
+  (use-package gdb-mi
+    :ensure nil)
 #+end_src
 * Programming languages
 ** C/C++
