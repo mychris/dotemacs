@@ -75,7 +75,7 @@ This is mostly use-package and local utilities which are used throught the confi
       "M->" nil
       "M-C-}" '(end-of-buffer :no-autoload t)
     (emacs-map
-      "<menu>" iso-transl-ctl-x-8-map)
+      "<menu>" '(:keymap iso-transl-ctl-x-8-map))
     (emacs-map
       'iso-transl-ctl-x-8-map
       "<menu>" '(execute-extended-command :no-autoload t))))
