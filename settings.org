@@ -729,6 +729,7 @@ This is mostly use-package and local utilities which are used throught the confi
       "M-X" #'consult-mode-command
       "M-s y" #'consult-yank-from-kill-ring
       "M-s g" #'consult-ripgrep
+      "M-s G" #'consult-grep
       "M-s f" #'consult-find
       [remap switch-to-buffer] #'consult-buffer)
     (emacs-map
@@ -1670,7 +1671,9 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (emacs-map
       "M-%" #'query-replace
       "C-%" #'replace-string
-      "C-M-%" #'query-replace-regexp)
+      "C-M-%" #'query-replace-regexp
+      "M-g o" #'occur
+      "M-g O" #'multi-occur)
     (emacs-map
       'occur-mode-map
       "C-a" #'+occur-mode-move-beginning-of-line
