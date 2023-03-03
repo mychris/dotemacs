@@ -124,9 +124,11 @@
 (eval-and-compile
   (require 'use-package)
   ;; Whether to report about loading and configuration details.
-  (setq use-package-verbose nil);(not (bound-and-true-p byte-compile-current-file)))
+  ;;(setq use-package-verbose (not (bound-and-true-p byte-compile-current-file)))
+  (setq use-package-verbose nil)
   ;; If non-nil, compute statistics concerned use-package declarations.
-  (setq use-package-compute-statistics nil);(not (bound-and-true-p byte-compile-current-file)))
+  ;;(setq use-package-compute-statistics (not (bound-and-true-p byte-compile-current-file)))
+  (setq use-package-compute-statistics nil)
   ;; If non-nil, assume ':demand t' unless ':defer' is used.
   (setq use-package-always-demand nil)
   ;; If non-nil, assume ':defer t' unless ':demand' is used.
@@ -142,7 +144,7 @@
   ;; Text append to the name of hooks mentioned by :hook.
   (setq use-package-hook-name-suffix nil)
   ;; Quit the use-package-report window and kill the buffer as well.
-  (define-key use-package-statistics-mode-map ["q"] #'kill-buffer-and-window))
+  (define-key use-package-statistics-mode-map (kbd "q") #'kill-buffer-and-window))
 
 (eval-and-compile
   (require 'general)
