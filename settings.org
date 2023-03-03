@@ -1132,6 +1132,8 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       (dired-mouse-find-file event #'find-file #'find-alternate-file))
     :general
     (emacs-map
+      "C-x D" #'dired-jump)
+    (emacs-map
       'dired-mode-map
       "<return>" '(+dired-open :no-autoload t)
       "<up>" #'dired-previous-line
