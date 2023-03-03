@@ -15,7 +15,7 @@
 (when (version< emacs-version "27")
   (error "Emacs version < 27 no supported"))
 
-(when (not (member system-type '(gnu/linux)))
+(when (not (member system-type '(gnu/linux windows-nt)))
   (error "Unsupported operating system %s" system-type))
 
 ;;;; Customization information
@@ -32,7 +32,12 @@
 ;;;; Make sure some environment variables are set
 
 (unless (getenv "XDG_CACHE_HOME")
-  (setenv "XDG_CACHE_HOME" (expand-file-name "~/.cache")))
+  (cond
+   ((eq system-type 'gnu/linux)
+    (setenv "XDG_CACHE_HOME" (expand-file-name "~/.cache")))
+   ((eq system-type 'windows-nt)
+    (setenv "XDG_CACHE_HOME" (getenv "LOCALAPPDATA")))
+   (t (error "Unsupported operating system %s" system-type))))
 
 (defconst user-emacs-cache-directory
   (let ((env-value (getenv "EMACS_CACHE_DIR")))

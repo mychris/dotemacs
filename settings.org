@@ -1802,7 +1802,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
             (enable-theme theme)
           (load-theme theme :no-confirm))))
     :hook
-    (after-init-hook . (lambda ()
+    (emacs-startup-hook . (lambda ()
                             (if (or (display-graphic-p)
                                     ;; daemon running on GNU/Linux with X
                                     (and (eq system-type 'gnu/linux) (daemonp) (getenv "DISPLAY")))
@@ -1853,7 +1853,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
         (+font-cycle-step)))
     (cond
      ((display-graphic-p)
-      (add-hook 'after-init-hook #'+initialize-fonts))
+      (add-hook 'emacs-startup-hook #'+initialize-fonts))
      ((and (eq system-type 'gnu/linux) (daemonp) (getenv "DISPLAY"))
       ;; daemon running on GNU/Linux with X
       (add-hook 'server-after-make-frame-hook #'+initialize-fonts)))
@@ -1916,7 +1916,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
                           (accent . (telephone-line-major-mode-segment))
                           (nil . (telephone-line-airline-position-segment))))
     :hook
-    (after-init-hook . telephone-line-mode))
+    (emacs-startup-hook . telephone-line-mode))
 
   (use-package keycast
     :ensure t
