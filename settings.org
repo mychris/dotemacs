@@ -2485,7 +2485,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       "C-M-h" #'c-mark-function)
     :hook
     (c-mode-common-hook . +c-mode-setup)
-    (c-mode-hook . +c-mode-hook-setup)
+    (c-mode-hook . +c-mode-setup)
     (c++-mode-hook . +c-mode-setup))
 
   (defconst openjdk-cc-style
