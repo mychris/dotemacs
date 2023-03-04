@@ -146,19 +146,6 @@
   ;; Quit the use-package-report window and kill the buffer as well.
   (define-key use-package-statistics-mode-map (kbd "q") #'kill-buffer-and-window))
 
-(eval-and-compile
-  (require 'general)
-  (general-create-definer emacs-map)
-  (general-create-definer evil-imap :states 'insert)
-  (general-create-definer evil-emap :states 'emacs)
-  (general-create-definer evil-nmap :states 'normal)
-  (general-create-definer evil-vmap :states 'visual)
-  (general-create-definer evil-mmap :states 'motion)
-  (general-create-definer evil-omap :states 'operator)
-  (general-create-definer evil-rmap :states 'replace)
-  (general-create-definer evil-iemap :states '(insert emacs))
-  (general-create-definer evil-nvmap :states '(normal visual)))
-
 ;;;; Load settings
 
 (defun +file-time-less-p (a b)

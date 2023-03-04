@@ -17,7 +17,19 @@ This is mostly use-package and local utilities which are used throught the confi
   (require 'delight)
   (require 'bind-key)
   (require 'my-utils)
-  (require 'general)
+
+  (eval-and-compile
+    (require 'general)
+    (general-create-definer emacs-map)
+    (general-create-definer evil-imap :states 'insert)
+    (general-create-definer evil-emap :states 'emacs)
+    (general-create-definer evil-nmap :states 'normal)
+    (general-create-definer evil-vmap :states 'visual)
+    (general-create-definer evil-mmap :states 'motion)
+    (general-create-definer evil-omap :states 'operator)
+    (general-create-definer evil-rmap :states 'replace)
+    (general-create-definer evil-iemap :states '(insert emacs))
+    (general-create-definer evil-nvmap :states '(normal visual)))
 #+end_src
 * Miscellaneous settings
 ** General Emacs configuration
@@ -74,11 +86,11 @@ This is mostly use-package and local utilities which are used throught the confi
       "M-C-{" '(beginning-of-buffer :no-autoload t)
       "M->" nil
       "M-C-}" '(end-of-buffer :no-autoload t)
-    (emacs-map
-      "<menu>" '(:keymap iso-transl-ctl-x-8-map))
-    (emacs-map
-      'iso-transl-ctl-x-8-map
-      "<menu>" '(execute-extended-command :no-autoload t))))
+      (emacs-map
+        "<menu>" '(:keymap iso-transl-ctl-x-8-map))
+      (emacs-map
+        'iso-transl-ctl-x-8-map
+        "<menu>" '(execute-extended-command :no-autoload t))))
 
   (use-package emacs
     :ensure nil
@@ -367,18 +379,18 @@ This is mostly use-package and local utilities which are used throught the confi
 * Evil
 ** evil - Extensible Vi layer for Emacs.
 #+begin_src emacs-lisp
+  ;; `evil-collection' assumes that
+  ;;   `evil-want-keybinding' is set to `t'
+  ;;   `evil-want-integration' is set to `nil'
+  ;; before loading `evil' and `evil-collection'
+  ;; See https://github.com/emacs-evil/evil-collection#installation
+  ;; With byte-code compilation turned on, it doesn't work if it is
+  ;; specified in the :init or :preface section
+  (eval-and-compile
+    (setq evil-want-keybinding nil)
+    (setq evil-want-integration t))
   (use-package evil
     :ensure t
-    :preface
-    ;; `evil-collection' assumes that
-    ;;   `evil-want-keybinding' is set to `t'
-    ;;   `evil-want-integration' is set to `nil'
-    ;; before loading `evil' and `evil-collection'
-    ;; See https://github.com/emacs-evil/evil-collection#installation
-    ;; With byte-code compilation turned on, it doesn't work if it is
-    ;; specified in the :init section
-    (setq evil-want-integration t)
-    (setq evil-want-keybinding nil)
     :custom
     (evil-echo-state nil)
     (evil-want-C-u-scroll t)
@@ -388,6 +400,14 @@ This is mostly use-package and local utilities which are used throught the confi
     (evil-select-search-module 'evil-search-module 'isearch)
     :hook
     (emacs-startup-hook . evil-mode)
+    (evil-mode-hook . (lambda ()
+                        (evil-imap
+                          'eshell-mode-map
+                          "<left>" #'evil-backward-char
+                          "<right>" #'evil-forward-char
+                          "C-<left>" #'evil-backward-word-begin
+                          "C-<right>" #'evil-forward-word-begin
+                          "C-w" evil-window-map)))
     :general
     (evil-emap
       :keymaps '(gdb-breakpoints-mode-map
@@ -705,7 +725,7 @@ This is mostly use-package and local utilities which are used throught the confi
 ** Consult - Consulting completing-read
 #+begin_src emacs-lisp
   (use-package consult
-    :ensure t
+    :ensure (consult :pin melpa)
     :demand t
     :functions (consult-completion-in-region
                 consult-register-format)
@@ -772,9 +792,9 @@ This is mostly use-package and local utilities which are used throught the confi
     :config
     ;; something changed in marginalia
     ;; TODO: refactor
-    ;(setq-default marginalia-annotators
-    ;              '(marginalia-annotators-heavy
-    ;                marginalia-annotators-light))
+    ;;(setq-default marginalia-annotators
+    ;;              '(marginalia-annotators-heavy
+    ;;                marginalia-annotators-light))
     :hook
     (emacs-startup-hook . marginalia-mode))
 #+end_src
@@ -932,9 +952,10 @@ This is mostly use-package and local utilities which are used throught the confi
     :ensure nil
     :commands (help-mode)
     :config
-    (advice-add #'help-window-display-message :after #'(lambda (&rest _ignored)
-                                               ;; Don't show the message in the bottom of the screen
-                                               (message nil)))
+    (advice-add #'help-window-display-message
+                :after #'(lambda (&rest _ignored)
+                           ;; Don't show the message in the bottom of the screen
+                           (message nil)))
     :general
     (emacs-map
       'help-mode-map
@@ -1114,9 +1135,9 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (dired-listing-switches "-AblGh --group-directories-first")
     :config
     (defun +dired-alternate-up-directory ()
-        "In Dired, visit the parent directory via `find-alternate-file'.
+      "In Dired, visit the parent directory via `find-alternate-file'.
   This kills the Dired buffer, then visits the parent directory."
-        (interactive)
+      (interactive)
       (find-alternate-file ".."))
     (defun +dired-open ()
       "In Dired, visit the file or directory named on this line.
@@ -1410,7 +1431,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
        ((looking-back "[[:blank:]]+" 1)
         (delete-horizontal-space t))
        (t
-        (backward-delete-char 1))))
+        (delete-char -1))))
     (defun forward-paragraph-recenter (&optional _arg)
       "Move forward to end of paragraph and center point using `recenter'.
   With argument ARG, do it ARG times; a negative argument ARG = -N means
@@ -1977,8 +1998,9 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (eshell-post-command-hook . (lambda ()
                                   (when (or (null +eshell-last-directory-cache)
                                             (not (string= +eshell-last-directory-cache default-directory)))
-                                    (require 'vc-git)
-                                    (require 'vc-hg)
+                                    (eval-and-compile
+                                      (require 'vc-git)
+                                      (require 'vc-hg))
                                     (cond
                                      ((vc-git-root default-directory)
                                       (vc-mode-line default-directory 'Git))
@@ -3069,8 +3091,11 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
 #+begin_src emacs-lisp
   (provide 'settings)
 
-  ;;; settings.el ends here
+  ;; Local Variables:
+  ;; indent-tabs-mode: nil
+  ;; End:
 
+  ;;; settings.el ends here
 #+end_src
 * Using local build of Emacs
 Install dependencies:
