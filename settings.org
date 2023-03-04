@@ -1023,7 +1023,11 @@ This is mostly use-package and local utilities which are used throught the confi
     (which-key-show-early-on-C-h t)
     (which-key-compute-remaps t)
     :config
+    (which-key-add-key-based-replacements "C-x a" "abbrev prefix")
+    (which-key-add-key-based-replacements "C-x t" "tab-bar prefix")
+    (which-key-add-key-based-replacements "C-x C-k" "kmacro prefix")
     (which-key-add-key-based-replacements "M-g e" "next-error prefix")
+    (which-key-add-key-based-replacements "M-g h" "hi-lock prefix")
     :hook
     (after-init-hook . which-key-mode))
 
@@ -1604,6 +1608,8 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :commands (global-evil-mc-mode)
     :init
     ;; (setq-default evil-mc-one-cursor-show-mode-line-text nil)
+    :config
+    (which-key-add-key-based-replacements "g ." "evil-mc prefix")
     :general
     (emacs-map
       "C->" #'evil-mc-make-cursor-move-next-line
@@ -2445,8 +2451,6 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :demand t
     :custom
     (next-error-recenter '(4))
-    :config
-    (which-key-add-key-based-replacements "M-g e" "next-error prefix")
     :general
     (emacs-map
       "M-g e n" #'next-error
