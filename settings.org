@@ -2200,7 +2200,6 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package yasnippet
     :ensure t
-    :delight (yas-minor-mode)
     :commands (yas-minor-mode
                yas-reload-all
                yas-expand-snippet)
@@ -2274,7 +2273,6 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package company
     :ensure t
-    :delight (company-mode)
     :custom
     (company-tooltip-align-annotations t)
     (company-minimum-prefix-length 1)
