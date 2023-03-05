@@ -1464,7 +1464,10 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   (use-package goto-chg
     :ensure t
     :commands (goto-last-change
-               goto-last-change-reverse))
+               goto-last-change-reverse)
+    :general
+    (emacs-map
+      "M-s c" #'goto-last-change))
 #+end_src
 ** disable-mouse - Disable mouse commands globally
 #+begin_src emacs-lisp
