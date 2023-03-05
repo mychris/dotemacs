@@ -202,7 +202,7 @@ This is mostly use-package and local utilities which are used throught the confi
     (save-place-file (expand-file-name "saveplace" user-emacs-cache-directory))
     (save-place-forget-unreadable-files t)
     :hook
-    (after-init-hook . save-place-mode))
+    (emacs-startup-hook . save-place-mode))
 #+end_src
 ** Backups and auto-save
 #+begin_src emacs-lisp
@@ -265,7 +265,7 @@ This is mostly use-package and local utilities which are used throught the confi
                            ;; to cleanup every now and then
                            (run-with-idle-timer 5 nil (lambda ()
                                                         (recentf-cleanup)))))
-    (after-init-hook . recentf-mode))
+    (emacs-startup-hook . recentf-mode))
 #+end_src
 ** Line numbers
 #+begin_src emacs-lisp
@@ -566,7 +566,7 @@ This is mostly use-package and local utilities which are used throught the confi
     :custom
     (auto-revert-verbose t)
     :hook
-    (after-init-hook . global-auto-revert-mode))
+    (emacs-startup-hook . global-auto-revert-mode))
 #+end_src
 ** imenu [built-in] - find major definitions in a file by name
 #+begin_src emacs-lisp
@@ -1029,7 +1029,7 @@ This is mostly use-package and local utilities which are used throught the confi
     (which-key-add-key-based-replacements "M-g e" "next-error prefix")
     (which-key-add-key-based-replacements "M-g h" "hi-lock prefix")
     :hook
-    (after-init-hook . which-key-mode))
+    (emacs-startup-hook . which-key-mode))
 
   (use-package which-key-posframe
     :if (and (window-system) (version<= "26.1" emacs-version))
@@ -3030,7 +3030,7 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
       "M-4" nil)
     :hook
     (magit-mode-hook . magit-load-config-extensions)
-    (after-init-hook . magit-auto-revert-mode))
+    (emacs-startup-hook . magit-auto-revert-mode))
 
   (use-package git-commit ;; part of magit
     :ensure nil
