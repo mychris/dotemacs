@@ -12,8 +12,11 @@
 
 ;;;; Check supported emacs version and system
 
-(when (version< emacs-version "27")
-  (error "Emacs version < 27 no supported"))
+(when (version< emacs-version "27.1")
+  ;; Internal features like `early-init.el' or `package-quickstart-refresh'
+  ;; are used.
+  ;; In addition, some packages like `vertico' are no longer supported in 26.3
+  (error "Emacs version < 27.1 no supported"))
 
 (when (not (member system-type '(gnu/linux windows-nt)))
   (error "Unsupported operating system %s" system-type))
@@ -29,21 +32,20 @@
 (add-to-list 'load-path (file-name-as-directory
 			 (expand-file-name "elisp" user-emacs-directory)))
 
-;;;; Make sure some environment variables are set
-
-(unless (getenv "XDG_CACHE_HOME")
-  (cond
-   ((eq system-type 'gnu/linux)
-    (setenv "XDG_CACHE_HOME" (expand-file-name "~/.cache")))
-   ((eq system-type 'windows-nt)
-    (setenv "XDG_CACHE_HOME" (getenv "LOCALAPPDATA")))
-   (t (error "Unsupported operating system %s" system-type))))
+;;;; Setup the cache directory
 
 (defconst user-emacs-cache-directory
-  (let ((env-value (getenv "EMACS_CACHE_DIR")))
-    (if env-value
-	(file-name-as-directory env-value)
-      (file-name-as-directory (expand-file-name "emacs" (getenv "XDG_CACHE_HOME")))))
+  (let ((emacs-cache-dir-env (getenv "EMACS_CACHE_DIR"))
+	(xdg-cache-home-env (getenv "XDG_CACHE_HOME")))
+    (cond
+     (emacs-cache-dir-env
+      (file-name-as-directory emacs-cache-dir-env))
+     (xdg-cache-home-env
+      (file-name-as-directory (expand-file-name "emacs" xdg-cache-home-env)))
+     ((eq system-type 'windows-nt)
+      (file-name-as-directory (expand-file-name "emacs" (getenv "LOCALAPPDATA"))))
+     (t
+      (error "Failed to find Emacs cache directory"))))
   "Directory for user specific Emacs cache files.")
 
 (setenv "EMACS_CACHE_DIR" user-emacs-cache-directory)

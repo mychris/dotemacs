@@ -3,6 +3,7 @@
 ;;; Commentary:
 
 ;; Emacs now starts the package manager before init.el is loaded.
+;; Requires Emacs 27.1
 
 ;;; Code:
 
@@ -10,7 +11,7 @@
 (setq gc-cons-threshold most-positive-fixnum)
 (setq gc-cons-percentage 0.6)
 
-;; Initialise installed packages
+;; Initialize installed packages
 (setq package-enable-at-startup nil)
 
 ;; Allow loading from the package cache.
