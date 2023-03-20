@@ -922,6 +922,15 @@ This is mostly use-package and local utilities which are used throught the confi
     :hook
     (emacs-startup-hook . persp-mode))
 #+end_src
+** tab-bar.el [built-in] - frame-local tabs with named persistent window configurations
+#+begin_src emacs-lisp
+  (use-package tab-bar
+    :ensure nil
+    :general
+    (emacs-map
+      "C-x t l" #'tab-next
+      "C-x t h" #'tab-previous))
+#+end_src
 * Help / Discovery / Cheat sheets
 ** help [built-in]
 #+begin_src emacs-lisp
