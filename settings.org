@@ -1227,7 +1227,8 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :custom
     (whitespace-style '(face tab-mark))
     :hook
-    (prog-mode-hook . whitespace-mode))
+    (prog-mode-hook . whitespace-mode)
+    (text-mode-hook . whitespace-mode))
 #+end_src
 ** hi-lock [built-in] - minor mode for interactive automatic highlighting
 #+begin_src emacs-lisp
