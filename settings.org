@@ -1334,7 +1334,8 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       'undo-tree-visualizer-mode-map
       "C-x u" #'undo-tree-visualize-quit)
     :hook
-    (emacs-startup-hook . global-undo-tree-mode))
+    (emacs-startup-hook . global-undo-tree-mode)
+    (evil-local-mode-hook . turn-on-undo-tree-mode))
 #+end_src
 * Editing
 ** expand-region - Increase selected region by semantic units
