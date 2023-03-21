@@ -2042,6 +2042,9 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (term-mode-hook . (lambda () (display-line-numbers-mode 0)))
     (term-exec-hook . +kill-term-process-sentinel)
     :general
+    (evil-imap
+      'term-raw-map
+      "<delete>" #'term-send-del)
     (emacs-map
       'term-raw-map
       "M-1" nil
