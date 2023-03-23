@@ -2694,6 +2694,9 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       "<wheel-right>" #'sly-inspector-next
       "<mouse-8>" #'sly-inspector-pop
       "<mouse-9>" #'sly-inspector-next)
+    (evil-imap 'sly-mrepl-mode-map
+      "<up>" #'sly-mrepl-previous-input-or-button
+      "<down>" #'sly-mrepl-next-input-or-button)
     :hook
     (sly-mode-hook . company-mode))
 #+end_src
