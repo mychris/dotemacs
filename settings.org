@@ -42,6 +42,7 @@ This is mostly use-package and local utilities which are used throught the confi
    global-hl-line-mode t
    visible-bell t
    large-file-warning-threshold (* 100 1024 1024)
+   read-process-output-max (* 1024 1024)
    initial-major-mode 'text-mode
    frame-title-format '("Emacs - "
                         (:eval (if (buffer-file-name)
