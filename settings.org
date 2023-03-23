@@ -3082,6 +3082,17 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
   (use-package system-packages
     :ensure t)
 #+end_src
+* Directory-local variables
+#+begin_src emacs-lisp
+  (dir-locals-set-class-variables
+   'work-projects
+   '((c-mode . ((fill-column . 80)
+                (c-file-style . "linux")
+                (indent-tabs-mode . t)
+                (c-basic-offset . 80)))))
+  (dir-locals-set-directory-class
+   "/loc" 'work-projects)
+#+end_src
 * Postface
 #+begin_src emacs-lisp
   (provide 'settings)
