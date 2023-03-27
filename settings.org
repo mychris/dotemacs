@@ -3092,7 +3092,7 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
    '((c-mode . ((fill-column . 80)
                 (c-file-style . "linux")
                 (indent-tabs-mode . t)
-                (c-basic-offset . 80)))))
+                (c-basic-offset . 8)))))
   (dir-locals-set-directory-class
    "/loc" 'work-projects)
 #+end_src
