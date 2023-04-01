@@ -131,6 +131,8 @@
   ;; If non-nil, compute statistics concerned use-package declarations.
   ;;(setq use-package-compute-statistics (not (bound-and-true-p byte-compile-current-file)))
   (setq use-package-compute-statistics nil)
+  ;; Minimal load timet that will be reported
+  (setq use-package-minimum-reported-time 0.001)
   ;; If non-nil, assume ':demand t' unless ':defer' is used.
   (setq use-package-always-demand nil)
   ;; If non-nil, assume ':defer t' unless ':demand' is used.
