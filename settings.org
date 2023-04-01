@@ -54,7 +54,6 @@ This is mostly use-package and local utilities which are used throught the confi
   (put 'narrow-to-region 'disabled nil)
   (put 'upcase-region 'disabled nil)
   (put 'downcase-region 'disabled nil)
-  (put 'dired-find-alternate-file 'disabled nil)
   (put 'overwrite-mode 'disabled t)
   (emacs-map
     "C-z" nil ;; Use C-z as a prefix key.
@@ -558,7 +557,7 @@ This is mostly use-package and local utilities which are used throught the confi
     :custom
     (auto-revert-verbose t)
     :hook
-    (emacs-startup-hook . global-auto-revert-mode))
+    (find-file-hook . auto-revert-mode))
 #+end_src
 ** imenu [built-in] - find major definitions in a file by name
 #+begin_src emacs-lisp
@@ -704,7 +703,6 @@ This is mostly use-package and local utilities which are used throught the confi
 #+begin_src emacs-lisp
   (use-package consult
     :ensure (consult :pin melpa)
-    :demand t
     :functions (consult-completion-in-region
                 consult-register-format)
     :config
@@ -1008,6 +1006,7 @@ This is mostly use-package and local utilities which are used throught the confi
 #+begin_src emacs-lisp
   (use-package which-key
     :ensure t
+    :defer 5
     :delight (which-key-mode)
     :commands (which-key-mode
                which-key-add-key-based-replacements
@@ -1029,8 +1028,8 @@ This is mostly use-package and local utilities which are used throught the confi
     (which-key-add-key-based-replacements "C-x C-k" "kmacro prefix")
     (which-key-add-key-based-replacements "M-g e" "next-error prefix")
     (which-key-add-key-based-replacements "M-g h" "hi-lock prefix")
-    :hook
-    (emacs-startup-hook . which-key-mode))
+    (which-key-add-key-based-replacements "g ." "evil-mc prefix")
+    (which-key-mode))
 
   (use-package which-key-posframe
     :if (and (window-system) (version<= "26.1" emacs-version))
@@ -1113,6 +1112,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package dired
     :ensure nil
+    :defer t
     :commands (dired
                dired-other-window
                dired-other-frame
@@ -1139,6 +1139,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (defun +dired-mouse-find-file (event)
       (interactive "e")
       (dired-mouse-find-file event #'find-file #'find-alternate-file))
+    (put 'dired-find-alternate-file 'disabled nil)
     :general
     (emacs-map
       "C-x D" #'dired-jump)
@@ -1184,8 +1185,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package treemacs
     :ensure t
-    :commands (treemacs
-               treemacs-follow-mode)
+    :commands (treemacs)
     :custom
     (treemacs-persist-file (expand-file-name "treemacs-persist" user-emacs-cache-directory))
     :general
@@ -1195,8 +1195,9 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       'treemacs-mode-map
       "<up>" #'treemacs-previous-line
       "<down>" #'treemacs-next-line)
+    :config
+    (treemacs-follow-mode)
     :hook
-    (emacs-startup-hook . treemacs-follow-mode)
     (treemacs-mode-hook . (lambda () (display-line-numbers-mode 0))))
 
   (use-package treemacs-projectile
@@ -1401,6 +1402,9 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package menu-bar
     :ensure nil
+    :commands (clipboard-kill-region
+               clipboard-kill-ring-save
+               clipboard-yank)
     :custom
     (save-interprogram-paste-before-kill t)
     :general
@@ -1623,8 +1627,6 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :commands (global-evil-mc-mode)
     :init
     ;; (setq-default evil-mc-one-cursor-show-mode-line-text nil)
-    :config
-    (which-key-add-key-based-replacements "g ." "evil-mc prefix")
     :general
     (emacs-map
       "C->" #'evil-mc-make-cursor-move-next-line
@@ -1726,6 +1728,16 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package grep
     :ensure nil
+    :commands (grep
+               grep-mode
+               grep-process-setup
+               grep-compute-defaulst
+               find-grep
+               grep-find
+               lgrep
+               rgrep
+               zrgrep
+               rzgrep)
     :general
     (emacs-map
       'grep-mode-map
@@ -2008,6 +2020,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :ensure nil
     :preface
     (defvar-local +eshell-last-directory-cache nil)
+    :commands (esh-mode)
     :hook
     (eshell-post-command-hook . (lambda ()
                                   (when (or (null +eshell-last-directory-cache)
@@ -2134,7 +2147,9 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (abbrev-file-name (expand-file-name "abbrev_defs" user-emacs-directory))
     (only-global-abbrevs nil "Enable mode-specific abbrevs")
     (abbrev-all-caps nil)
-    (abbrev-suggest nil "Do not suggest using an abbrev in the echo area"))
+    (abbrev-suggest nil "Do not suggest using an abbrev in the echo area")
+    :hook
+    ((org-mode-hook . abbrev-mode)))
 #+end_src
 ** paren [built-in] - highlight matching paren
 #+begin_src emacs-lisp
@@ -2151,8 +2166,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   (use-package autoinsert
     :ensure nil
     :delight (auto-insert-mode)
-    :commands (auto-insert-mode
-               define-auto-insert)
+    :commands (auto-insert-mode)
     :custom
     (auto-insert 'other)
     (auto-insert-query nil)
@@ -2164,10 +2178,10 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       (yas-expand-snippet
        (yas--template-content
         (yas--get-template-by-uuid mode name))))
+    :config
     (define-auto-insert '(sh-mode . "Shell script") '(lambda () (+auto-insert-using-yasnippet 'sh-mode "new-file-template")))
     :hook
-    (find-file-hook . auto-insert)
-    (emacs-startup-hook . auto-insert-mode))
+    (find-file-hook . auto-insert))
 #+end_src
 ** treesit [built-in] - tree-sitter utilities
 #+begin_src emacs-lisp
@@ -2374,7 +2388,6 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package flycheck
     :ensure t
-    :defer 1
     :delight (flycheck-mode)
     :commands (flycheck-mode)
     :functions (flycheck-define-error-level)
@@ -2621,7 +2634,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :ensure nil
     :delight (eldoc-mode)
     :hook
-    (emacs-startup-hook . global-eldoc-mode))
+    (emacs-lisp-mode-hook . global-eldoc-mode))
 #+end_src
 ** Ocaml
 #+begin_src emacs-lisp
@@ -2908,6 +2921,8 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
     (org-imenu-depth 7)
     (org-adapt-indentation nil)
     (org-agenda-files '("~/Documents/org"))
+    (org-agenda-span 14)
+    (org-agenda-start-on-weekday 1)
     :config
     ;; code blocks languages
     (org-babel-do-load-languages
@@ -2925,14 +2940,7 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
       'org-src-mode-map
       "C-c C-c" #'org-edit-src-exit)
     :hook
-    (org-mode-hook . abbrev-mode)
     (org-mode-hook . (lambda () (setq indent-tabs-mode nil))))
-
-  (use-package org-agenda
-    :ensure nil
-    :custom
-    (org-agenda-span 14)
-    (org-agenda-start-on-weekday 1))
 
   (use-package org-src
     :ensure nil
