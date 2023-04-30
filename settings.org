@@ -137,11 +137,7 @@ This is mostly use-package and local utilities which are used throught the confi
 #+begin_src emacs-lisp
   (use-package server
     :ensure nil
-    :commands (server-start)
-    :init
-    (run-with-idle-timer 5 nil (lambda ()
-                                 (when (not (display-graphic-p))
-                                   (server-start)))))
+    :commands (server-start))
 
   (use-package desktop
     :ensure nil
@@ -1006,7 +1002,6 @@ This is mostly use-package and local utilities which are used throught the confi
 #+begin_src emacs-lisp
   (use-package which-key
     :ensure t
-    :defer 5
     :delight (which-key-mode)
     :commands (which-key-mode
                which-key-add-key-based-replacements
@@ -1029,7 +1024,8 @@ This is mostly use-package and local utilities which are used throught the confi
     (which-key-add-key-based-replacements "M-g e" "next-error prefix")
     (which-key-add-key-based-replacements "M-g h" "hi-lock prefix")
     (which-key-add-key-based-replacements "g ." "evil-mc prefix")
-    (which-key-mode))
+    :hook
+    (emacs-startup-hook . which-key-mode))
 
   (use-package which-key-posframe
     :if (and (window-system) (version<= "26.1" emacs-version))
