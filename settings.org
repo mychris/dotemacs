@@ -1863,6 +1863,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :ensure nil
     :demand t
     :init
+    ;;;; Monospace font cycling and initial setup
     (defvar +font-cycle-list nil
       "The list of fonts used by `+font-cycle-step'")
     (defvar +font-cycle-list--idx 0
@@ -1884,15 +1885,15 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (defun +initialize-fonts ()
       (unless +font-cycle-list
         (when (font-utils-exists-p "Source Code Pro")
-          (push "Source Code Pro:size=12:hintstyle=hintfull:autohint=true:antialise=true:rgba=rgb" +font-cycle-list))
+          (push "Source Code Pro:size=14:hintstyle=hintfull:autohint=true:antialise=true:rgba=rgb" +font-cycle-list))
         (when (font-utils-exists-p "Hack")
-          (push "Hack:size=12:hintstyle=hintfull:autohint=true:antialise=true:rgba=rgb" +font-cycle-list))
+          (push "Hack:size=14:hintstyle=hintfull:autohint=true:antialise=true:rgba=rgb" +font-cycle-list))
         (when (font-utils-exists-p "Inconsolata")
           (push "Inconsolata:size=14:hintstyle=hintfull:autohint=true:antialise=true:rgba=rgb" +font-cycle-list))
         (when (font-utils-exists-p "Victor Mono")
-          (push "Victor Mono:size=12:hintstyel=hintfull:autohint=true:antialise=true:rgba=rgb" +font-cycle-list))
+          (push "Victor Mono:size=14:hintstyel=hintfull:autohint=true:antialise=true:rgba=rgb" +font-cycle-list))
         (when (font-utils-exists-p "Fira Code")
-          (push "Fira Code:size=12:hintstyle=hintfull:autohint=true:antialise=true:rgba=rgb" +font-cycle-list))
+          (push "Fira Code:size=14:hintstyle=hintfull:autohint=true:antialise=true:rgba=rgb" +font-cycle-list))
         (unless +font-cycle-list
           (warn "settings.el: Failed to load custom fonts"))
         (+font-cycle-step)))
