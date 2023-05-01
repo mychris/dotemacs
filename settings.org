@@ -382,6 +382,11 @@ This is mostly use-package and local utilities which are used throught the confi
                           "C-<right>" #'evil-forward-word-begin
                           "C-w" evil-window-map)))
     :general
+    (evil-nmap
+      'view-mode-map
+      :no-autoload t
+      "d" #'evil-scroll-down
+      "u" #'evil-scroll-up)
     (evil-emap
       :keymaps '(gdb-breakpoints-mode-map
                  gdb-registers-mode-map
@@ -1637,7 +1642,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :commands (view-mode)
     :general
     (emacs-map
-      "C-`" #'view-mode)
+      "M-z" #'view-mode)
     (emacs-map
       'view-mode-map
       :no-autoload t
