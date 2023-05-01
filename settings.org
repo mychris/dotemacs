@@ -370,6 +370,20 @@ This is mostly use-package and local utilities which are used throught the confi
     (evil-want-C-i-jump nil)
     (evil-undo-system #'undo-tree)
     :config
+    (defun +evil-set-cursor (orig-fun &rest args)
+      (if (display-graphic-p)
+          (apply orig-fun args)
+        (let ((specs (car args)))
+          (unless (equal cursor-type specs)
+            (let ((shape (or (car-safe specs) specs))
+                  (param))
+              (setq param
+                    (cond ((eq shape 'bar) "6")
+                          ((eq shape 'hbar) "4")
+                          (t "2")))
+              (send-string-to-terminal
+               (concat "\e[" param " q")))))))
+    (advice-add #'evil-set-cursor :around #'+evil-set-cursor)
     (evil-select-search-module 'evil-search-module 'isearch)
     :hook
     (emacs-startup-hook . evil-mode)
