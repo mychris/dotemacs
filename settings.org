@@ -2250,6 +2250,10 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (setq yas-alias-to-yas/prefix-p nil)
     :config
     (yas-reload-all)
+    (defun +yas--find-next-field-expand-abbrev-advice (&rest args)
+      "Advice which should run before `yas--find-next-field' to expand abbrevs"
+      (expand-abbrev))
+    (advice-add 'yas--find-next-field :before #'+yas--find-next-field-expand-abbrev-advice)
     :hook
     (prog-mode-hook . yas-minor-mode)
     (org-mode-hook . yas-minor-mode))
