@@ -2196,6 +2196,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
         (yas--get-template-by-uuid mode name))))
     :config
     (define-auto-insert '(sh-mode . "Shell script") '(lambda () (+auto-insert-using-yasnippet 'sh-mode "new-file-template")))
+    (define-auto-insert '(emacs-lisp-mode . "Emacs Lisp") '(lambda () (+auto-insert-using-yasnippet 'emacs-lisp-mode "new-file-template")))
     :hook
     (find-file-hook . auto-insert))
 #+end_src
