@@ -753,6 +753,7 @@ This is mostly use-package and local utilities which are used throught the confi
       'consult-narrow-map
       "?" #'consult-narrow-help)
     (evil-nmap
+      [remap bookmark-jump] '(consult-bookmark :no-autoload t)
       "g l" #'consult-goto-line)
     :hook
     (embark-collect-mode-hook . consult-preview-at-point-mode))
@@ -1049,6 +1050,7 @@ This is mostly use-package and local utilities which are used throught the confi
     (which-key-add-key-based-replacements "M-g e" "next-error prefix")
     (which-key-add-key-based-replacements "M-g h" "hi-lock prefix")
     (which-key-add-key-based-replacements "g ." "evil-mc prefix")
+    (which-key-add-key-based-replacements "SPC c" "bookmark prefix")
     :hook
     (emacs-startup-hook . which-key-mode))
 
@@ -2139,6 +2141,31 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   (use-package fzf
     :ensure t
     :after (:all projectile ggtags))
+#+end_src
+** bookmark [built-in] - Set bookmarks, maybe annotate them, jump to them later
+#+begin_src emacs-lisp
+  (use-package bookmark
+    :ensure nil
+    :commands (bookmark-maybe-load-default-file
+               bookmark-load
+               bookmark-jump
+               bookmark-set
+               bookmark-set-no-overwrite
+               bookmark-save
+               bookmark-bmenu-list)
+    :custom
+    (bookmark-save-flag 5)
+    (bookmark-default-file (expand-file-name "bookmarks" user-emacs-directory))
+    (bookmark-sort-flag t)
+    (bookmark-fringe-mark nil)
+    :general
+    (emacs-map
+      'bookmark-map
+      "m" #'bookmark-set-no-overwrite
+      "M" #'bookmark-set
+      "L" #'bookmark-bmenu-list)
+    (evil-nmap
+      "SPC c" '(:keymap bookmark-map)))
 #+end_src
 * Programming generic
 ** abbrev [built-in] - abbrev mode commands for Emacs
