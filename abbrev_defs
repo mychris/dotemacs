@@ -22,6 +22,7 @@
     ("uintptrt" "uintptr_t" nil :count 0)
     ("ptrdifft" "ptrdiff_t" nil :count 0)
     ("inclued" "include" nil :count 0)
+    ("uinon" "union" nil :count 0)
    ))
 
 (define-abbrev-table 'c++-mode-abbrev-table
@@ -47,6 +48,7 @@
     ("uintptrt" "uintptr_t" nil :count 0)
     ("ptrdifft" "ptrdiff_t" nil :count 0)
     ("inclued" "include" nil :count 0)
+    ("uinon" "union" nil :count 0)
    ))
 
 
