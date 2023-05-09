@@ -720,8 +720,12 @@ This is mostly use-package and local utilities which are used throught the confi
     :ensure (consult :pin melpa)
     :functions (consult-completion-in-region
                 consult-register-format)
-    :config
-    (setq-default completion-in-region-function #'consult-completion-in-region
+    :init
+    (setq-default completion-in-region-function #'(lambda (&rest args)
+                                                    (apply (if vertico-mode
+                                                               #'consult-completion-in-region
+                                                             #'completion--in-region)
+                                                           args))
                   register-preview-function #'consult-register-format)
     :custom
     (consult-line-numbers-widen t)
