@@ -399,8 +399,10 @@ This is mostly use-package and local utilities which are used throught the confi
     (evil-nmap
       'view-mode-map
       :no-autoload t
-      "d" #'evil-scroll-down
-      "u" #'evil-scroll-up)
+      "SPC" #'View-scroll-page-forward
+      "DEL" #'View-scroll-page-backward
+      "d" #'View-scroll-page-forward
+      "u" #'View-scroll-page-backward)
     (evil-emap
       :keymaps '(gdb-breakpoints-mode-map
                  gdb-registers-mode-map
