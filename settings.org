@@ -1671,6 +1671,34 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       "n" #'next-line
       "p" #'previous-line))
 #+end_src
+** link-hint - Use avy to open, copy, etc. visible links
+#+begin_src emacs-lisp
+  (use-package link-hint
+    :ensure t
+    :commands (link-hint-open-link
+               link-hint-copy-link
+               link-hint-copy-all-links
+               link-hint-open-all-links
+               link-hint-copy-link-at-point
+               link-hint-open-link-at-point
+               link-hint-copy-multiple-links
+               link-hint-open-multiple-links)
+    :custom
+    (link-hint-restore t)
+    :general
+    (evil-nmap
+      "SPC f o" #'link-hint-open-link
+      "SPC f c" #'link-hint-copy-link))
+#+end_src
+** +link-hint - Enhancements for link-hint
+#+begin_src emacs-lisp
+  (use-package +link-hint
+    :ensure nil
+    :after (link-hint)
+    :demand t
+    :config
+    (+link-hint-setup))
+#+end_src
 * Searching
 ** isearch [built-in]
 #+begin_src emacs-lisp
