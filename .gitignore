@@ -1,6 +1,7 @@
 *.elc
 tree-sitter-module/
 projectile-bookmarks.eld
+bookmarks.eld
 settings.el
 settings-local.*
 

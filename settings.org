@@ -2168,7 +2168,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
                bookmark-bmenu-list)
     :custom
     (bookmark-save-flag 5)
-    (bookmark-default-file (expand-file-name "bookmarks" user-emacs-directory))
+    (bookmark-default-file (expand-file-name "bookmarks.eld" user-emacs-directory))
     (bookmark-sort-flag t)
     (bookmark-fringe-mark nil)
     :general
