@@ -140,7 +140,7 @@ This is mostly use-package and local utilities which are used throught the confi
     :ensure nil
     :commands (cua-mode)
     :hook
-    (emacs-startup-hook . (lambda () (cua-mode -1))))
+    (after-init-hook . (lambda () (cua-mode -1))))
 #+end_src
 ** nsm.el [built-in] - Network Security Manager
 #+begin_src emacs-lisp
@@ -171,7 +171,7 @@ This is mostly use-package and local utilities which are used throught the confi
     (desktop-restore-frames nil)
     (desktop-save 'ask-if-new)
     :hook
-    (emacs-startup-hook . (lambda () (desktop-save-mode -1))))
+    (after-init-hook . (lambda () (desktop-save-mode -1))))
 #+end_src
 ** Make sure that UTF-8 is used everywhere.
 #+begin_src emacs-lisp
@@ -200,7 +200,7 @@ This is mostly use-package and local utilities which are used throught the confi
     (history-delete-duplicates t)
     (savehist-save-minibuffer-history t)
     :hook
-    (emacs-startup-hook . savehist-mode))
+    (after-init-hook . savehist-mode))
 #+end_src
 ** Saveplace (cursor position)
 #+begin_src emacs-lisp
@@ -211,7 +211,7 @@ This is mostly use-package and local utilities which are used throught the confi
     (save-place-file (expand-file-name "saveplace" user-emacs-cache-directory))
     (save-place-forget-unreadable-files t)
     :hook
-    (emacs-startup-hook . save-place-mode))
+    (after-init-hook . save-place-mode))
 #+end_src
 ** Backups and auto-save
 #+begin_src emacs-lisp
@@ -270,7 +270,7 @@ This is mostly use-package and local utilities which are used throught the confi
                            ;; to cleanup every now and then
                            (run-with-idle-timer 5 nil (lambda ()
                                                         (recentf-cleanup)))))
-    (emacs-startup-hook . recentf-mode))
+    (after-init-hook . recentf-mode))
 #+end_src
 ** Line numbers
 #+begin_src emacs-lisp
@@ -354,7 +354,7 @@ This is mostly use-package and local utilities which are used throught the confi
     (gcmh-high-cons-threshold (* 16 1024 1024))
     (gcmh-verbose nil)
     :hook
-    (emacs-startup-hook . gcmh-mode))
+    (after-init-hook . gcmh-mode))
 #+end_src
 ** utils - Personal utilities
 #+begin_src emacs-lisp
@@ -568,14 +568,14 @@ This is mostly use-package and local utilities which are used throught the confi
   (use-package minibuf-eldef
     :ensure nil
     :hook
-    (emacs-startup-hook . minibuffer-electric-default-mode))
+    (after-init-hook . minibuffer-electric-default-mode))
 
   (use-package mb-depth
     :ensure nil
     :custom
     (minibuffer-depth-indicator-function (lambda (depth) (format "[%2d] " depth)))
     :hook
-    (emacs-startup-hook . minibuffer-depth-indicate-mode))
+    (after-init-hook . minibuffer-depth-indicate-mode))
 #+end_src
 ** autorevert [built-in]
 #+begin_src emacs-lisp
