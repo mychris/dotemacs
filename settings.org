@@ -2631,7 +2631,8 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (defun +c-mode-setup ()
       (lsp-maybe)
       (display-fill-column-indicator-mode) 
-      (setq-local indent-tabs-mode nil))
+      (setq-local indent-tabs-mode nil)
+      (modify-syntax-entry ?_ "w"))
     (lsp-maybe-add-predicate 'c-mode #'lsp-maybe-active-if-compile-commands-in-projectile-root)
     :general
     (emacs-map
@@ -2732,6 +2733,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       (setq-local fill-column 80)
       (setq-local show-trailing-whitespace t)
       (display-fill-column-indicator-mode 1)
+      (modify-syntax-entry ?- "w")
       (flycheck-mode 1)
       (company-mode 1))
     :hook
