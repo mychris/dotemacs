@@ -32,13 +32,19 @@ This is mostly use-package and local utilities which are used throught the confi
     (general-create-definer evil-nvmap :states '(normal visual))
 
     (general-create-definer buffer-local-leader
-      :states 'normala
+      :states 'normal
       :keymaps 'override
       :prefix "SPC g")
     (general-create-definer system-local-leader
       :states 'normal
       :keymaps 'override
       :prefix "SPC s")
+    (general-create-definer major-mode-leader
+      :states 'normal
+      :prefix "SPC w")
+    (general-create-definer inspect-leader
+      :states 'normal
+      :prefix "SPC ,")
     (general-create-definer c-x-leader
       :states 'normal
       :keymaps 'override
@@ -121,7 +127,9 @@ This is mostly use-package and local utilities which are used throught the confi
   (c-x-leader
     "s" #'save-buffer
     "k" #'kill-buffer
+    "c" #'save-buffers-kill-terminal
     "f" #'find-file
+    "x" #'execute-extended-command
     "b" #'switch-to-buffer)
 
   (setq
@@ -1074,6 +1082,11 @@ This is mostly use-package and local utilities which are used throught the confi
     (which-key-add-key-based-replacements "C-x a" "abbrev prefix")
     (which-key-add-key-based-replacements "C-x t" "tab-bar prefix")
     (which-key-add-key-based-replacements "C-x C-k" "kmacro prefix")
+    (which-key-add-key-based-replacements "SPC f" "link-hint prefix")
+    (which-key-add-key-based-replacements "SPC g" "buffer-local-leader")
+    (which-key-add-key-based-replacements "SPC s" "system-local-leader")
+    (which-key-add-key-based-replacements "SPC ," "inspect-leader")
+    (which-key-add-key-based-replacements "SPC w" "major-mode-leader")
     (which-key-add-key-based-replacements "SPC g e" "next-error prefix")
     (which-key-add-key-based-replacements "SPC g h" "hi-lock prefix")
     (which-key-add-key-based-replacements "g ." "evil-mc prefix")
@@ -2307,7 +2320,10 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
           (user-error "No identifier here"))))
 
     (unless (fboundp 'xref-find-definitions-at-mouse)
-      (defalias 'xref-find-definitions-at-mouse '+xref-find-definitions-at-mouse)))
+      (defalias 'xref-find-definitions-at-mouse '+xref-find-definitions-at-mouse))
+    :general
+    (inspect-leader
+     "?" #'xref-find-reference))
 #+end_src
 ** yasnippet - A template system for Emacs
 #+begin_src emacs-lisp
