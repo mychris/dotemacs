@@ -1942,7 +1942,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       (add-hook 'emacs-startup-hook #'+initialize-fonts))
      ((and (eq system-type 'gnu/linux) (daemonp) (getenv "DISPLAY"))
       ;; daemon running on GNU/Linux with X
-      (add-hook 'server-after-make-frame-hook #'(lambda () (when windown-system (+initialize-fonts))))))
+      (add-hook 'server-after-make-frame-hook #'(lambda () (when window-system (+initialize-fonts))))))
     (set-face-background 'glyphless-char "red")
     :general
     (emacs-map
