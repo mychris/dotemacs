@@ -2331,7 +2331,10 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :ensure t
     :commands (yas-minor-mode
                yas-reload-all
-               yas-expand-snippet)
+               yas-expand-snippet
+               yas-new-snippet
+               yas-insert-snippet
+               yas-visit-snippet-file)
     :custom
     (yas-snippet-dirs
      `(,(file-name-as-directory (expand-file-name "snippets" user-emacs-directory))))
