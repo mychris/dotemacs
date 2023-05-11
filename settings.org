@@ -403,13 +403,6 @@ This is mostly use-package and local utilities which are used throught the confi
                           "C-<right>" #'evil-forward-word-begin
                           "C-w" evil-window-map)))
     :general
-    (evil-nmap
-      'view-mode-map
-      :no-autoload t
-      "SPC" #'View-scroll-page-forward
-      "DEL" #'View-scroll-page-backward
-      "d" #'View-scroll-page-forward
-      "u" #'View-scroll-page-backward)
     (evil-emap
       :keymaps '(gdb-breakpoints-mode-map
                  gdb-registers-mode-map
@@ -1676,7 +1669,12 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       'view-mode-map
       :no-autoload t
       "n" #'next-line
-      "p" #'previous-line))
+      "p" #'previous-line)
+    (evil-nmap
+      'view-mode-map
+      :no-autoload t
+      "d" #'View-scroll-page-forward
+      "u" #'View-scroll-page-backward))
 #+end_src
 ** link-hint - Use avy to open, copy, etc. visible links
 #+begin_src emacs-lisp
