@@ -257,13 +257,12 @@ This is mostly use-package and local utilities which are used throught the confi
 ** Line numbers
 #+begin_src emacs-lisp
   (use-package display-line-numbers
-    :disabled t ;; For now, try to life without it, performance degradation is sometimes too bad.
     :ensure nil
     :delight (display-line-numbers-mode)
     :commands (display-line-numbers-mode
                global-display-line-numbers-mode)
     :custom
-    (display-line-numbers-type t)
+    (display-line-numbers-type 'relative)
     (display-line-numbers-width-start t)
     (display-line-numbers-grow-only t)
     :init
