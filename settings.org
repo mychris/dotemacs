@@ -552,7 +552,7 @@ This is mostly use-package and local utilities which are used throught the confi
     (emacs-map
       :no-autoload t
       "H-f" #'+focus-minibuffer-or-completion
-      "C-x k" #'+kill-buffer-save
+      [remap kill-buffer] #'+kill-buffer-save
       "C-x K" #'+kill-other-buffer
       "C-x C-o" #'+switch-to-minibuffer-window)
     (emacs-map
