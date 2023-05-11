@@ -29,7 +29,14 @@ This is mostly use-package and local utilities which are used throught the confi
     (general-create-definer evil-omap :states 'operator)
     (general-create-definer evil-rmap :states 'replace)
     (general-create-definer evil-iemap :states '(insert emacs))
-    (general-create-definer evil-nvmap :states '(normal visual)))
+    (general-create-definer evil-nvmap :states '(normal visual))
+
+    (general-create-definer buffer-local-leader
+      :states 'normal
+      :prefix "SPC g")
+    (general-create-definer system-local-leader
+      :states 'normal
+      :prefix "SPC s"))
 
   (eval-and-compile
     (defvar user-emacs-cache-directory)) ;; from init.el
@@ -738,13 +745,14 @@ This is mostly use-package and local utilities which are used throught the confi
     (consult-async-input-throttle 0.8)
     (consult-narrow-key ">")
     :general
+    (buffer-local-leader
+      ":" #'consult-goto-line
+      ";" #'consult-goto-line
+      "l" #'consult-line
+      "s" #'consult-isearch-history
+      "m" #'consult-mark
+      "i" #'consult-imenu)
     (emacs-map
-      "M-g ;" #'consult-goto-line
-      "M-g :" #'consult-goto-line
-      "M-g l" #'consult-line
-      "M-g s" #'consult-isearch-history
-      "M-g m" #'consult-mark
-      [remap imenu] #'consult-imenu
       "M-X" #'consult-mode-command
       "M-s y" #'consult-yank-from-kill-ring
       "M-s g" #'consult-ripgrep
@@ -1062,8 +1070,8 @@ This is mostly use-package and local utilities which are used throught the confi
     (which-key-add-key-based-replacements "C-x a" "abbrev prefix")
     (which-key-add-key-based-replacements "C-x t" "tab-bar prefix")
     (which-key-add-key-based-replacements "C-x C-k" "kmacro prefix")
-    (which-key-add-key-based-replacements "M-g e" "next-error prefix")
-    (which-key-add-key-based-replacements "M-g h" "hi-lock prefix")
+    (which-key-add-key-based-replacements "SPC g e" "next-error prefix")
+    (which-key-add-key-based-replacements "SPC g h" "hi-lock prefix")
     (which-key-add-key-based-replacements "g ." "evil-mc prefix")
     (which-key-add-key-based-replacements "SPC c" "bookmark prefix")
     :hook
@@ -1303,19 +1311,20 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       (interactive nil hi-lock-mode)
       (unhighlight-regexp t))
     :general
-    (emacs-map
+    (buffer-local-leader
       'hi-lock-map
       :no-autoload t
-      "M-g h i" #'hi-lock-find-patterns
-      "M-g h l" #'highlight-lines-matching-regexp
-      "M-g h p" #'highlight-phrase
-      "M-g h h" #'highlight-regexp
-      "M-g h r" #'unhighlight-regexp
-      "M-g h b" #'hi-lock-write-interactive-patterns
-      "M-g h ." #'+highlight-region-or-symbol
-      "M-g h ," #'+unhighlight-region-or-symbol
-      "M-g h U" #'+unhighlight-all
-      "M-g h q" #'+unhighlight-all
+      "h i" #'hi-lock-find-patterns
+      "h l" #'highlight-lines-matching-regexp
+      "h p" #'highlight-phrase
+      "h h" #'highlight-regexp
+      "h r" #'unhighlight-regexp
+      "h b" #'hi-lock-write-interactive-patterns
+      "h ." #'+highlight-region-or-symbol
+      "h ," #'+unhighlight-region-or-symbol
+      "h U" #'+unhighlight-all
+      "h q" #'+unhighlight-all)
+    (emacs-map
       "C-x w i" nil
       "C-x w l" nil
       "C-x w p" nil
@@ -1565,13 +1574,10 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :custom
     (avy-keys (list ?h ?t ?n ?s ?d ?u ?e ?o ?a))
     :general
-    (emacs-map
-      "M-g g" #'avy-goto-line
-      "M-g M-g" #'avy-goto-line
-      "M-g c" #'avy-goto-char
-      "M-g M-c" #'avy-goto-char
-      "M-g f" #'avy-goto-word-0
-      "M-g M-f" #'avy-goto-word-0)
+    (buffer-local-leader
+      "g" #'avy-goto-line
+      "c" #'avy-goto-char
+      "f" #'avy-goto-word-0)
     (evil-nmap
       "M-f" #'avy-goto-line))
 #+end_src
@@ -1751,12 +1757,11 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
         (call-interactively #'occur-mode-goto-occurrence)
         (select-window window)))
     :general
-    (emacs-map
-      "M-%" #'query-replace
-      "C-%" #'replace-string
-      "C-M-%" #'query-replace-regexp
-      "M-g o" #'occur
-      "M-g O" #'multi-occur)
+    (buffer-local-leader
+      "&" #'query-replace
+      "%" #'replace-string
+      "o" #'occur
+      "O" #'multi-occur)
     (emacs-map
       'occur-mode-map
       "C-a" #'+occur-mode-move-beginning-of-line
@@ -2563,10 +2568,10 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :custom
     (next-error-recenter '(4))
     :general
-    (emacs-map
-      "M-g e n" #'next-error
-      "M-g e p" #'previous-error
-      "M-g e b" #'next-error-select-buffer))
+    (buffer-local-leader
+      "e n" #'next-error
+      "e p" #'previous-error
+      "e b" #'next-error-select-buffer))
 #+end_src
 ** gdb-mi [built-in] - User Interface for running GDB
 #+begin_src emacs-lisp
