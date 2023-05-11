@@ -32,11 +32,17 @@ This is mostly use-package and local utilities which are used throught the confi
     (general-create-definer evil-nvmap :states '(normal visual))
 
     (general-create-definer buffer-local-leader
-      :states 'normal
+      :states 'normala
+      :keymaps 'override
       :prefix "SPC g")
     (general-create-definer system-local-leader
       :states 'normal
-      :prefix "SPC s"))
+      :keymaps 'override
+      :prefix "SPC s")
+    (general-create-definer c-x-leader
+      :states 'normal
+      :keymaps 'override
+      :prefix "DEL"))
 
   (eval-and-compile
     (defvar user-emacs-cache-directory)) ;; from init.el
@@ -112,6 +118,11 @@ This is mostly use-package and local utilities which are used throught the confi
     "<C-right>" nil
     "<M-right>" nil
     "<C-M-right>" nil)
+  (c-x-leader
+    "s" #'save-buffer
+    "k" #'kill-buffer
+    "f" #'find-file
+    "b" #'switch-to-buffer)
 
   (setq
    initial-buffer-choice nil
@@ -457,7 +468,7 @@ This is mostly use-package and local utilities which are used throught the confi
     (evil-mode-hook . (lambda ()
                         (when (and (bound-and-true-p evil-mode)
                                    (fboundp 'evilem-default-keybindings))
-                          (evilem-default-keybindings "SPC")))))
+                          (evilem-default-keybindings "C-a")))))
 #+end_src
 ** my-evil-commands - Additional evil commands
 #+begin_src emacs-lisp
@@ -743,14 +754,14 @@ This is mostly use-package and local utilities which are used throught the confi
       ";" #'consult-goto-line
       "l" #'consult-line
       "s" #'consult-isearch-history
-      "m" #'consult-mark
-      "i" #'consult-imenu)
+      "m" #'consult-mark)
+    (system-local-leader
+      "y" #'consult-yank-from-kill-ring
+      "g" #'consult-ripgrep
+      "G" #'consult-grep
+      "f" #'consult-find)
     (emacs-map
       "M-X" #'consult-mode-command
-      "M-s y" #'consult-yank-from-kill-ring
-      "M-s g" #'consult-ripgrep
-      "M-s G" #'consult-grep
-      "M-s f" #'consult-find
       [remap switch-to-buffer] #'consult-buffer)
     (emacs-map
       'consult-narrow-map
@@ -764,8 +775,8 @@ This is mostly use-package and local utilities which are used throught the confi
   (use-package consult-imenu
     :ensure nil ;; part of consult
     :general
-    (emacs-map
-      "M-s i" #'consult-imenu))
+    (buffer-local-leader
+      "i" #'consult-imenu))
 
   (use-package consult-register
     :ensure nil ;; part of consult
@@ -3122,6 +3133,8 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
       (magit-restore-window-configuration)
       (mapc #'kill-buffer (magit-mode-get-buffers)))
     :general
+    (c-x-leader
+      "g" #'magit-status)
     (emacs-map 'magit-status-mode-map
       "q" #'+kill-magit-buffers)
     (emacs-map 'magit-section-mode-map
