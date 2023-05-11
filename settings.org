@@ -874,17 +874,17 @@ This is mostly use-package and local utilities which are used throught the confi
        (kill-ring (styles . (basic substring orderless)))
        (consult-location (styles . (basic substring orderless)))))
     :config
-    (defun my/orderless-literal-style-dispatcher (pattern _index _total)
+    (defun +orderless-literal-style-dispatcher (pattern _index _total)
       "Style dispatcher which recognizes patterns which have an \"=\" as suffix and
   dispatches those to the orderless-literal style."
       (when (string-suffix-p "=" pattern)
         `(orderless-literal . ,(substring pattern 0 -1))))
-    (defun my/orderless-initialism-style-dispatcher (pattern _index _total)
+    (defun +orderless-initialism-style-dispatcher (pattern _index _total)
       "Style dispatchter which recognizes patterns which have an \";\" as suffix and
-  dispatches those to the orderless-literal style."
+  dispatches those to the orderless-initialism style."
       (when (string-suffix-p ";" pattern)
         `(orderless-initialism . ,(substring pattern 0 -1))))
-    (defun my/orderless-flex-style-dispatcher (pattern _index _total)
+    (defun +orderless-flex-style-dispatcher (pattern _index _total)
       "Style dispatcher which recognizes patterns which have an \",\" as suffix and
   dispatches those to the orderless-flex style."
       (when (string-suffix-p "," pattern)
@@ -896,9 +896,9 @@ This is mostly use-package and local utilities which are used throught the confi
             orderless-regexp
             orderless-flex))
     (setq orderless-style-dispatchers
-          '(my/orderless-literal-style-dispatcher
-            my/orderless-initialism-style-dispatcher
-            my/orderless-flex-style-dispatcher))
+          '(+orderless-literal-style-dispatcher
+            +orderless-initialism-style-dispatcher
+            +orderless-flex-style-dispatcher))
     :general
     (emacs-map
       'minibuffer-local-completion-map
