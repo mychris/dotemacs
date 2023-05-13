@@ -41,7 +41,7 @@ This is mostly use-package and local utilities which are used throught the confi
       :prefix "SPC s")
     (general-create-definer major-mode-leader
       :states 'normal
-      :prefix "SPC w")
+      :prefix "SPC TAB")
     (general-create-definer inspect-leader
       :states 'normal
       :prefix "SPC ,")
@@ -124,6 +124,9 @@ This is mostly use-package and local utilities which are used throught the confi
     "<C-right>" nil
     "<M-right>" nil
     "<C-M-right>" nil)
+
+  ;; Use the c-x leader
+  ;; For now, disable the old bindings to get used to it
   (c-x-leader
     "s" #'save-buffer
     "k" #'kill-buffer
@@ -131,6 +134,12 @@ This is mostly use-package and local utilities which are used throught the confi
     "f" #'find-file
     "x" #'execute-extended-command
     "b" #'switch-to-buffer)
+  (emacs-map
+    "C-x C-s" nil
+    "C-x C-k" nil
+    "C-x C-f" nil
+    "C-x C-c" nil
+    "C-x C-x" nil)
 
   (setq
    initial-buffer-choice nil
@@ -412,22 +421,29 @@ This is mostly use-package and local utilities which are used throught the confi
     (evil-select-search-module 'evil-search-module 'isearch)
     (evil-set-initial-state 'help-mode 'normal)
     :hook
-    (emacs-startup-hook . evil-mode)
-    (evil-mode-hook . (lambda ()
-                        (evil-imap
-                          'eshell-mode-map
-                          "<left>" #'evil-backward-char
-                          "<right>" #'evil-forward-char
-                          "C-<left>" #'evil-backward-word-begin
-                          "C-<right>" #'evil-forward-word-begin
-                          "C-w" evil-window-map)))
+    (emacs-startup-hook . evil-mode))
+
+  ;; Use an additional use-package declaration.
+  ;; I think general has some problems with the keybindings.
+  ;; They are not always picked up.
+  (use-package evil
+    :after (:all evil)
     :general
+    (evil-nmap
+      "SPC w" '(:keymap evil-window-map)
+      "C-w" nil)
     (evil-emap
       :keymaps '(gdb-breakpoints-mode-map
                  gdb-registers-mode-map
                  gdb-locals-mode-map
                  gdb-frames-mode-map)
-      "C-w" '(:keymap evil-window-map)))
+      "SPC w" '(:keymap evil-window-map))
+    (evil-imap
+      'eshell-mode-map
+      "<left>" #'evil-backward-char
+      "<right>" #'evil-forward-char
+      "C-<left>" #'evil-backward-word-begin
+      "C-<right>" #'evil-forward-word-begin))
 #+end_src
 ** evil-org - evil keybindings for org-mode
 #+begin_src emacs-lisp
@@ -1086,11 +1102,11 @@ This is mostly use-package and local utilities which are used throught the confi
     (which-key-add-key-based-replacements "SPC g" "buffer-local-leader")
     (which-key-add-key-based-replacements "SPC s" "system-local-leader")
     (which-key-add-key-based-replacements "SPC ," "inspect-leader")
-    (which-key-add-key-based-replacements "SPC w" "major-mode-leader")
     (which-key-add-key-based-replacements "SPC g e" "next-error prefix")
     (which-key-add-key-based-replacements "SPC g h" "hi-lock prefix")
     (which-key-add-key-based-replacements "g ." "evil-mc prefix")
     (which-key-add-key-based-replacements "SPC c" "bookmark prefix")
+    (which-key-add-key-based-replacements "SPC w" "window prefix")
     :hook
     (emacs-startup-hook . which-key-mode))
 
