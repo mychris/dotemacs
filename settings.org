@@ -994,8 +994,15 @@ This is mostly use-package and local utilities which are used throught the confi
     :ensure nil
     :general
     (emacs-map
-      "C-x t l" #'tab-next
-      "C-x t h" #'tab-previous))
+      "C-x t" nil)
+    (evil-emap
+      "C-x t" '(:keymap tab-prefix-map))
+    (evil-nmap
+      "SPC t" '(:keymap tab-prefix-map))
+    (emacs-map
+      'tab-prefix-map
+      "l" #'tab-next
+      "h" #'tab-previous))
 #+end_src
 * Help / Discovery / Cheat sheets
 ** help [built-in]
