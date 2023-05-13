@@ -31,6 +31,7 @@ This is mostly use-package and local utilities which are used throught the confi
     (general-create-definer evil-iemap :states '(insert emacs))
     (general-create-definer evil-nvmap :states '(normal visual))
 
+    ;; Leader keys to get rid of C- and M- prefix keys.
     (general-create-definer buffer-local-leader
       :states 'normal
       :keymaps 'override
@@ -39,12 +40,13 @@ This is mostly use-package and local utilities which are used throught the confi
       :states 'normal
       :keymaps 'override
       :prefix "SPC s")
-    (general-create-definer major-mode-leader
+    (general-create-definer mode-action-leader
       :states 'normal
-      :prefix "SPC TAB")
+      :prefix "SPC ESC")
     (general-create-definer inspect-leader
       :states 'normal
       :prefix "SPC ,")
+    ;; Try to replace as many C-x key bindings as possible
     (general-create-definer c-x-leader
       :states 'normal
       :keymaps 'override
@@ -128,18 +130,37 @@ This is mostly use-package and local utilities which are used throught the confi
   ;; Use the c-x leader
   ;; For now, disable the old bindings to get used to it
   (c-x-leader
+    :no-autoload t
     "s" #'save-buffer
+    "S" #'save-some-buffers
     "k" #'kill-buffer
     "c" #'save-buffers-kill-terminal
     "f" #'find-file
     "x" #'execute-extended-command
-    "b" #'switch-to-buffer)
+    "b" #'switch-to-buffer
+    "d" #'dired)
   (emacs-map
+    :no-autoload t
+    :keymaps 'global
     "C-x C-s" nil
-    "C-x C-k" nil
+    "C-x s" nil
+    "C-x k" nil
     "C-x C-f" nil
     "C-x C-c" nil
-    "C-x C-x" nil)
+    "M-x" nil
+    "C-x b" nil
+    "C-x d" nil)
+  (evil-emap
+    :no-autoload t
+    :keymaps 'global
+    "C-x C-s" #'save-buffer
+    "C-x s" #'save-some-buffers
+    "C-x k" #'kill-buffer
+    "C-x C-c" #'save-buffers-kill-terminal
+    "C-x C-f" #'find-file
+    "M-x" #'execute-extended-command
+    "C-x b" #'switch-to-buffer
+    "C-x d" #'dired)
 
   (setq
    initial-buffer-choice nil
@@ -510,10 +531,12 @@ This is mostly use-package and local utilities which are used throught the confi
     (evil-nmap
       "g ;" #'+evil-goto-last-change-center
       "g ," #'+evil-goto-last-change-reverse-center)
+    (evil-nmap
+      'evil-window-map
+      "m" '(+switch-to-minibuffer-window :no-autoload t))
     (evil-mmap
       "`" #'+evil-goto-mark-center
-      "'" #'+evil-goto-mark-line-center
-      "C-w m" '(+switch-to-minibuffer-window :no-autoload t)))
+      "'" #'+evil-goto-mark-line-center))
 #+end_src
 * Interface enhancements
 ** Minibuffer [built-in]
@@ -1234,7 +1257,9 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       (dired-mouse-find-file event #'find-file #'find-alternate-file))
     (put 'dired-find-alternate-file 'disabled nil)
     :general
-    (emacs-map
+    (c-x-leader
+      "D" #'dired-jump)
+    (evil-emap
       "C-x D" #'dired-jump)
     (emacs-map
       'dired-mode-map
@@ -2348,12 +2373,46 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
         (if identifier
             (xref-find-definitions identifier)
           (user-error "No identifier here"))))
-
     (unless (fboundp 'xref-find-definitions-at-mouse)
       (defalias 'xref-find-definitions-at-mouse '+xref-find-definitions-at-mouse))
+    (defun +elisp-describe-thing-at-point ()
+      "Show the documentation of the Elisp function and variable near point.
+        This checks in turn:
+        -- for a function name where point is
+        -- for a variable name where point is
+        -- for a surrounding function call
+        "
+      (interactive)
+      (let (sym)
+        ;; sigh, function-at-point is too clever.  we want only the first half.
+        (cond ((setq sym (ignore-errors
+                           (with-syntax-table emacs-lisp-mode-syntax-table
+                             (save-excursion
+                               (or (not (zerop (skip-syntax-backward "_w")))
+                                   (eq (char-syntax (char-after (point))) ?w)
+                                   (eq (char-syntax (char-after (point))) ?_)
+                                   (forward-sexp -1))
+                               (skip-chars-forward "`'")
+                               (let ((obj (read (current-buffer))))
+                                 (and (symbolp obj) (fboundp obj) obj))))))
+               (describe-function sym))
+              ((setq sym (variable-at-point)) (describe-variable sym))
+              ;; now let it operate fully -- i.e. also check the
+              ;; surrounding sexp for a function call.
+              ((setq sym (function-at-point)) (describe-function sym)))))
     :general
+    (evil-nmap
+      'emacs-lisp-mode-map
+      "C-<down-mouse-1>" #'xref-find-definitions-at-mouse
+      "C-<mouse-1>" #'xref-find-definitions-at-mouse
+      "<wheel-left>" #'xref-go-back
+      "<wheel-right>" #'xref-go-forward)
     (inspect-leader
-     "?" #'xref-find-reference))
+      'emacs-lisp-mode-map
+      "/" #'xref-find-reference
+      "?" #'xref-find-definitions
+      "m" #'+elisp-describe-thing-at-point))
+#+end_src
 #+end_src
 ** yasnippet - A template system for Emacs
 #+begin_src emacs-lisp
@@ -2406,7 +2465,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       "C-<down-mouse-1>" #'+lsp-find-definition-at-mouse
       "C-<mouse-1>" #'+lsp-find-definition-at-mouse
       "<wheel-left>" #'xref-go-back
-      "<wheel-right>" #'xref-go-use)
+      "<wheel-right>" #'xref-go-forward)
     :hook
     (lsp-mode-hook . company-mode))
 
@@ -2770,7 +2829,15 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       (flycheck-mode 1)
       (company-mode 1))
     :hook
-    (emacs-lisp-mode-hook . +emacs-lisp-mode-setup))
+    (emacs-lisp-mode-hook . +emacs-lisp-mode-setup)
+    :general
+    (mode-action-leader
+      'emacs-lisp-mode-map
+      "e e" #'eval-last-sexp
+      "e E" #'pp-eval-last-sexp
+      "e b" #'eval-buffer
+      "e d" #'eval-defun
+      "e p" #'eval-print-last-sexp))
 
   (use-package pp
     :ensure nil
@@ -3052,6 +3119,9 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
           (dotimes (_ count)
             (+makefile-join-line 1))))
       :general
+      (emacs-map
+        'makefile-mode-map
+        "C-c C-c" '(comment-dwim :no-autoload t))
       (evil-nmap
         'makefile-mode-map
         "J" #'+evil-makefile-join))
@@ -3186,6 +3256,10 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
     :general
     (c-x-leader
       "g" #'magit-status)
+    (emacs-map
+      "C-x g" nil)
+    (evil-emap
+      "C-x g" #'magit-status)
     (emacs-map 'magit-status-mode-map
       "q" #'+kill-magit-buffers)
     (emacs-map 'magit-section-mode-map
