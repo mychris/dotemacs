@@ -2843,6 +2843,16 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :ensure nil
     :commands (emacs-lisp-mode)
     :config
+    (defun +eval-buffer-force ()
+      "Execute the current buffer as Lisp code.
+  Top-level forms are evaluated with `eval-defun' so that `defvar'
+  and `defcustom' forms reset their default values."
+      (interactive)
+      (save-excursion
+        (goto-char (point-min))
+        (while (not (eobp))
+          (forward-sexp)
+          (eval-defun nil))))
     (defun +emacs-lisp-mode-setup ()
       (setq-local indent-tabs-mode t)
       (setq-local fill-column 80)
@@ -2859,14 +2869,12 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       "e e" #'eval-last-sexp
       "e E" #'pp-eval-last-sexp
       "e b" #'eval-buffer
+      "e B" #'+eval-buffer-force
       "e d" #'eval-defun
       "e p" #'eval-print-last-sexp))
 
   (use-package pp
-    :ensure nil
-    :general
-    (emacs-map
-      [remap eval-last-sexp] #'pp-eval-last-sexp))
+    :ensure nil)
 
   (use-package eldoc
     :ensure nil
