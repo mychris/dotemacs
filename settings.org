@@ -519,6 +519,16 @@ This is mostly use-package and local utilities which are used throught the confi
     :hook
     (evil-mode-hook . evil-escape-mode))
 #+end_src
+** evil-surround - emulate surround.vim from Vim
+#+begin_src emacs-lisp
+  (use-package evil-surround
+    :ensure (evil-surround :pin melpa)
+    :after (:all evil)
+    :commands (evil-surround-mode
+               global-evil-surround-mode)
+    :hook
+    (evil-mode-hook . global-evil-surround-mode))
+#+end_src
 ** evil-easymotion
 #+begin_src emacs-lisp
   (use-package evil-easymotion
