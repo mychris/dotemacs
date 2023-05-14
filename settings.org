@@ -254,6 +254,7 @@ This is mostly use-package and local utilities which are used throught the confi
     :delight (save-place-mode)
     :custom
     (save-place-file (expand-file-name "saveplace" user-emacs-cache-directory))
+    (save-place-limit 2048)
     (save-place-forget-unreadable-files t)
     :hook
     (after-init-hook . save-place-mode))
