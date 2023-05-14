@@ -1741,22 +1741,6 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (emacs-map
       [remap other-window] #'ace-window))
 #+end_src
-** multiple-cursors.el - Multiple cursors for Emacs.
-#+begin_src emacs-lisp
-  (use-package multiple-cursors
-    :disabled t
-    :ensure t
-    :custom
-    (mc/list-file (locate-user-emacs-file ".mc-lists.el"))
-    (mc/max-cursors nil)
-    (mc/always-run-for-all nil)
-    (mc/always-repeat-command nil)
-    :general
-    (emacs-map
-      "M-C-SPC" #'set-rectangular-region-anchor
-      "C->" #'mc/mark-next-like-this
-      "C-<" #'mc/mark-previous-like-this))
-#+end_src
 ** evil-mc - Multiple cursors implementation for evil-mode
 #+begin_src emacs-lisp
   (use-package evil-mc
