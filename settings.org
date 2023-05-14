@@ -131,17 +131,21 @@ This is mostly use-package and local utilities which are used throught the confi
   ;; For now, disable the old bindings to get used to it
   (c-x-leader
     :no-autoload t
+    ":" #'eval-expression
     "s" #'save-buffer
     "S" #'save-some-buffers
     "k" #'kill-buffer
-    "c" #'save-buffers-kill-terminal
+    "ESC -" #'save-buffers-kill-terminal
+    "ESC ESC" #'keyboard-quit
     "f" #'find-file
     "x" #'execute-extended-command
     "b" #'switch-to-buffer
-    "d" #'dired)
+    "d" #'dired
+    "h" '(:keymap help-map))
   (emacs-map
     :no-autoload t
     :keymaps 'global
+    "M-:" nil
     "C-x C-s" nil
     "C-x s" nil
     "C-x k" nil
@@ -149,10 +153,12 @@ This is mostly use-package and local utilities which are used throught the confi
     "C-x C-c" nil
     "M-x" nil
     "C-x b" nil
-    "C-x d" nil)
+    "C-x d" nil
+    "C-h" nil)
   (evil-emap
     :no-autoload t
     :keymaps 'global
+    "M-:" #'eval-expression
     "C-x C-s" #'save-buffer
     "C-x s" #'save-some-buffers
     "C-x k" #'kill-buffer
@@ -160,7 +166,8 @@ This is mostly use-package and local utilities which are used throught the confi
     "C-x C-f" #'find-file
     "M-x" #'execute-extended-command
     "C-x b" #'switch-to-buffer
-    "C-x d" #'dired)
+    "C-x d" #'dired
+    "C-h" '(:keymap help-map))
 
   (setq
    initial-buffer-choice nil
@@ -452,6 +459,7 @@ This is mostly use-package and local utilities which are used throught the confi
     :after (:all evil)
     :general
     (evil-nmap
+      :keymaps 'override
       "SPC w" '(:keymap evil-window-map)
       "C-w" nil)
     (evil-emap
@@ -1037,9 +1045,11 @@ This is mostly use-package and local utilities which are used throught the confi
     (evil-emap
       "C-x t" '(:keymap tab-prefix-map))
     (evil-nmap
+      :keymaps 'override
       "SPC t" '(:keymap tab-prefix-map))
     (emacs-map
       'tab-prefix-map
+      "<escape>" '(keyboard-quit :no-autoload t)
       "l" #'tab-next
       "h" #'tab-previous))
 #+end_src
@@ -1085,7 +1095,8 @@ This is mostly use-package and local utilities which are used throught the confi
                describe-command)
     :general
     (emacs-map
-      "C-h K" #'describe-keymap))
+      'help-map
+      "K" #'describe-keymap))
 #+end_src
 ** info [built-in]
 #+begin_src emacs-lisp
@@ -1197,7 +1208,8 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (free-keys-modifiers '("" "C" "M" "C-M"))
     :general
     (emacs-map
-      "C-h C-k" #'free-keys)
+      'help-map
+      "C-k" #'free-keys)
     (emacs-map
       'free-keys-mode-map
       "q" '(kill-buffer-and-window :no-autoload t))
@@ -2292,6 +2304,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       "M" #'bookmark-set
       "L" #'bookmark-bmenu-list)
     (evil-nmap
+      :keymaps 'override
       "SPC c" '(:keymap bookmark-map)))
 
   (use-package +bookmark
@@ -3291,8 +3304,13 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
       "C-x g" nil)
     (evil-emap
       "C-x g" #'magit-status)
-    (emacs-map 'magit-status-mode-map
-      "q" #'+kill-magit-buffers)
+    (evil-nmap
+      'magit-status-mode-map
+      "q" #'+kill-magit-buffers
+      "J" #'magit-section-forward
+      "K" #'magit-section-backward
+      "[ [" #'magit-section-backward-sibling
+      "] ]" #'magit-section-forward-sibling)
     (emacs-map 'magit-section-mode-map
       "M-1" nil
       "M-2" nil
