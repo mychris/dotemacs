@@ -42,7 +42,7 @@ This is mostly use-package and local utilities which are used throught the confi
       :prefix "SPC s")
     (general-create-definer mode-action-leader
       :states 'normal
-      :prefix "SPC ESC")
+      :prefix "SPC <escape>")
     (general-create-definer inspect-leader
       :states 'normal
       :prefix "SPC ,")
@@ -135,8 +135,8 @@ This is mostly use-package and local utilities which are used throught the confi
     "s" #'save-buffer
     "S" #'save-some-buffers
     "k" #'kill-buffer
-    "ESC -" #'save-buffers-kill-terminal
-    "ESC ESC" #'keyboard-quit
+    "<escape> -" #'save-buffers-kill-terminal
+    "<escape> <escape>" #'keyboard-quit
     "f" #'find-file
     "x" #'execute-extended-command
     "b" #'switch-to-buffer
