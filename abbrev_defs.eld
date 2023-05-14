@@ -23,6 +23,7 @@
     ("ptrdifft" "ptrdiff_t" nil :count 0)
     ("inclued" "include" nil :count 0)
     ("uinon" "union" nil :count 0)
+    ("ii" "int i" nil :count 0)
    ))
 
 (define-abbrev-table 'c++-mode-abbrev-table
@@ -49,6 +50,7 @@
     ("ptrdifft" "ptrdiff_t" nil :count 0)
     ("inclued" "include" nil :count 0)
     ("uinon" "union" nil :count 0)
+    ("ii" "int i" nil :count 0)
    ))
 
 
