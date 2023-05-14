@@ -2277,6 +2277,13 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       "L" #'bookmark-bmenu-list)
     (evil-nmap
       "SPC c" '(:keymap bookmark-map)))
+
+  (use-package +bookmark
+    :ensure nil
+    :after (:all bookmark)
+    :demand t
+    :config
+    (+bookmark-setup))
 #+end_src
 * Programming generic
 ** abbrev [built-in] - abbrev mode commands for Emacs
