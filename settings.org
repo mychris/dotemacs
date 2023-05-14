@@ -552,6 +552,27 @@ This is mostly use-package and local utilities which are used throught the confi
                                    (fboundp 'evilem-default-keybindings))
                           (evilem-default-keybindings "C-a")))))
 #+end_src
+** evil-mc - Multiple cursors implementation for evil-mode
+#+begin_src emacs-lisp
+  (use-package evil-mc
+    :ensure (evil-mc :pin melpa)
+    :after (:all evil)
+    :delight (evil-mc-mode)
+    :commands (evil-mc-mode
+               global-evil-mc-mode)
+    :init
+    ;; (setq-default evil-mc-one-cursor-show-mode-line-text nil)
+    :general
+    (emacs-map
+      "C->" #'evil-mc-make-cursor-move-next-line
+      "C-<" #'evil-mc-make-cursor-move-prev-line)
+    (evil-nmap
+      'evil-mc-key-map
+      "j" #'evil-mc-make-cursor-move-next-line
+      "k" #'evil-mc-make-cursor-move-prev-line)
+    :hook
+    (evil-mode-hook . global-evil-mc-mode))
+#+end_src
 * Interface enhancements
 ** Minibuffer [built-in]
 #+begin_src emacs-lisp
@@ -1740,22 +1761,6 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :general
     (emacs-map
       [remap other-window] #'ace-window))
-#+end_src
-** evil-mc - Multiple cursors implementation for evil-mode
-#+begin_src emacs-lisp
-  (use-package evil-mc
-    :ensure (evil-mc :pin melpa)
-    :after (:all evil)
-    :delight (evil-mc-mode)
-    :commands (global-evil-mc-mode)
-    :init
-    ;; (setq-default evil-mc-one-cursor-show-mode-line-text nil)
-    :general
-    (emacs-map
-      "C->" #'evil-mc-make-cursor-move-next-line
-      "C-<" #'evil-mc-make-cursor-move-prev-line)
-    :hook
-    (evil-mode-hook . global-evil-mc-mode))
 #+end_src
 ** view.el [built-in] - peruse file or buffer without editing
 #+begin_src emacs-lisp
