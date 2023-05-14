@@ -471,7 +471,17 @@ This is mostly use-package and local utilities which are used throught the confi
     :after (:all evil)
     :demand t
     :config
-    (+evil-setup))
+    (+evil-setup)
+    :general
+    (evil-nmap
+      "g ;" #'+evil-goto-last-change-center
+      "g ," #'+evil-goto-last-change-reverse-center)
+    (emacs-map
+      'evil-window-map
+      "m" '(+switch-to-minibuffer-window :no-autoload t))
+    (evil-mmap
+      "`" #'+evil-goto-mark-center
+      "'" #'+evil-goto-mark-line-center))
 #+end_src
 ** evil-org - evil keybindings for org-mode
 #+begin_src emacs-lisp
@@ -521,22 +531,6 @@ This is mostly use-package and local utilities which are used throught the confi
                         (when (and (bound-and-true-p evil-mode)
                                    (fboundp 'evilem-default-keybindings))
                           (evilem-default-keybindings "C-a")))))
-#+end_src
-** my-evil-commands - Additional evil commands
-#+begin_src emacs-lisp
-  (use-package my-evil-commands
-    :ensure nil
-    :after (:all evil)
-    :general
-    (evil-nmap
-      "g ;" #'+evil-goto-last-change-center
-      "g ," #'+evil-goto-last-change-reverse-center)
-    (evil-nmap
-      'evil-window-map
-      "m" '(+switch-to-minibuffer-window :no-autoload t))
-    (evil-mmap
-      "`" #'+evil-goto-mark-center
-      "'" #'+evil-goto-mark-line-center))
 #+end_src
 * Interface enhancements
 ** Minibuffer [built-in]
