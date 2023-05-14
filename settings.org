@@ -1711,42 +1711,6 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (evil-nmap
       "M-f" #'avy-goto-line))
 #+end_src
-** smartparens - Automatic insertion, wrapping and paredit-like navigation with user defined pairs.
-#+begin_src emacs-lisp
-  (use-package smartparens
-    :ensure (smartparens :pin melpa)
-    :delight (smartparens-mode)
-    :commands (smartparens-mode
-               sp-beginning-of-sexp
-               sp-end-of-sexp)
-    :custom
-    (sp-autoinsert-pair t)
-    (sp-escape-quotes-after-insert nil)
-    :config
-    (defun +sp-beginning-of-sexp (&optional ARG)
-      "Like `sp-beginning-of-sexp` but a bit better.
-  Falls back to `backward-sexp` if point does not move."
-      (interactive "^P")
-      (let ((current-point (point)))
-        (sp-beginning-of-sexp ARG)
-        (when (= (point) current-point)
-          (backward-sexp ARG))))
-    (defun +sp-end-of-sexp (&optional ARG)
-      "Like `sp-beginning-of-sexp` but a bit better.
-  Falls back to `forward-sexp` if point does not move."
-      (interactive "^P")
-      (let ((current-point (point)))
-        (sp-end-of-sexp ARG)
-        (when (= (point) current-point)
-          (forward-sexp ARG))))
-    :general
-    (emacs-map
-      :no-autoload t
-      [remap backward-sexp] #'+sp-beginning-of-sexp
-      [remap forward-sexp] #'+sp-end-of-sexp)
-    :hook
-    (prog-mode-hook . smartparens-mode))
-#+end_src
 ** ace-window - Quickly switch windows
 #+begin_src emacs-lisp
   (use-package ace-window
