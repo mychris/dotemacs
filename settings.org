@@ -1305,6 +1305,14 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       "C-<mouse-1>" #'dired-mouse-find-file-other-window
       "C-<down-mouse-1>" #'dired-mouse-find-file-other-window))
 #+end_src
+** colored-dired - More colors for dired
+#+begin_src emacs-lisp
+  (use-package colored-dired
+    :ensure nil
+    :commands (colored-dired-setup-font-locking)
+    :hook
+    (dired-mode-hook . colored-dired-setup-font-locking))
+#+end_src
 ** neotree - A tree plugin like NerdTree for Vim
 #+begin_src emacs-lisp
   (use-package neotree
