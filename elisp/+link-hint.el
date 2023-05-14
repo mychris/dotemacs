@@ -74,7 +74,8 @@ well-formed."
       (ignore-errors (beginning-of-line))
       (when (looking-at-p +link-hint--c-include-regexp)
 	(re-search-forward +link-hint--c-include-regexp (point-max) t)
-	(when (= (match-beginning 1) pt)
+	(when (and (= (match-beginning 1) pt)
+		   (button-at (match-beginning 1)))
 	  (button-label (button-at (match-beginning 1))))))))
 
 (link-hint-define-type 'c-include
