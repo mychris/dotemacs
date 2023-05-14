@@ -424,6 +424,7 @@ This is mostly use-package and local utilities which are used throught the confi
     (evil-want-C-u-scroll t)
     (evil-want-C-i-jump nil)
     (evil-undo-system #'undo-tree)
+    (evil-want-minibuffer t)
     :config
     (defun +evil-set-cursor (orig-fun &rest args)
       (if (display-graphic-p)
@@ -741,6 +742,17 @@ This is mostly use-package and local utilities which are used throught the confi
       "C-k" #'vertico-previous
       "C-n" #'vertico-next
       "C-j" #'vertico-next)
+    (evil-nmap
+      'vertico-map
+      "<escape>" #'abort-recursive-edit
+      "k" #'vertico-previous
+      "j" #'vertico-next
+      "{" #'vertico-scroll-down
+      "}" #'vertico-scroll-up
+      "C-u" #'vertico-scroll-up
+      "C-d" #'vertico-scroll-down
+      "g g" #'vertico-first
+      "G" #'vertico-last)
     :hook
     (emacs-startup-hook . vertico-mode))
 
