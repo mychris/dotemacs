@@ -827,7 +827,8 @@ This is mostly use-package and local utilities which are used throught the confi
                                     (symbol (vertico-sort-function . vertico-sort-alpha))))
     :hook
     (vertico-mode-hook . (lambda ()
-                           (vertico-multiform-mode (if (bound-and-true-p vertico-mode) 1 -1)))))
+                           (vertico-multiform-mode
+                            (if (bound-and-true-p vertico-mode) 1 -1)))))
 #+end_src
 ** Consult - Consulting completing-read
 #+begin_src emacs-lisp
@@ -835,12 +836,25 @@ This is mostly use-package and local utilities which are used throught the confi
     :ensure (consult :pin melpa)
     :functions (consult-completion-in-region
                 consult-register-format)
+    :commands (consult-goto-line
+               consult-line
+               consult-isearch-history
+               consult-mark
+               consult-yank-from-kill-ring
+               consult-ripgrep
+               consult-grep
+               consult-find
+               consult-man
+               consult-buffer
+               consult-narrow-help
+               consult-bookmark)
     :init
-    (setq-default completion-in-region-function #'(lambda (&rest args)
-                                                    (apply (if vertico-mode
-                                                               #'consult-completion-in-region
-                                                             #'completion--in-region)
-                                                           args))
+    (setq-default completion-in-region-function
+                  #'(lambda (&rest args)
+                      (apply (if vertico-mode
+                                 #'consult-completion-in-region
+                               #'completion--in-region)
+                             args))
                   register-preview-function #'consult-register-format)
     :custom
     (consult-line-numbers-widen t)
@@ -848,6 +862,10 @@ This is mostly use-package and local utilities which are used throught the confi
     (consult-async-input-debounce 0.5)
     (consult-async-input-throttle 0.8)
     (consult-narrow-key ">")
+    (consult-ripgrep-args
+     "rg --null --line-buffered --color=never --max-columns=1000 \
+      --path-separator / --no-ignore-vcs --smart-case --no-heading \
+      --with-filename --line-number --search-zip")
     :general
     (buffer-local-leader
       ":" #'consult-goto-line
@@ -859,15 +877,17 @@ This is mostly use-package and local utilities which are used throught the confi
       "y" #'consult-yank-from-kill-ring
       "g" #'consult-ripgrep
       "G" #'consult-grep
-      "f" #'consult-find)
+      "f" #'consult-find
+      "m" #'consult-man)
+    (c-x-leader
+      "X" #'consult-mode-command)
     (emacs-map
-      "M-X" #'consult-mode-command
       [remap switch-to-buffer] #'consult-buffer)
     (emacs-map
       'consult-narrow-map
       "?" #'consult-narrow-help)
     (evil-nmap
-      [remap bookmark-jump] '(consult-bookmark :no-autoload t)
+      [remap bookmark-jump] #'consult-bookmark
       "g l" #'consult-goto-line)
     :hook
     (embark-collect-mode-hook . consult-preview-at-point-mode))
@@ -889,10 +909,10 @@ This is mostly use-package and local utilities which are used throught the confi
     :ensure t
     :after (:all lsp consult)
     :general
-    (emacs-map
+    (inspect-leader
       'lsp-mode-map
-      "M-s S" #'consult-lsp-symbols
-      "M-s s" #'consult-lsp-file-symbols))
+      "S" #'consult-lsp-symbols
+      "s" #'consult-lsp-file-symbols))
 #+end_src
 ** Marginalia - Enrich existing commands with completion annotations
 #+begin_src emacs-lisp
@@ -1900,7 +1920,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
                rg-dwim-current-dir
                rg-dwim-current-file)
     :custom
-    (rg-command-line-flags nil)
+    (rg-command-line-flags '("--no-ignore-vcs"))
     (rg-buffer-name "ripgrep")
     (rg-ignore-ripgreprc t)
     :general
