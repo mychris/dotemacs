@@ -1685,13 +1685,13 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 ** smartparens - Automatic insertion, wrapping and paredit-like navigation with user defined pairs.
 #+begin_src emacs-lisp
   (use-package smartparens
-    :ensure t
+    :ensure (smartparens :pin melpa)
     :delight (smartparens-mode)
     :commands (smartparens-mode
                sp-beginning-of-sexp
                sp-end-of-sexp)
     :custom
-    (sp-autoinsert-pair nil)
+    (sp-autoinsert-pair t)
     (sp-escape-quotes-after-insert nil)
     :config
     (defun +sp-beginning-of-sexp (&optional ARG)
