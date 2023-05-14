@@ -2282,7 +2282,9 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       "C-x p O" #'projectile-grep
       "C-x p t" #'projectile-test-project)
     :hook
-    (emacs-startup-hook . projectile-mode))
+    ;; after-init-hook is required, otherwise directory variables won't be applied
+    ;; if emacs is created with a file argument
+    (after-init-hook . projectile-mode))
 #+end_src
 ** fzf - A front-end for fzf.
 #+begin_src emacs-lisp
