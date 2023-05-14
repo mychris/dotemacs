@@ -2450,6 +2450,17 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       "?" #'xref-find-definitions
       "m" #'+elisp-describe-thing-at-point))
 #+end_src
+** smart-tabs-mode - Intelligently indent with tabs, align with spaces!
+#+begin_src emacs-lisp
+  (use-package smart-tabs-mode
+    :ensure (smart-tabs-mode :pin melpa)
+    :commands (smart-tabs-mode
+               smart-tabs-mode-enable
+               smart-tabs-advice
+               smart-tabs-insinuate)
+    :hook
+    ((prog-mode-hook . (lambda ()
+                         (smart-tabs-insinuate 'c 'c++)))))
 #+end_src
 ** yasnippet - A template system for Emacs
 #+begin_src emacs-lisp
