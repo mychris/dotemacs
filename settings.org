@@ -850,15 +850,17 @@ This is mostly use-package and local utilities which are used throught the confi
                consult-man
                consult-buffer
                consult-narrow-help
-               consult-bookmark)
+               consult-bookmark
+               consult-completion-in-region
+               consult-register-format)
     :init
-    (setq-default completion-in-region-function
-                  #'(lambda (&rest args)
-                      (apply (if vertico-mode
-                                 #'consult-completion-in-region
-                               #'completion--in-region)
-                             args))
-                  register-preview-function #'consult-register-format)
+    (setq completion-in-region-function
+          #'(lambda (&rest args)
+              (apply (if vertico-mode
+                         #'consult-completion-in-region
+                       #'completion--in-region)
+                     args))
+          register-preview-function #'consult-register-format)
     :custom
     (consult-line-numbers-widen t)
     (consult-async-min-input 3)
