@@ -1,4 +1,4 @@
-;;-*-coding: utf-8;-*-
+;; -*-coding: utf-8;-*-
 (define-abbrev-table 'c-mode-abbrev-table
   '(
     ("sizet" "size_t" nil :count 0)
@@ -24,7 +24,7 @@
     ("inclued" "include" nil :count 0)
     ("uinon" "union" nil :count 0)
     ("ii" "int i" nil :count 0)
-   ))
+    ))
 
 (define-abbrev-table 'c++-mode-abbrev-table
   '(
@@ -51,11 +51,15 @@
     ("inclued" "include" nil :count 0)
     ("uinon" "union" nil :count 0)
     ("ii" "int i" nil :count 0)
-   ))
+    ("ccast" "const_cast" nil :count 0)
+    ("scast" "static_cast" nil :count 0)
+    ("rcast" "reinterpret_cast" nil :count 0)
+    ("dcast" "dynamic_cast" nil :count 0)
+    ))
 
 
 (define-abbrev-table 'global-abbrev-table
   '(
     ("openjdk" "OpenJDK" nil :count 0)
-   ))
+    ))
 
