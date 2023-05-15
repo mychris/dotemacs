@@ -30,27 +30,28 @@ This is mostly use-package and local utilities which are used throught the confi
     (general-create-definer evil-rmap :states 'replace)
     (general-create-definer evil-iemap :states '(insert emacs))
     (general-create-definer evil-nvmap :states '(normal visual))
+    (general-create-definer evil-nmmap :states '(normal motion)))
 
-    ;; Leader keys to get rid of C- and M- prefix keys.
-    (general-create-definer buffer-local-leader
-      :states 'normal
-      :keymaps 'override
-      :prefix "SPC g")
-    (general-create-definer system-local-leader
-      :states 'normal
-      :keymaps 'override
-      :prefix "SPC s")
-    (general-create-definer mode-action-leader
-      :states 'normal
-      :prefix "SPC <escape>")
-    (general-create-definer inspect-leader
-      :states 'normal
-      :prefix "SPC ,")
-    ;; Try to replace as many C-x key bindings as possible
-    (general-create-definer c-x-leader
-      :states 'normal
-      :keymaps 'override
-      :prefix "DEL"))
+  ;; Leader keys to get rid of C- and M- prefix keys.
+  (general-create-definer buffer-local-leader
+    :states '(normal motion)
+    :keymaps 'override
+    :prefix "SPC g")
+  (general-create-definer system-local-leader
+    :states '(normal motion)
+    :keymaps 'override
+    :prefix "SPC s")
+  (general-create-definer mode-action-leader
+    :states '(normal motion)
+    :prefix "SPC <escape>")
+  (general-create-definer inspect-leader
+    :states '(normal motion)
+    :prefix "SPC ,")
+  ;; Try to replace as many C-x key bindings as possible
+  (general-create-definer c-x-leader
+    :states '(normal motion)
+    :keymaps 'override
+    :prefix "DEL")
 
   (eval-and-compile
     (defvar user-emacs-cache-directory)) ;; from init.el
@@ -449,7 +450,8 @@ This is mostly use-package and local utilities which are used throught the confi
                (concat "\e[" param " q")))))))
     (advice-add #'evil-set-cursor :around #'+evil-set-cursor)
     (evil-select-search-module 'evil-search-module 'isearch)
-    (evil-set-initial-state 'help-mode 'normal)
+    (dolist (m '(help-mode Info-mode))
+      (evil-set-initial-state m 'motion))
     :hook
     (emacs-startup-hook . evil-mode))
 
@@ -459,7 +461,7 @@ This is mostly use-package and local utilities which are used throught the confi
   (use-package evil
     :after (:all evil)
     :general
-    (evil-nmap
+    (evil-nmmap
       :keymaps 'override
       "SPC w" '(:keymap evil-window-map)
       "C-w" nil)
@@ -509,7 +511,8 @@ This is mostly use-package and local utilities which are used throught the confi
     :after (:all evil)
     :commands (evil-collection-init)
     :config
-    (delete 'help evil-collection-mode-list)
+    (dolist (m '(help info evil-mc))
+      (delete m evil-collection-mode-list))
     :hook
     (evil-mode-hook . evil-collection-init)
     (evil-mode-hook . (lambda ()
@@ -566,8 +569,8 @@ This is mostly use-package and local utilities which are used throught the confi
     (emacs-map
       "C->" #'evil-mc-make-cursor-move-next-line
       "C-<" #'evil-mc-make-cursor-move-prev-line)
-    (evil-nmap
-      'evil-mc-key-map
+    (emacs-map
+      'evil-mc-cursor-map
       "j" #'evil-mc-make-cursor-move-next-line
       "k" #'evil-mc-make-cursor-move-prev-line)
     :hook
@@ -1134,6 +1137,9 @@ This is mostly use-package and local utilities which are used throught the confi
       ">" #'help-go-forward
       "<tab>" #'forward-button
       "<backtab>" #'backward-button)
+    (emacs-map
+      'evil-window-map
+      "e" #'view-echo-area-messages)
     (evil-mmap
       'help-mode-map
       "<mouse-8>" #'help-go-back
@@ -1159,13 +1165,17 @@ This is mostly use-package and local utilities which are used throught the confi
       "<mouse-8>" #'Info-history-back
       "<wheel-left>" #'Info-history-back
       "<mouse-9>" #'Info-history-forward
-      "<wheel-right>" #'Info-history-forward)
+      "<wheel-right>" #'Info-history-forward
+      "<" #'Info-history-back
+      ">" #'Info-history-forward)
     (evil-mmap
       'Info-mode-map
       "<return>" #'Info-follow-nearest-node
       "C-t" #'Info-history-back
       "C-o" #'Info-history-back
+      "<" #'Info-history-back
       "C-i" #'Info-history-forward
+      ">" #'Info-history-forward
       "gj" #'Info-next
       "gk" #'Info-prev
       "TAB" #'Info-next-reference
@@ -1788,9 +1798,10 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :custom
     (link-hint-restore t)
     :general
-    (evil-nmap
-      "SPC f o" #'link-hint-open-link
-      "SPC f c" #'link-hint-copy-link))
+    (evil-nmmap
+      :keymaps 'override
+      "SPC f" #'link-hint-open-link
+      "SPC F" #'link-hint-copy-link))
 #+end_src
 ** +link-hint - Enhancements for link-hint
 #+begin_src emacs-lisp
@@ -2298,7 +2309,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       "m" #'bookmark-set-no-overwrite
       "M" #'bookmark-set
       "L" #'bookmark-bmenu-list)
-    (evil-nmap
+    (evil-nmmap
       :keymaps 'override
       "SPC c" '(:keymap bookmark-map)))
 
