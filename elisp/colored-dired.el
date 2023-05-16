@@ -181,6 +181,21 @@
 (defvar colored-dired-modified-face 'colored-dired-modified
   "Face name used for the last modification time.")
 
+(defface colored-dired-delete
+  '((t (:inherit font-lock-comment-face :strike-through "#fb4933")))
+  "Face for files marked for deletion."
+  :group 'colored-dired-faces)
+(defvar colored-dired-delete-face 'colored-dired-delete
+  "Face name used for files marked for deletion.")
+
+(defface colored-dired-marked
+  '((t (:inherit default :weight bold)))
+  "Face for marked files."
+  :group 'colored-dired-faces)
+(defvar colored-dired-marked-face 'colored-dired-marked
+  "Face name for marked files.")
+(face-attribute font-lock-warning-face :foreground)
+
 
 ;;; Font-lock
 
@@ -243,7 +258,18 @@
      (15 colored-dired-owner-face)
      (16 colored-dired-group-face)
      (17 colored-dired-file-size-face)
-     (18 colored-dired-modified-face))))
+     (18 colored-dired-modified-face))
+    ;; Marked for deletion
+    (,(rx line-start
+	  (group (regex (char-to-string dired-del-marker))
+		 (* (any space)))
+	  (group (* nonl))
+	  line-end)
+     (1 colored-dired-marked-face t)
+     (2 colored-dired-delete-face append))
+    ;; Markde files
+    (,(concat "^\\([^[:space:]" (char-to-string dired-del-marker) "].*\\)$")
+     (1 colored-dired-marked-face append))))
 
 
 ;;; Commands
