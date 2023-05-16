@@ -42,6 +42,18 @@
   :type '(string)
   :group 'link-hint)
 
+(defcustom +link-hint-jira-url
+  nil
+  "Url of Jira."
+  :type '(string)
+  :group 'link-hint)
+
+(defcustom +link-hint-jira-project-keys
+  nil
+  "List of all Jira project keys."
+  :type '(list string)
+  :group 'link-hint)
+
 (defconst +link-hint--c-include-regexp
   "^[[:space:]]*#[[:space:]]*include[[:space:]]+[\"<]\\([[:alnum:][:punct:]]+\\)[\">]"
   "Regular expression used to find C includes for `link-hint'.")
@@ -90,12 +102,12 @@ well-formed."
 Only search the range between just after the point and BOUND."
   (save-excursion
     (ignore-errors (forward-char))
-    (when (re-search-forward "{[[:alpha:]]+-[0-9]+}" bound t)
+    (when (re-search-forward "{[[:alpha:]]+-[[:digit:]]+}" bound t)
       (match-beginning 0))))
 
 (defun +link-hint--polarion-reference-at-point-p ()
   "Return the polarion reference at the point or nil."
-  (when (looking-at-p "{[[:alpha:]]+-[0-9]+}")
+  (when (looking-at-p "{[[:alpha:]]+-[[:digit:]]+}")
     (match-string-no-properties 0)))
 
 (defun +link-hint--parse-polarion-reference (reference action)
@@ -122,11 +134,54 @@ Only search the range between just after the point and BOUND."
   :copy #'kill-new)
 
 
+(defun +link-hint--next-jira-reference (bound)
+  "Find the next jira referenc.
+Only search the range between just after the point and BOUND."
+  (save-excursion
+    (ignore-errors (forward-char))
+    (when (re-search-forward
+	   (concat "\\(?:"
+		   (mapconcat #'identity +link-hint-jira-project-keys "|")
+		   "\\)-[[:digit:]]+")
+	   bound
+	   t)
+      (match-beginning 0))))
+
+(defun +link-hint--jira-reference-at-point-p ()
+  "Return the Jira reference at the point or nil."
+  (when (looking-at-p
+	 (concat "\\(?:"
+		 (mapconcat #'identity +link-hint-jira-project-keys "|")
+		 "\\)-[[:digit:]]+"))
+    (match-string-no-properties 0)))
+
+(defun +link-hint--parse-jira-reference (reference action)
+  "Alter Jira REFERENCE so that it can be passed to the ACTION function."
+  (cond
+   ((eq :describe action)
+    reference)
+   ((or (eq :open action)
+	(eq :copy action))
+    (format "%s/browse/%s" +link-hint-jira-url reference))
+   (t
+    reference)))
+
+(link-hint-define-type 'jira-reference
+  :next #'+link-hint--next-jira-reference
+  :at-point-p #'+link-hint--jira-reference-at-point-p
+  :parse #'+link-hint--parse-jira-reference
+  :predicates '((lambda () (and +link-hint-jira-url
+				+link-hint-jira-project-keys)))
+  :open #'browse-url
+  :copy #'kill-new)
+
+
 ;;;###autoload
 (defun +link-hint-setup ()
   "Setup `link-hint-types' provided by +link-hint."
   (dolist (type '(link-hint-c-include
-	      link-hint-polarion-reference))
+		  link-hint-polarion-reference
+		  link-hint-jira-reference))
     (delete type link-hint-types)
     (push type link-hint-types)))
 
