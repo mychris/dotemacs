@@ -436,7 +436,21 @@ This is mostly use-package and local utilities which are used throught the confi
     (evil-want-C-i-jump nil)
     (evil-undo-system #'undo-tree)
     (evil-want-minibuffer t)
+    ;; Try out emacs "cursor-between-characters" semantics in evil
+    ;; Use `+evil-toggle-cursor-semantics' to switch
+    (evil-move-cursor-back nil)
+    (evil-move-beyond-eol t)
+    (evil-highlight-closing-paren-at-point-states nil))
     :config
+    (defun +evil-toggle-cursor-semantics ()
+      (if evil-move-cursor-back
+          (progn
+            (setq evil-move-cursor-back nil)
+            (setq evil-move-beyond-eol t)
+            (setq evil-highlight-closing-paren-at-point-states nil))
+        (setq evil-move-cursor-back t)
+        (setq evil-move-beyond-eol nil)
+        (setq evil-highlight-closing-paren-at-point-states t)))
     (defun +evil-set-cursor (orig-fun &rest args)
       (if (display-graphic-p)
           (apply orig-fun args)
