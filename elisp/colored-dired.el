@@ -201,16 +201,18 @@
       (group (1+ digit)) ;; links
       (1+ whitespace)
       (group alphabetic (0+ (not whitespace))) ;; owner
-      (1+ whitespace)
+      (0+ whitespace)
       (group (? alphabetic (0+ (not whitespace)))) ;; group
       (1+ whitespace)
       (group digit (0+ (not whitespace))) ;; file size
       (1+ whitespace)
       (group (1+ (not whitespace)) ;; modification
 	     (1+ whitespace)
-	     (1+ (not whitespace)) ;; modification day
-	     (1+ whitespace)
-	     (1+ (not whitespace)))) ;; modification time
+	     (? (any digit) (0+ (not whitespace)) ;; modification day
+		(1+ whitespace))
+	     (any digit) (1+ (not whitespace)))
+      (any space))
+  ;; modification time
   "Regex matching all parts of a DIRED line.")
 
 (defconst colored-dired-font-lock-keywords
@@ -218,7 +220,7 @@
     ;; Header line
     (,(rx line-start
 	  (= 2 (any space))
-	  (group (+? nonl) ?:)
+	  (group (+ nonl) ?:)
 	  (* (any space))
 	  line-end)
      (1 colored-dired-header-face keep t))
