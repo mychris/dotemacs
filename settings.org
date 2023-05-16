@@ -48,10 +48,12 @@ This is mostly use-package and local utilities which are used throught the confi
     :states '(normal motion)
     :prefix "SPC ,")
   ;; Try to replace as many C-x key bindings as possible
+  (defvar-keymap c-x-leader-map
+    :doc "C-x leader.")
+  (evil-nmmap
+    "<backspace>" '(:keymap c-x-leader-map))
   (general-create-definer c-x-leader
-    :states '(normal motion)
-    :keymaps 'override
-    :prefix "DEL")
+    :keymaps 'c-x-leader-map)
 
   (eval-and-compile
     (defvar user-emacs-cache-directory)) ;; from init.el
@@ -572,7 +574,8 @@ This is mostly use-package and local utilities which are used throught the confi
     (emacs-map
       'evil-mc-cursor-map
       "j" #'evil-mc-make-cursor-move-next-line
-      "k" #'evil-mc-make-cursor-move-prev-line)
+      "k" #'evil-mc-make-cursor-move-prev-line
+      "q" #'evil-mc-undo-all-cursors)
     :hook
     (evil-mode-hook . global-evil-mc-mode))
 #+end_src
@@ -778,6 +781,8 @@ This is mostly use-package and local utilities which are used throught the confi
     (evil-nmap
       'vertico-map
       "<escape>" #'abort-recursive-edit
+      "DEL" '(:keymap c-x-leader-map)
+      "<backspace>" '(:keymap c-x-leader-map)
       "k" #'vertico-previous
       "j" #'vertico-next
       "{" #'vertico-scroll-down
