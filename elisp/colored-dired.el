@@ -48,6 +48,13 @@
   :group 'colored-dired
   :group 'faces)
 
+(defface colored-dired-header
+  '((t (:inherit font-lock-constant-face :weight bold)))
+  "Face for the header line."
+  :group 'colored-dired-faces)
+(defvar colored-dired-header-face 'colored-dired-header
+  "Face name used for the header line.")
+
 (defface colored-dired-file-type
   '((t (:inherit font-lock-variable-name-face)))
   "Face for the file type."
@@ -204,10 +211,17 @@
 	     (1+ (not whitespace)) ;; modification day
 	     (1+ whitespace)
 	     (1+ (not whitespace)))) ;; modification time
-  "")
+  "Regex matching all parts of a DIRED line.")
 
 (defconst colored-dired-font-lock-keywords
   `(
+    ;; Header line
+    (,(rx line-start
+	  (= 2 (any space))
+	  (group (+? nonl) ?:)
+	  (* (any space))
+	  line-end)
+     (1 colored-dired-header-face keep t))
     ;; File type
     (,colored-dired--re-mode
      (1 colored-dired-file-type-face keep t)
