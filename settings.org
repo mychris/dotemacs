@@ -440,7 +440,7 @@ This is mostly use-package and local utilities which are used throught the confi
     ;; Use `+evil-toggle-cursor-semantics' to switch
     (evil-move-cursor-back nil)
     (evil-move-beyond-eol t)
-    (evil-highlight-closing-paren-at-point-states nil))
+    (evil-highlight-closing-paren-at-point-states nil)
     :config
     (defun +evil-toggle-cursor-semantics ()
       (if evil-move-cursor-back
