@@ -1129,6 +1129,11 @@ This is mostly use-package and local utilities which are used throught the confi
       "l" #'tab-next
       "h" #'tab-previous))
 #+end_src
+** pos-tip - Show tooltip at point
+#+begin_src emacs-lisp
+  (use-package pos-tip
+    :ensure t)
+#+end_src
 * Help / Discovery / Cheat sheets
 ** help [built-in]
 #+begin_src emacs-lisp
