@@ -2576,7 +2576,8 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       "<wheel-left>" #'xref-go-back
       "<wheel-right>" #'xref-go-forward)
     :hook
-    (lsp-mode-hook . company-mode))
+    ((rustic-mode-hook . lsp)
+     (tuareg-mode-hook . lsp)))
 
   (use-package lsp-ui
     :ensure t
@@ -2605,9 +2606,11 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package company
     :ensure t
+    :commands (company-mode)
     :custom
     (company-tooltip-align-annotations t)
     (company-minimum-prefix-length 1)
+    (company-idle-delay 0.0)
     (company-show-quick-access 'left)
     (company-quick-access-modifier 'meta)
     (company-quick-access-keys '("1" "2" "3" "4" "5" "6" "7" "8" "9" "0"))
@@ -2670,7 +2673,15 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       "C-n" #'company-select-next-or-abort
       "C-j" #'company-select-next-or-abort
       "C-p" #'company-select-previous-or-abort
-      "C-k" #'company-select-previous-or-abort))
+      "C-k" #'company-select-previous-or-abort)
+    :hook
+    ((emacs-lisp-mode . company-mode)
+     (sh-mode-hook . company-mode)
+     (c-mode-common-hook . company-mode)
+     (rustic-mode-hook . company-mode)
+     (tuareg-mode-hook . company-mode)
+     (sly-mode-hook . company-mode)
+     (lsp-mode-hook . company-mode)))
 
   (use-package company-dabbrev-code
     :ensure nil ;; packaged with company
@@ -2687,7 +2698,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :commands (company-quickhelp-mode
                +company-quickhelp-mode-toggle)
     :custom
-    (company-quickhelp-delay 1)
+    (company-quickhelp-delay 0.2)
     (company-quickhelp-max-lines 40)
     :config
     (defun +company-quickhelp-mode-toggle ()
@@ -2765,10 +2776,12 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       :fringe-face 'flycheck-fringe-info
       :error-list-face 'flycheck-error-list-info)
     :hook
-    (lsp-mode-hook . flycheck-mode)
-    (org-src-mode-hook . (lambda ()
-                           (setq-local flycheck-disabled-checkers
-                                       '(emacs-lisp-checkdoc)))))
+    ((lsp-mode-hook . flycheck-mode)
+     (emacs-lisp-mode . flycheck-mode)
+     (sh-mode-hook . flycheck-mode)
+     (org-src-mode-hook . (lambda ()
+                            (setq-local flycheck-disabled-checkers
+                                        '(emacs-lisp-checkdoc))))))
 
   (use-package flycheck-popup-tip
     :ensure t
@@ -2915,10 +2928,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 ** Rust
 #+begin_src emacs-lisp
   (use-package rustic
-    :ensure t
-    :hook
-    (rustic-mode-hook . lsp)
-    (rustic-mode-hook . company-mode))
+    :ensure t)
 
   (setq mouse-wheel-scroll-amount '(3 ((shift) . 1) ((control) . nil)))
   (setq mouse-wheel-progressive-speed nil)
@@ -2944,11 +2954,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       (setq-local fill-column 80)
       (setq-local show-trailing-whitespace t)
       (display-fill-column-indicator-mode 1)
-      (modify-syntax-entry ?- "w")
-      (flycheck-mode 1)
-      (company-mode 1))
-    :hook
-    (emacs-lisp-mode-hook . +emacs-lisp-mode-setup)
+      (modify-syntax-entry ?- "w"))
     :general
     (mode-action-leader
       'emacs-lisp-mode-map
@@ -2957,16 +2963,19 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       "e b" #'eval-buffer
       "e B" #'+eval-buffer-force
       "e d" #'eval-defun
-      "e p" #'eval-print-last-sexp))
+      "e p" #'eval-print-last-sexp)
+    :hook
+    (emacs-lisp-mode-hook . +emacs-lisp-mode-setup))
 
   (use-package pp
     :ensure nil)
 
   (use-package eldoc
     :ensure nil
-    :delight (eldoc-mode)
+    :delight (eldoc-mode
+              global-eldoc-mode)
     :hook
-    (emacs-lisp-mode-hook . global-eldoc-mode))
+    (emacs-lisp-mode-hook . eldoc-mode))
 #+end_src
 ** Ocaml
 #+begin_src emacs-lisp
@@ -2981,9 +2990,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
                     ("\\.topml$" . tuareg-mode))
                   auto-mode-alist))
     :hook
-    (tuareg-mode-hook . utop-minor-mode)
-    (tuareg-mode-hook . lsp)
-    (tuareg-mode-hook . company-mode))
+    (tuareg-mode-hook . utop-minor-mode))
 
   (use-package utop
     :ensure t
@@ -3051,9 +3058,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       "<mouse-9>" #'sly-inspector-next)
     (evil-imap 'sly-mrepl-mode-map
       "<up>" #'sly-mrepl-previous-input-or-button
-      "<down>" #'sly-mrepl-next-input-or-button)
-    :hook
-    (sly-mode-hook . company-mode))
+      "<down>" #'sly-mrepl-next-input-or-button))
 #+end_src
 
 ** Shell
@@ -3098,8 +3103,6 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
      "C-c C-x" nil
      "C-c C-z" nil)
     :hook
-    (sh-mode-hook . flycheck-mode)
-    (sh-mode-hook . company-mode)
     (sh-mode-hook . display-fill-column-indicator-mode)
     (sh-mode-hook . +sh-mode-setup))
 
