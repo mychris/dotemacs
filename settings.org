@@ -1401,6 +1401,16 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       "C-<mouse-1>" #'dired-mouse-find-file-other-window
       "C-<down-mouse-1>" #'dired-mouse-find-file-other-window))
 #+end_src
+** dired-narrow - Live-narrowing of search results for dired
+#+begin_src emacs-lisp
+  (use-package dired-narrow
+    :ensure (dired-narrow :pin melpa)
+    :after (:all dired)
+    :demand t
+    :commands (dired-narrow
+               dired-narrow-regexp
+               dired-narrow-fuzzy))
+#+end_src
 ** colored-dired - More colors for dired
 #+begin_src emacs-lisp
   (use-package colored-dired
