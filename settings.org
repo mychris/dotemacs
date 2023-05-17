@@ -335,9 +335,12 @@ This is mostly use-package and local utilities which are used throught the confi
     :init
     (set-face-attribute 'line-number-current-line nil :weight 'bold)
     :hook
-    (prog-mode-hook . (lambda ()
-                        (setq display-line-numbers-type 'visual)))
-    (emacs-startup-hook . global-display-line-numbers-mode))
+    ((emacs-startup-hook . global-display-line-numbers-mode)
+     (prog-mode-hook . (lambda () (setq display-line-numbers-type 'visual)))
+     (imenu-list-major-mode-hook . (lambda () (display-line-numbers-mode 0)))
+     (treemacs-mode-hook . (lambda () (display-line-numbers-mode 0)))
+     (shell-mode-hook . (lambda () (display-line-numbers-mode 0)))
+     (term-mode-hook . (lambda () (display-line-numbers-mode 0)))))
 #+end_src
 ** S - The long lost Emacs string manipulation library
 #+begin_src emacs-lisp
@@ -547,7 +550,7 @@ This is mostly use-package and local utilities which are used throught the confi
     (evil-escape-unodered-key-sequence nil)
     :hook
     (evil-mode-hook . evil-escape-mode)
-    (minibuffer-mode-hook . (lambda () (evil-escape-mode -1))))
+    (minibuffer-mode-hook . (lambda () (evil-escape-mode 0))))
 #+end_src
 ** evil-surround - emulate surround.vim from Vim
 #+begin_src emacs-lisp
@@ -841,7 +844,7 @@ This is mostly use-package and local utilities which are used throught the confi
   (use-package vertico-multiform
     :ensure nil ;; part of vertico
     :after (:all vertico)
-    :delight (vectico-multiform-mode)
+    :delight (vertico-multiform-mode)
     :commands (vertico-multiform-mode)
     :custom
     (vertico-multiform-commands '((consult-line buffer)
@@ -849,9 +852,7 @@ This is mostly use-package and local utilities which are used throught the confi
     (vertico-multiform-categories '((imenu (:not indexed mouse))
                                     (symbol (vertico-sort-function . vertico-sort-alpha))))
     :hook
-    (vertico-mode-hook . (lambda ()
-                           (vertico-multiform-mode
-                            (if (bound-and-true-p vertico-mode) 1 -1)))))
+    (vertico-mode-hook . vertico-multiform-mode))
 #+end_src
 ** Consult - Consulting completing-read
 #+begin_src emacs-lisp
@@ -1441,9 +1442,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       "<up>" #'treemacs-previous-line
       "<down>" #'treemacs-next-line)
     :config
-    (treemacs-follow-mode)
-    :hook
-    (treemacs-mode-hook . (lambda () (display-line-numbers-mode 0))))
+    (treemacs-follow-mode))
 
   (use-package treemacs-projectile
     :ensure t
@@ -1717,7 +1716,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :config
     (defun +disable-mouse-in-evil-mode ()
       (interactive)
-      (when (bound-and-true-p evil-made)
+      (when (bound-and-true-p evil-mode)
         (mapc #'disable-mouse-in-keymap
               (list evil-motion-state-map
                     evil-normal-state-map
@@ -1954,9 +1953,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       "C-c c" #'wgrep-finish-edit
       "C-c k" #'wgrep-abort-changes
       "C-c r" #'wgrep-remove-change
-      "C-c u" #'wgrep-remove-all-change)
-    :hook
-    (rg-mode-hook . wgrep-rg-setup))
+      "C-c u" #'wgrep-remove-all-change))
 #+end_src
 ** rg - A search tool based on ripgrep
 #+begin_src emacs-lisp
@@ -1986,7 +1983,9 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 
   (use-package wgrep-rg
     :ensure nil ;; part of rg
-    :commands (wgrep-rg-setup))
+    :commands (wgrep-rg-setup)
+    :hook
+    (rg-mode-hook . wgrep-rg-setup))
 #+end_src
 * Coloring / themes / fonts
 #+begin_src emacs-lisp
@@ -2185,7 +2184,6 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
                shell-mode)
     :hook
     (shell-mode-hook . (lambda ()
-                         (display-line-numbers-mode 0)
                          (face-remap-set-base 'comint-highlight-prompt :inherit nil))))
 #+end_src
 ** eshell [built-in] - the Emacs command shell
@@ -2257,9 +2255,6 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
          `(lambda (process event)
             (when (string= event "finished\n")
               (kill-buffer ,buff))))))
-    :hook
-    (term-mode-hook . (lambda () (display-line-numbers-mode 0)))
-    (term-exec-hook . +kill-term-process-sentinel)
     :general
     (evil-imap
       'term-raw-map
@@ -2275,7 +2270,9 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       "M-7" nil
       "M-8" nil
       "M-9" nil
-      "M-0" nil))
+      "M-0" nil)
+    :hook
+    (term-exec-hook . +kill-term-process-sentinel))
 #+end_src
 * TRAMP
 #+begin_src emacs-lisp
@@ -2356,7 +2353,6 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package abbrev
     :ensure nil
-    :delight (abbrev-mode)
     :commands (abbrev-mode
                edit-abbrevs-mode
                read-abbrev-file
@@ -2388,6 +2384,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package paren
     :ensure nil
+    :commands (show-paren-mode)
     :custom
     (show-paren-delay 0.25)
     (show-paren-style 'parenthesis)
@@ -2695,19 +2692,12 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 
   (use-package company-quickhelp
     :ensure t
-    :commands (company-quickhelp-mode
-               +company-quickhelp-mode-toggle)
+    :commands (company-quickhelp-mode)
     :custom
     (company-quickhelp-delay 0.2)
     (company-quickhelp-max-lines 40)
-    :config
-    (defun +company-quickhelp-mode-toggle ()
-      "Enable/Disable the `company-quickhelp-mode' dependent on the status of the
-  `company-mode'."
-      (interactive)
-      (company-quickhelp-mode (if (bound-and-true-p company-mode) 1 -1)))
     :hook
-    (company-mode-hook . +company-quickhelp-mode-toggle))
+    (company-mode-hook . company-quickhelp-mode))
 #+end_src
 ** flycheck - On-the-fly syntax checking
 #+begin_src emacs-lisp
@@ -2786,18 +2776,11 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   (use-package flycheck-popup-tip
     :ensure t
     :after (:all flycheck)
-    :commands (flycheck-popup-tip-mode
-               +flycheck-popup-tip-mode-toggle)
+    :commands (flycheck-popup-tip-mode)
     :custom
     (flycheck-popup-tip-error-prefix "\u27a4 ")
-    :config
-    (defun +flycheck-popup-tip-mode-toggle ()
-      "Enable/Disable `flycheck-popup-tip-mode' dependent on the status of the
-  `flycheck-mode'."
-      (interactive)
-      (flycheck-popup-tip-mode (if (bound-and-true-p flycheck-mode) 1 -1)))
     :hook
-    (flycheck-mode-hook . +flycheck-popup-tip-mode-toggle))
+    (flycheck-mode-hook . flycheck-popup-tip-mode))
 #+end_src
 ** next-error [built-in]
 #+begin_src emacs-lisp
@@ -3278,7 +3261,7 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
       'org-src-mode-map
       "C-c C-c" #'org-edit-src-exit)
     :hook
-    (org-mode-hook . (lambda () (setq indent-tabs-mode nil))))
+    (org-mode-hook . (lambda () (indent-tabs-mode 0))))
 
   (use-package org-src
     :ensure nil
