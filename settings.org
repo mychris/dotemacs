@@ -1756,15 +1756,6 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       "M-p" #'move-text-up
       "M-n" #'move-text-down))
 #+end_src
-** iy-go-to-char.el - Go to next CHAR
-#+begin_src emacs-lisp
-  (use-package iy-go-to-char
-    :ensure nil ;; Not on melpa.
-    :general
-    (emacs-map
-      "M-m" #'iy-go-up-to-char
-      "M-M" #'iy-go-up-to-char-backward))
-#+end_src
 ** Avy - Jump to arbitrary positions in visible text and select text quickly
 #+begin_src emacs-lisp
   (use-package avy
