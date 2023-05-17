@@ -546,7 +546,8 @@ This is mostly use-package and local utilities which are used throught the confi
     (evil-escape-delay 0.1)
     (evil-escape-unodered-key-sequence nil)
     :hook
-    (evil-mode-hook . evil-escape-mode))
+    (evil-mode-hook . evil-escape-mode)
+    (minibuffer-mode-hook . (lambda () (evil-escape-mode -1))))
 #+end_src
 ** evil-surround - emulate surround.vim from Vim
 #+begin_src emacs-lisp
