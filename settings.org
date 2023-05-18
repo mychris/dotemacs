@@ -2716,7 +2716,10 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     ((emacs-lisp-mode-hook . company-mode)
      (sh-mode-hook . company-mode)
      (c-mode-common-hook . company-mode)
+     (c-ts-mode-hook . company-mode)
+     (c++-ts-mode-hook . company-mode)
      (rustic-mode-hook . company-mode)
+     (rust-ts-mode-hook . company-mode)
      (tuareg-mode-hook . company-mode)
      (sly-mode-hook . company-mode)
      (lsp-mode-hook . company-mode)))
@@ -2881,6 +2884,23 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (c-mode-common-hook . +c-mode-setup)
     (c-mode-hook . +c-mode-setup)
     (c++-mode-hook . +c-mode-setup))
+
+  (use-package c-ts-mode ;; built-in
+    :ensure nil
+    :if (version< "29.0" emacs-version)
+    :init
+    (add-to-list 'major-mode-remap-alist '(c-mode . c-ts-mode))
+    (add-to-list 'major-mode-remap-alist '(c++-mode . c++-ts-mode))
+    :config
+    (defun +c-ts-mode-setup ()
+      (lsp-maybe)
+      (display-fill-column-indicator-mode)
+      (setq-local indent-tabs-mode nil)
+      (modify-syntax-entry ?_ "w"))
+    (lsp-maybe-add-predicate 'c-ts-mode #'lsp-maybe-active-if-compile-commands-in-projectile-root)
+    :hook
+    (c-ts-mode-hook . +c-ts-mode-setup)
+    (c++-ts-mode-hook . +c-ts-mode-setup))
 
   (defconst openjdk-cc-style
     `((c-recognize-knr-p . nil)
@@ -3484,7 +3504,13 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
    '((c-mode . ((fill-column . 80)
                 (c-file-style . "linux")
                 (indent-tabs-mode . t)
-                (c-basic-offset . 8)))))
+                (c-basic-offset . 8)))
+     (c-ts-mode . ((fill-column . 80)
+                   (c-file-style . "linux")
+                   (indent-tabs-mode . t)
+                   (c-basic-offset . 8)
+                   (c-ts-mode-indent-offset . 8)
+                   (c-ts-mode-indent-style . 'linux)))))
   (dir-locals-set-directory-class
    "/loc" 'work-projects)
 #+end_src
