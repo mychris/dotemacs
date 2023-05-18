@@ -1395,19 +1395,24 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (evil-emap
       "C-x D" #'dired-jump)
     (emacs-map
-      'dired-mode-map
-      "<return>" '(+dired-open :no-autoload t)
+      :keymaps 'dired-mode-map
+      :no-autoload t
+      "<return>" #'+dired-open
       "<up>" #'dired-previous-line
       "<down>" #'dired-next-line
-      "^" '(+dired-alternate-up-directory :no-autoload t)
-      "o" '(+dired-open :no-autoload t)
+      "^" #'+dired-alternate-up-directory
+      "o" #'+dired-open
       "C-o" #'dired-find-file-other-window
       "C-<return>" #'dired-find-file-other-window
-      "<mouse-2>" '(+dired-mouse-find-file :no-autoload t)
-      "<mouse-8>" '(+dired-alternate-up-directory :no-autoload t)
+      "<mouse-2>" #'+dired-mouse-find-file
+      "<mouse-8>" #'+dired-alternate-up-directory
       "C-<mouse-2>" #'dired-mouse-find-file-other-window
       "C-<mouse-1>" #'dired-mouse-find-file-other-window
-      "C-<down-mouse-1>" #'dired-mouse-find-file-other-window))
+      "C-<down-mouse-1>" #'dired-mouse-find-file-other-window)
+    (emacs-map
+      :keymaps 'dired-mode-map
+      :states '(normal visual motion)
+      "gr" #'revert-buffer))
 #+end_src
 ** dired-narrow - Live-narrowing of search results for dired
 #+begin_src emacs-lisp
