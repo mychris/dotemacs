@@ -2695,7 +2695,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       "C-p" #'company-select-previous-or-abort
       "C-k" #'company-select-previous-or-abort)
     :hook
-    ((emacs-lisp-mode . company-mode)
+    ((emacs-lisp-mode-hook . company-mode)
      (sh-mode-hook . company-mode)
      (c-mode-common-hook . company-mode)
      (rustic-mode-hook . company-mode)
