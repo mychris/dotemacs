@@ -1172,12 +1172,13 @@ This is mostly use-package and local utilities which are used throught the confi
       "<" #'help-go-back
       ">" #'help-go-forward
       "<tab>" #'forward-button
-      "<backtab>" #'backward-button)
+      "<backtab>" #'backward-button
+      "SPC t" '(:keymap tab-prefix-map))
     (emacs-map
-      'evil-window-map
+      :keymaps 'evil-window-map
       "e" #'view-echo-area-messages)
     (evil-mmap
-      'help-mode-map
+      :keymaps 'help-mode-map
       "<mouse-8>" #'help-go-back
       "<wheel-left>" #'help-go-back))
 
