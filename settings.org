@@ -2392,7 +2392,8 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (abbrev-all-caps nil)
     (abbrev-suggest nil "Do not suggest using an abbrev in the echo area")
     :hook
-    ((org-mode-hook . abbrev-mode)))
+    ((prog-mode-hook . abbrev-mode)
+     (org-mode-hook . abbrev-mode)))
 #+end_src
 ** paren [built-in] - highlight matching paren
 #+begin_src emacs-lisp
