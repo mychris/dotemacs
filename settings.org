@@ -3260,6 +3260,7 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
   (use-package org
     :ensure nil
     :commands (org-mode)
+    :delight (org-src-mode)
     :custom
     (org-directory "~/Documents/org")
     (org-imenu-depth 7)
