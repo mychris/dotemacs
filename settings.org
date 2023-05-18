@@ -1277,6 +1277,8 @@ This is mostly use-package and local utilities which are used throught the confi
     (which-key-add-key-based-replacements "g ." "evil-mc prefix")
     (which-key-add-key-based-replacements "SPC c" "bookmark prefix")
     (which-key-add-key-based-replacements "SPC w" "window prefix")
+    (which-key-add-key-based-replacements "<backspace> h" "help prefix")
+    (which-key-add-key-based-replacements "<backspace> p" "proj prefix")
     :hook
     (emacs-startup-hook . which-key-mode))
 
