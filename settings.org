@@ -1414,6 +1414,15 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       :keymaps 'dired-mode-map
       :states '(normal visual motion)
       "gr" #'revert-buffer))
+
+  (use-package +dired
+    :ensure nil
+    :after (:all dired)
+    :demand t
+    :general
+    (emacs-map
+      :keymaps 'dired-mode-map
+      [remap dired-maybe-insert-subdir] #'dired-maybe-insert-subdir-or-kill-subdir))
 #+end_src
 ** dired-narrow - Live-narrowing of search results for dired
 #+begin_src emacs-lisp
