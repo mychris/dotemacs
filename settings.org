@@ -1835,12 +1835,10 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       "M-z" #'view-mode)
     (emacs-map
       'view-mode-map
-      :no-autoload t
       "n" #'next-line
       "p" #'previous-line)
     (evil-nmap
       'view-mode-map
-      :no-autoload t
       "d" #'View-scroll-page-forward
       "u" #'View-scroll-page-backward))
 #+end_src
@@ -1936,7 +1934,6 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       "S-<return>" #'+occur-mode-goto-occurrence-stay-occurrence-buffer)
     (emacs-map
       'occur-mode-map
-      :no-autoload t
       "q" #'kill-buffer-and-window
       "<up>" #'previous-line
       "<down>" #'next-line
