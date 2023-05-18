@@ -432,7 +432,7 @@ This is mostly use-package and local utilities which are used throught the confi
     (setq evil-want-keybinding nil)
     (setq evil-want-integration t))
   (use-package evil
-    :ensure t
+    :ensure (evil :pin melpa)
     :custom
     (evil-echo-state nil)
     (evil-want-C-u-scroll t)
@@ -529,14 +529,14 @@ This is mostly use-package and local utilities which are used throught the confi
     :ensure t
     :after (:all evil)
     :commands (evil-collection-init)
+    :demand t
     :config
+    (setq evil-collection-setup-minibuffer t)
+    ;; delight this mode in :delight doesn't work because the file is not in the load path
+    (delight 'evil-collection-unimpaired-mode nil "evil-collection-unimpaired")
     (dolist (m '(help info evil-mc))
       (delete m evil-collection-mode-list))
-    :hook
-    (evil-mode-hook . evil-collection-init)
-    (evil-mode-hook . (lambda ()
-                        ;; delight this mode in :delight doesn't work because the file is not in the load path
-                        (delight 'evil-collection-unimpaired-mode nil "evil-collection-unimpaired"))))
+    (evil-collection-init))
 #+end_src
 ** evil-escape - Customizable key sequence to escape from insert state and everything else in Emacs.
 #+begin_src emacs-lisp
@@ -587,10 +587,17 @@ This is mostly use-package and local utilities which are used throught the confi
     ;; (setq-default evil-mc-one-cursor-show-mode-line-text nil)
     :general
     (emacs-map
-      "C->" #'evil-mc-make-cursor-move-next-line
-      "C-<" #'evil-mc-make-cursor-move-prev-line)
+      :keymaps 'evil-mc-key-map
+      :states '(normal visual motion)
+      "g ." '(:keymap evil-mc-cursors-map))
     (emacs-map
-      'evil-mc-cursor-map
+      :keymaps 'evil-mc-key-map
+      :states '(normal visual motion)
+      "g r" nil)
+    (emacs-map
+      :keymaps 'evil-mc-cursors-map
+      :states '(normal visual)
+      :no-autoload t
       "j" #'evil-mc-make-cursor-move-next-line
       "k" #'evil-mc-make-cursor-move-prev-line
       "q" #'evil-mc-undo-all-cursors)
@@ -1154,8 +1161,9 @@ This is mostly use-package and local utilities which are used throught the confi
       "<wheel-right>" #'help-go-forward
       "d" #'scroll-down-command
       "u" #'scroll-up-command)
-    (evil-nmap
-      'help-mode-map
+    (emacs-map
+      :keymaps 'help-mode-map
+      :states '(normal visual motion)
       "d" #'evil-scroll-down
       "u" #'evil-scroll-up
       "g]" #'forward-button
