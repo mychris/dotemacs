@@ -3391,7 +3391,6 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
                magit-commit
                magit-load-config-extensions
                magit-auto-revert-mode
-               git-commit-turn-on-flyspell
                magit-process-git)
     :functions (magit-restore-window-configuration
                 magit-mode-get-buffers)
@@ -3426,6 +3425,7 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
 
   (use-package git-commit ;; part of magit
     :ensure nil
+    :commands (git-commit-turn-on-flyspell)
     :custom
     (git-commit-summary-max-length 72)
     :general
