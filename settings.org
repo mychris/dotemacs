@@ -132,45 +132,47 @@ This is mostly use-package and local utilities which are used throught the confi
 
   ;; Use the c-x leader
   ;; For now, disable the old bindings to get used to it
-  (c-x-leader
-    :no-autoload t
-    ":" #'eval-expression
-    "s" #'save-buffer
-    "S" #'save-some-buffers
-    "k" #'kill-buffer
-    "<escape> -" #'save-buffers-kill-terminal
-    "<escape> <escape>" #'keyboard-quit
-    "f" #'find-file
-    "x" #'execute-extended-command
-    "b" #'switch-to-buffer
-    "d" #'dired
-    "h" '(:keymap help-map))
-  (emacs-map
-    :no-autoload t
-    :keymaps 'global
-    "M-:" nil
-    "C-x C-s" nil
-    "C-x s" nil
-    "C-x k" nil
-    "C-x C-f" nil
-    "C-x C-c" nil
-    "M-x" nil
-    "C-x b" nil
-    "C-x d" nil
-    "C-h" nil)
-  (evil-emap
-    :no-autoload t
-    :keymaps 'global
-    "M-:" #'eval-expression
-    "C-x C-s" #'save-buffer
-    "C-x s" #'save-some-buffers
-    "C-x k" #'kill-buffer
-    "C-x C-c" #'save-buffers-kill-terminal
-    "C-x C-f" #'find-file
-    "M-x" #'execute-extended-command
-    "C-x b" #'switch-to-buffer
-    "C-x d" #'dired
-    "C-h" '(:keymap help-map))
+  (with-eval-after-load 'evil
+    (c-x-leader
+      :no-autoload t
+      ":" #'eval-expression
+      "s" #'save-buffer
+      "S" #'save-some-buffers
+      "k" #'kill-buffer
+      "<escape> -" #'save-buffers-kill-terminal
+      "<escape> <escape>" #'keyboard-quit
+      "f" #'find-file
+      "x" #'execute-extended-command
+      "b" #'switch-to-buffer
+      "d" #'dired
+      "h" '(:keymap help-map)
+      "p" '(:package projectile :keymap projectile-command-map))
+    (emacs-map
+      :no-autoload t
+      :keymaps 'global
+      "M-:" nil
+      "C-x C-s" nil
+      "C-x s" nil
+      "C-x k" nil
+      "C-x C-f" nil
+      "C-x C-c" nil
+      "M-x" nil
+      "C-x b" nil
+      "C-x d" nil
+      "C-h" nil)
+    (evil-emap
+      :no-autoload t
+      :keymaps 'global
+      "M-:" #'eval-expression
+      "C-x C-s" #'save-buffer
+      "C-x s" #'save-some-buffers
+      "C-x k" #'kill-buffer
+      "C-x C-c" #'save-buffers-kill-terminal
+      "C-x C-f" #'find-file
+      "M-x" #'execute-extended-command
+      "C-x b" #'switch-to-buffer
+      "C-x d" #'dired
+      "C-h" '(:keymap help-map)))
 
   (setq
    initial-buffer-choice nil
@@ -439,21 +441,7 @@ This is mostly use-package and local utilities which are used throught the confi
     (evil-want-C-i-jump nil)
     (evil-undo-system #'undo-tree)
     (evil-want-minibuffer t)
-    ;; Try out emacs "cursor-between-characters" semantics in evil
-    ;; Use `+evil-toggle-cursor-semantics' to switch
-    (evil-move-cursor-back nil)
-    (evil-move-beyond-eol t)
-    (evil-highlight-closing-paren-at-point-states nil)
     :config
-    (defun +evil-toggle-cursor-semantics ()
-      (if evil-move-cursor-back
-          (progn
-            (setq evil-move-cursor-back nil)
-            (setq evil-move-beyond-eol t)
-            (setq evil-highlight-closing-paren-at-point-states nil))
-        (setq evil-move-cursor-back t)
-        (setq evil-move-beyond-eol nil)
-        (setq evil-highlight-closing-paren-at-point-states t)))
     (defun +evil-set-cursor (orig-fun &rest args)
       (if (display-graphic-p)
           (apply orig-fun args)
@@ -480,6 +468,8 @@ This is mostly use-package and local utilities which are used throught the confi
   (use-package evil
     :after (:all evil)
     :general
+    (emacs-map
+      "C-w" nil)
     (evil-nmmap
       :keymaps 'override
       "SPC w" '(:keymap evil-window-map)
@@ -2376,7 +2366,8 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       'bookmark-map
       "m" #'bookmark-set-no-overwrite
       "M" #'bookmark-set
-      "L" #'bookmark-bmenu-list)
+      "L" #'bookmark-bmenu-list
+      "p" '(projectile-switch-project :no-autoload t))
     (evil-nmmap
       :keymaps 'override
       "SPC c" '(:keymap bookmark-map)))
