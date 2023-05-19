@@ -3401,6 +3401,17 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
     :commands (i3wm-config-mode))
 #+end_src
 * Tools
+** calc [built-in] - The GNU Emacs calculator
+#+begin_src emacs-lisp
+  (use-package calc
+    :ensure nil
+    :commands (calc
+               full-calc)
+    :general
+    (evil-nmmap
+      :keymaps 'calc-mode-map
+      [remap evil-redo] #'calc-redo))
+#+end_src
 ** Magit - A Git Porcelain inside Emacs
 #+begin_src emacs-lisp
   (use-package magit
