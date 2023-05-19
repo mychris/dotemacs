@@ -2421,6 +2421,11 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :hook
     ((prog-mode-hook . abbrev-mode)
      (org-mode-hook . abbrev-mode)))
+
+  (use-package +abbrev
+    :ensure nil
+    :after (:all abbrev)
+    :demand t)
 #+end_src
 ** paren [built-in] - highlight matching paren
 #+begin_src emacs-lisp
