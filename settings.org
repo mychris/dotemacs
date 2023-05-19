@@ -395,6 +395,16 @@ This is mostly use-package and local utilities which are used throught the confi
       'package-menu-mode-map
       "q" '(kill-buffer-and-window :no-autoload t)))
 #+end_src
+** pcache - persistent caching for Emacs
+#+begin_src emacs-lisp
+  (use-package pcache
+    :ensure (pcache :pin melpa)
+    :config
+    (setq pcache-directory
+          (let ((dir (expand-file-name "pcache" user-emacs-cache-directory)))
+            (make-directory dir t)
+            dir)))
+#+end_src
 ** GCMH - the Garbage Collector Magic Hack
 #+begin_src emacs-lisp
   (use-package gcmh
