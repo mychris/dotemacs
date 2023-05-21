@@ -2603,7 +2603,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 ** lsp - Language Server Protocol support for Emacs
 #+begin_src emacs-lisp
   (use-package lsp-mode
-    :ensure t
+    :ensure (lsp-mode :pin melpa)
     :commands (lsp)
     :custom
     (lsp-keymap-prefix "s-g")
@@ -2627,8 +2627,12 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     ((rustic-mode-hook . lsp)
      (tuareg-mode-hook . lsp)))
 
+  (use-package lsp-lens
+    :ensure nil ;; part of lsp-mode
+    :delight (lsp-lens-mode))
+
   (use-package lsp-ui
-    :ensure t
+    :ensure (lsp-ui :pin melpa)
     :custom
     (lsp-ui-peek-enable t)
     (lsp-ui-sideline-enable t)
@@ -2699,6 +2703,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
                              (company-dabbrev-code company-keywords company-files)
                              (company-dabbrev)))
     (setq company-transformers '(delete-consecutive-dups
+                                 company-sort-prefer-same-case-prefix
                                  company-sort-by-occurrence
                                  my/company-sort-yas-first))
     (advice-add 'company-yasnippet--candidates :around #'my/wrap--company-yasnippet--candidates)
@@ -2760,6 +2765,9 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :delight (flycheck-mode)
     :commands (flycheck-mode)
     :functions (flycheck-define-error-level)
+    :custom
+    (flycheck-check-syntax-automatically '(save idle-change mode-enabled))
+    (flycheck-idle-change-delay 2)
     :config
     (define-fringe-bitmap 'flycheck-fringe-bitmap-one-excl
       (vector #b00000000
@@ -2830,6 +2838,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   (use-package flycheck-popup-tip
     :ensure t
     :after (:all flycheck)
+    :demand t
     :commands (flycheck-popup-tip-mode)
     :custom
     (flycheck-popup-tip-error-prefix "\u27a4 ")
@@ -2982,7 +2991,9 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 ** Rust
 #+begin_src emacs-lisp
   (use-package rustic
-    :ensure t)
+    :ensure (rustic :pin melpa)
+    :custom
+    (rustic-analyzer-command '("rustup" "run" "stable" "rust-analyzer")))
 
   (setq mouse-wheel-scroll-amount '(3 ((shift) . 1) ((control) . nil)))
   (setq mouse-wheel-progressive-speed nil)
