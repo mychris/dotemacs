@@ -2709,6 +2709,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (advice-add 'company-yasnippet--candidates :around #'my/wrap--company-yasnippet--candidates)
     :general
     (emacs-map
+      'company-mode-map
       [remap c-indent-line-or-region] #'company-indent-or-complete-common
       [remap indent-for-tab-command] #'company-indent-or-complete-common)
     (emacs-map
@@ -3210,7 +3211,7 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
 #+begin_src emacs-lisp
   (use-package fasm-mode
     :ensure nil
-    :mode (("\\.ASM\\'" . fasm-mode))
+    :mode (("\\.[Aa][Ss][Mm]\\'" . fasm-mode))
     :commands (fasm-mode)
     :config
     (defun +fasm-mode-setup ()
@@ -3218,6 +3219,10 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
       (setq-local tab-width 8)
       (setq-local indent-tabs-mode t)
       (setq-local fill-column 88))
+    :general
+    (emacs-map
+      'fasm-mode-map
+      "TAB" '(self-insert-command :no-autoload t))
     :hook
     (fasm-mode-hook . +fasm-mode-setup))
 #+end_src
