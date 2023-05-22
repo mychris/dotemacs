@@ -48,8 +48,10 @@ This is mostly use-package and local utilities which are used throught the confi
     :states '(normal motion)
     :prefix "SPC ,")
   ;; Try to replace as many C-x key bindings as possible
-  (defvar-keymap c-x-leader-map
-    :doc "C-x leader.")
+  (defvar c-x-leader-map
+    (let ((map (make-sparse-keymap)))
+      map)
+    "C-x leader.")
   (evil-nmmap
     "<backspace>" '(:keymap c-x-leader-map))
   (general-create-definer c-x-leader
