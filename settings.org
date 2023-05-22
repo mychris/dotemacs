@@ -3548,8 +3548,6 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
 #+end_src
 * Postface
 #+begin_src emacs-lisp
-  (provide 'settings)
-
   ;; Local Variables:
   ;; indent-tabs-mode: nil
   ;; End:

@@ -176,7 +176,8 @@ value."
 	(when do-byte-compile
 	  (unless (byte-compile-file file-el-path)
 	    (error "init.el: Failed to byte compile '%s'" file-el-path)))))
-    (require 'settings (file-name-sans-extension file-el-path))))
+    (when (not (load (file-name-sans-extension file-el-path)))
+      (error "init.el: Failed to load '%s'" (file-name-sans-extension file-el-path)))))
 
 ;; For now, do not byte compile the settings files. For some reason, this
 ;; messes up some of the use-package declaration.
