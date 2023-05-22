@@ -348,7 +348,7 @@
     ;; Labels
     (,(rx (and line-start
 	       (* (any " " "\t"))
-	       (group (and (any "a-z" "A-Z" "0-9" "." "?" "!" "@")
+	       (group (and (any "a-z" "A-Z" "0-9" "_" "." "?" "!" "@")
 			   (* (or (syntax word)
 				  (syntax symbol)))))
 	       ":"))
