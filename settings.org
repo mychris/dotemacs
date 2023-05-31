@@ -53,7 +53,8 @@ This is mostly use-package and local utilities which are used throught the confi
       map)
     "C-x leader.")
   (evil-nmmap
-    "<backspace>" '(:keymap c-x-leader-map))
+    "<backspace>" '(:keymap c-x-leader-map)
+    "DEL" '(:keymap c-x-leader-map))
   (general-create-definer c-x-leader
     :keymaps 'c-x-leader-map)
 
@@ -149,19 +150,6 @@ This is mostly use-package and local utilities which are used throught the confi
       "d" #'dired
       "h" '(:keymap help-map)
       "p" '(:package projectile :keymap projectile-command-map))
-    (emacs-map
-      :no-autoload t
-      :keymaps 'global
-      "M-:" nil
-      "C-x C-s" nil
-      "C-x s" nil
-      "C-x k" nil
-      "C-x C-f" nil
-      "C-x C-c" nil
-      "M-x" nil
-      "C-x b" nil
-      "C-x d" nil
-      "C-h" nil)
     (evil-emap
       :no-autoload t
       :keymaps 'global
