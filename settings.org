@@ -186,6 +186,12 @@ This is mostly use-package and local utilities which are used throught the confi
   ;; https://emacshorrors.com/posts/advertising-your-freedom.html
   (fset 'display-startup-echo-area-message 'ignore)
 #+end_src
+** compat - Emacs Lisp Compatibility Library
+#+begin_src emacs-lisp
+  (use-package compat
+    :ensure t
+    :demand t)
+#+end_src
 ** cua-base.el [built-in] - Emulate CUA key bindings
 #+begin_src emacs-lisp
   (use-package cua-base
