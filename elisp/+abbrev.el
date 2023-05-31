@@ -49,7 +49,7 @@
 
 (require 'abbrev)
 (require 's)
-(require 'yasnippet nil t)
+(require 'yasnippet nil 'noerror)
 
 (defun +abbrev-cursor-hook ()
   "Function to run after abbrev expansion.
@@ -67,8 +67,7 @@ position."
 (defun +abbrev-yas-hook ()
   "Function to run after abbrev expansion.
 Runs `yas-expand' to expand the yasnippet."
-  (yas-expand)
-  t)
+  (yas-expand))
 
 (put '+abbrev-yas-hook 'no-self-insert t)
 
@@ -76,8 +75,7 @@ Runs `yas-expand' to expand the yasnippet."
   "Function to run after abbrev expansion.
 Runs `yas-expand-snippet' using the expanded abbrev as a template."
   (let ((expansion (buffer-substring-no-properties last-abbrev-location (point))))
-    (yas-expand-snippet expansion last-abbrev-location (point)))
-  t)
+    (yas-expand-snippet expansion last-abbrev-location (point))))
 
 (put '+abbrev-yas-inline-hook 'no-self-insert t)
 
