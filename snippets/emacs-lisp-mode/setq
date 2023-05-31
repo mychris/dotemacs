@@ -2,4 +2,4 @@
 # name: (setq ...)
 # key: setq
 # --
-(setq $0)
+`(when (not (char-equal ?\( (char-before))) "(")`setq $0)

@@ -2,4 +2,4 @@
 # name: (let (...))
 # key: let
 # --
-(let ($1) $0)
+`(when (not (char-equal ?\( (char-before))) "(")`let ($1) $0)
