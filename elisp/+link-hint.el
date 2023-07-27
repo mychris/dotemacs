@@ -35,6 +35,7 @@
 
 
 (require 'link-hint)
+(require 'regexp-opt)
 
 (defcustom +link-hint-polarion-url
   nil
@@ -69,11 +70,13 @@ well-formed."
     (let ((pt (point)))
       (ignore-errors (beginning-of-line))
       (if (and (re-search-forward +link-hint--c-include-regexp bound t)
-	       (> (match-beginning 1) pt))
+	       (> (match-beginning 1) pt)
+	       (button-at (match-beginning 1)))
 	  (match-beginning 1)
 	(ignore-errors (goto-char pt))
 	(when (and (re-search-forward +link-hint--c-include-regexp bound t)
-		   (> (match-beginning 1) pt))
+		   (> (match-beginning 1) pt)
+		   (button-at (match-beginning 1)))
 	  (match-beginning 1))))))
 
 (defun +link-hint--c-include-at-point-p ()
@@ -141,7 +144,7 @@ Only search the range between just after the point and BOUND."
     (ignore-errors (forward-char))
     (when (re-search-forward
 	   (concat "\\(?:"
-		   (mapconcat #'identity +link-hint-jira-project-keys "|")
+		   (regexp-opt +link-hint-jira-project-keys)
 		   "\\)-[[:digit:]]+")
 	   bound
 	   t)
@@ -151,7 +154,7 @@ Only search the range between just after the point and BOUND."
   "Return the Jira reference at the point or nil."
   (when (looking-at-p
 	 (concat "\\(?:"
-		 (mapconcat #'identity +link-hint-jira-project-keys "|")
+		 (regexp-opt +link-hint-jira-project-keys)
 		 "\\)-[[:digit:]]+"))
     (match-string-no-properties 0)))
 
