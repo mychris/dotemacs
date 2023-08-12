@@ -3072,6 +3072,20 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+end_src
 ** Common lisp
 #+begin_src emacs-lisp
+  (use-package lisp-mode
+    :ensure nil
+    :commands (lisp-mode)
+    :config
+    (defun +lisp-mode-setup ()
+      (setq-local fill-column 100)
+      (setq-local show-trailing-whitespace t)
+      (display-fill-column-indicator-mode)
+      (modify-syntax-entry ?- "w"))
+    :hook
+    (lisp-mode-hook . +lisp-mode-setup)
+    (lisp-data-mode-hook . +lisp-mode-setup))
+#+end_src
+#+begin_src emacs-lisp
   (use-package sly
     :ensure t
     :commands (sly sly-mode)
