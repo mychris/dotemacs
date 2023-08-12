@@ -3,4 +3,5 @@
 # key: usep
 # --
 `(when (not (char-equal ?\( (char-before))) "(")`use-package ${1:package}
+  :ensure ${2:t}
   $0)

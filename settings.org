@@ -2416,6 +2416,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :custom
     (abbrev-file-name (expand-file-name "abbrev_defs.eld" user-emacs-directory))
     (only-global-abbrevs nil "Enable mode-specific abbrevs")
+    (save-abbrevs nil "Do not save abbrevs") ;; abbrevs are too complicated
     (abbrev-all-caps nil)
     (abbrev-suggest nil "Do not suggest using an abbrev in the echo area")
     :hook
@@ -2568,33 +2569,16 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       "Advice which should run before `yas--find-next-field' to expand abbrevs."
       (expand-abbrev))
     (advice-add 'yas--find-next-field :before #'+yas--find-next-field-expand-abbrev-advice)
+    :general
+    (evil-imap
+      'yas-minor-mode-map
+      "C-<tab>" #'yas-expand)
+    (emacs-map
+      'yas-keymap
+      "C-<tab>" #'yas-next-field)
     :hook
     (prog-mode-hook . yas-minor-mode)
     (org-mode-hook . yas-minor-mode))
-#+end_src
-** aas - Snippet expansions mid-typing
-#+begin_src emacs-lisp
-  (use-package aas
-    :ensure (aas :pin melpa)
-    :commands (aas-activate-for-major-mode)
-    :config
-    (aas-set-snippets 'c-mode
-      :cond #'(lambda ()
-                (if (or (nth 4 (syntax-ppss))
-                        (nth 3 (syntax-ppss)))
-                    nil
-                  (save-excursion
-                    (beginning-of-line)
-                    (looking-at-p "^[[:space:]]+\\(?:if\\|for\\|while\\|do\\|\\(?:} \\)?else\\|\\(?:} \\)?elif\\)[[:space:]]$"))))
-      "if " #'(lambda () (interactive) (yas-expand-snippet (yas-lookup-snippet "if (...) { ... }")))
-      "else " #'(lambda () (interactive) (yas-expand-snippet (yas-lookup-snippet "else { ... }")))
-      "elif " #'(lambda () (interactive) (yas-expand-snippet (yas-lookup-snippet "else if (...) { ... }")))
-      "for " #'(lambda () (interactive) (yas-expand-snippet (yas-lookup-snippet "for (...) { ... }")))
-      "while " #'(lambda () (interactive) (yas-expand-snippet (yas-lookup-snippet "while (...) { ... }")))
-      "do " #'(lambda () (interactive) (yas-expand-snippet (yas-lookup-snippet "do { ... } while (...)"))))
-    :hook
-    ((c-mode-hook . aas-activate-for-major-mode)
-     (c++-mode-hook . aas-activate-for-major-mode)))
 #+end_src
 ** lsp - Language Server Protocol support for Emacs
 #+begin_src emacs-lisp

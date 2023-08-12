@@ -67,15 +67,19 @@
 (require 's)
 (require 'yasnippet nil 'noerror)
 
-(defun +abbrev--point-in-string-p ()
-  "Return non-nil if the point is in a string."
-  (interactive)
-  (nth 3 (syntax-ppss)))
+(defun +abbrev-enable-in-code ()
+  "Return nil, if the cursor is in a comment or in a string.
+Can be used for the `:enable-function' property of `define-abbrev-table'."
+  (let ((syn (syntax-ppss)))
+    ;; 3 == string
+    ;; 4 == comment
+    (not (or (nth 3 syn)
+	     (nth 4 syn)))))
 
-(defun +abbrev--point-in-comment-p ()
-  "Return non-nil if the point is in a comment."
-  (interactive)
-  (nth 4 (syntax-ppss)))
+(defun +abbrev-enable-globally ()
+  "Return always t.
+Can be used for the `:enable-function' property of `define-abbrev-table'."
+  t)
 
 (defun +abbrev-cursor-hook ()
   "Function to run after abbrev expansion.
@@ -93,8 +97,7 @@ position."
 (defun +abbrev-yas-hook ()
   "Function to run after abbrev expansion.
 Runs `yas-expand' to expand the yasnippet."
-  (when (not (or (+abbrev--point-in-string-p)
-		 (+abbrev--point-in-comment-p)))
+  (when (+abbrev-enable-in-code)
     (yas-expand)))
 
 (put '+abbrev-yas-hook 'no-self-insert t)
@@ -102,26 +105,12 @@ Runs `yas-expand' to expand the yasnippet."
 (defun +abbrev-yas-inline-hook ()
   "Function to run after abbrev expansion.
 Runs `yas-expand-snippet' using the expanded abbrev as a template."
-  (when (not (or (+abbrev--point-in-string-p)
-		 (+abbrev--point-in-comment-p)))
+  (when (+abbrev-enable-in-code)
     (let ((expansion (buffer-substring-no-properties last-abbrev-location (point))))
       (yas-expand-snippet expansion last-abbrev-location (point)))))
 
 (put '+abbrev-yas-inline-hook 'no-self-insert t)
 
-(defun +abbrev-enable-in-code ()
-  "Return nil, if the cursor is in a comment or in a string.
-Can be used for the `:enable-function' property of `define-abbrev-table'."
-  (let ((syn (syntax-ppss)))
-    ;; 3 == string
-    ;; 4 == comment
-    (not (or (nth 3 syn)
-	     (nth 4 syn)))))
-
-(defun +abbrev-enable-globally ()
-  "Return always t.
-Can be used for the `:enable-function' property of `define-abbrev-table'."
-  t)
 
 
 (provide '+abbrev)
