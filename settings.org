@@ -2653,12 +2653,12 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 ** company - Modular text completion framework
 #+begin_src emacs-lisp
   (use-package company
-    :ensure t
+    :ensure (company :pin melpa)
     :commands (company-mode)
     :custom
     (company-tooltip-align-annotations t)
     (company-minimum-prefix-length 1)
-    (company-idle-delay 0.0)
+    (company-idle-delay 0.2) ;; 0.2 should not be noticeable
     (company-show-quick-access 'left)
     (company-quick-access-modifier 'meta)
     (company-quick-access-keys '("1" "2" "3" "4" "5" "6" "7" "8" "9" "0"))
@@ -2748,6 +2748,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 
   (use-package company-quickhelp
     :ensure t
+    :after (:all company)
     :commands (company-quickhelp-mode)
     :custom
     (company-quickhelp-delay 0.2)
