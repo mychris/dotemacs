@@ -33,10 +33,13 @@ This is mostly use-package and local utilities which are used throught the confi
     (general-create-definer evil-nmmap :states '(normal motion)))
 
   ;; Leader keys to get rid of C- and M- prefix keys.
+  (defvar buffer-local-leader-map
+    (let ((map (make-sparse-keymap)))
+      map)
+    "Map for buffer local actions.")
   (general-create-definer buffer-local-leader
-    :states '(normal motion)
-    :keymaps 'override
-    :prefix "SPC g")
+    :keymaps 'buffer-local-leader-map)
+
   (general-create-definer system-local-leader
     :states '(normal motion)
     :keymaps 'override
@@ -52,11 +55,14 @@ This is mostly use-package and local utilities which are used throught the confi
     (let ((map (make-sparse-keymap)))
       map)
     "C-x leader.")
-  (evil-nmmap
-    "<backspace>" '(:keymap c-x-leader-map)
-    "DEL" '(:keymap c-x-leader-map))
   (general-create-definer c-x-leader
     :keymaps 'c-x-leader-map)
+
+  (evil-nmmap
+    "<backspace>" '(:keymap c-x-leader-map)
+    "DEL" '(:keymap c-x-leader-map)
+    "SPC" nil
+    "SPC g" '(:keymap buffer-local-leader-map))
 
   (eval-and-compile
     (defvar user-emacs-cache-directory)) ;; from init.el
@@ -729,37 +735,16 @@ This is mostly use-package and local utilities which are used throught the confi
     (imenu-list-idle-update-delay 0.5)
     (imenu-list-position 'right)
     (imenu-list-buffer-name "*Ilist*")
-    :init
-    (defun +imenu-list-toggle ()
-      "Open the imenu-list buffer."
-      (interactive)
-      (if (string= (buffer-name) "*Ilist*")
-          (imenu-list-quit-window)
-        (progn
-          (imenu-list-minor-mode 1)
-          (if (get-buffer "*Ilist*")
-              (imenu-list-show)
-            (imenu-list))
-          (imenu-list-update)
-          (imenu-list-resize-window)
-          (enlarge-window-horizontally 2))))
-    (defun +imenu-list-ret-dwim ()
-      "Jump to the entry at `point' and close the imenu-list window."
-      (interactive)
-      (call-interactively #'imenu-list-ret-dwim)
-      (kill-buffer "*Ilist*"))
     :general
     (emacs-map
       :no-autoload t
-      "<f7>" #'+imenu-list-toggle)
+      "<f7>" #'imenu-list-smart-toggle)
     (emacs-map
       'imenu-list-major-mode-map
       "RET" #'imenu-list-display-dwim
       "<return>" #'imenu-list-display-dwim
       "TAB" '(hs-toggle-hiding :no-autoload t)
-      "<tab>" '(hs-toggle-hiding :no-autoload t))
-    :hook
-    (imenu-list-major-mode-hook . (lambda () (display-line-numbers-mode 0))))
+      "<tab>" '(hs-toggle-hiding :no-autoload t)))
 #+end_src
 ** vertico - VERTical Interactive COmpletion
 #+begin_src emacs-lisp
@@ -1281,6 +1266,7 @@ This is mostly use-package and local utilities which are used throught the confi
 
   (use-package which-key-posframe
     :if (and (window-system) (version<= "26.1" emacs-version))
+    :disabled t
     :ensure t
     :after (:all which-key)
     :delight (which-key-posframe-mode)
@@ -1547,7 +1533,6 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       (unhighlight-regexp t))
     :general
     (buffer-local-leader
-      'hi-lock-map
       :no-autoload t
       "h i" #'hi-lock-find-patterns
       "h l" #'highlight-lines-matching-regexp
@@ -1626,13 +1611,16 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   (use-package expand-region
     :ensure t
     :commands (er/expand-region
-               er/contract-region
-               er/mark-symbol)
+	       er/contract-region
+	       er/mark-symbol)
     :general
     (emacs-map
       "C-=" #'er/expand-region
       "C-+" #'er/contract-region
-      "M-C-S-SPC" #'er/mark-symbol))
+      "M-C-S-SPC" #'er/mark-symbol)
+    (evil-nmmap
+      "+" #'er/expand-region
+      "-" #'er/contract-region))
 #+end_src
 ** string-inflection - underscore -> UPCASE -> CamelCase -> lowerCamelCase conversion of names
 #+begin_src emacs-lisp
@@ -1683,6 +1671,17 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       "<XF86Cut>" #'clipboard-kill-region
       "<XF86Copy>" #'clipboard-kill-ring-save
       "<XF86Paste>" #'clipboard-yank))
+#+end_src
+** elec-pair - Automatic parenthesis pairing
+#+begin_src emacs-lisp
+  (use-package elec-pair
+    :ensure nil
+    :custom
+    (electric-pair-skip-whitespace nil)
+    :commands (electric-pair-mode
+               electric-pair-local-mode)
+    :hook
+    (c-mode-common-hook . electric-pair-local-mode))
 #+end_src
 * Movement / Navigation
 #+begin_src emacs-lisp
@@ -1868,6 +1867,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :ensure nil
     :after (link-hint)
     :demand t
+    :functions (+link-hint-setup)
     :config
     (+link-hint-setup))
 #+end_src
@@ -2462,14 +2462,17 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :hook
     (find-file-hook . auto-insert))
 #+end_src
-** treesit [built-in] - tree-sitter utilities
+** COMMENT treesit [built-in] - tree-sitter utilities
 #+begin_src emacs-lisp
   (use-package treesit
     :ensure nil
+    :disabled t
     :demand t
-    :if (file-directory-p
-         (file-name-as-directory
-          (expand-file-name "dist" (expand-file-name "tree-sitter-module" user-emacs-directory))))
+    :if (and
+         (version<= "29.1" emacs-version)
+         (file-directory-p
+          (file-name-as-directory
+           (expand-file-name "dist" (expand-file-name "tree-sitter-module" user-emacs-directory)))))
     :custom
     (treesit-extra-load-path
      (list (file-name-as-directory
@@ -2517,7 +2520,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
               ((setq sym (variable-at-point)) (describe-variable sym))
               ;; now let it operate fully -- i.e. also check the
               ;; surrounding sexp for a function call.
-              ((setq sym (function-at-point)) (describe-function sym)))))
+              ((setq sym (function-called-at-point)) (describe-function sym)))))
     :general
     (evil-nmap
       'emacs-lisp-mode-map
@@ -2535,6 +2538,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package smart-tabs-mode
     :ensure (smart-tabs-mode :pin melpa)
+    :disabled t
     :commands (smart-tabs-mode
                smart-tabs-mode-enable
                smart-tabs-advice
@@ -2827,6 +2831,11 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :hook
     (flycheck-mode-hook . flycheck-popup-tip-mode))
 #+end_src
+** flycheck-aspell - Aspell checker for flycheck
+#+begin_src emacs-lisp
+  (use-package flycheck-aspell
+    :ensure t)
+#+end_src
 ** next-error [built-in]
 #+begin_src emacs-lisp
   (use-package simple
@@ -2888,6 +2897,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 
   (use-package c-ts-mode ;; built-in
     :ensure nil
+    :disabled t
     :if (version< "29.0" emacs-version)
     :init
     (add-to-list 'major-mode-remap-alist '(c-mode . c-ts-mode))

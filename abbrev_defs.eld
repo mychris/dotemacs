@@ -123,7 +123,5 @@ Parents: `lisp-mode-code-abbrev-table' `lisp-mode-global-abbrev-table'."
 (define-abbrev-table 'global-abbrev-table
   '(
     ("openjdk" "OpenJDK" nil :count 0)
-    ("gcc" "GCC" nil :count 0)
-    ("emacs" "Emacs" nil :count 0)
     ("zzz" "Christoph Göttschkes" nil :count 0)
     ))

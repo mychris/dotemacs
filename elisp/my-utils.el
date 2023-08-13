@@ -26,6 +26,7 @@
 ;;; Code:
 
 (require 'subr-x)
+(require 'eshell)
 
 (defun +point-in-string-p ()
   "Return non-nil if the point is in a string."
@@ -170,6 +171,68 @@ Without any ARG, or if ARG is nil, mark the frame, otherwise unmark it."
       (+frame-urgency-hint-set-x11 frame arg))
      (t (warn "+frame-urgency-hint unavailable for the %s window system"
 	      (symbol-name current-window-system))))))
+
+(defun +switch-to-buffer-or-most-recent (predicate &optional switch-fn)
+  "Switch to the buffer satisfying PREDICATE using SWITCH-FN.
+
+If the current buffer satisfies the given PREDICATE, switch to the most recent
+buffer.  Otherwise, try to find a buffer which satisfies the PREDICATE and
+switch to that one.
+
+Returns the buffer switched to, or nil if no target buffer was found.
+
+If SWITCH-FN is not given, `switch-to-buffer' is used."
+  (setq switch-fn (or switch-fn #'switch-to-buffer))
+  (let ((buffers (buffer-list)))
+    (if (funcall predicate (current-buffer))
+	(if (nth 2 buffers)
+	    (funcall switch-fn (nth 2 buffers))
+	  (current-buffer))
+      (let ((target-buffer (cl-find-if
+			    predicate
+			    buffers)))
+	(if target-buffer
+	    (funcall switch-fn target-buffer)
+	  nil)))))
+
+;;;###autoload
+(defun +toggle-eshell ()
+  "Toggle an eshell buffer.
+
+Switch to the most recently used eshell buffer, or to the most recently used
+buffer, if currently in an eshell buffer."
+  (interactive)
+  (when (not (+switch-to-buffer-or-most-recent
+	      (lambda (buffer)
+		(string-prefix-p eshell-buffer-name (buffer-name buffer)))
+	      (lambda (buffer)
+		(switch-to-buffer buffer nil nil))))
+    (eshell)))
+
+(defun +transform-thing-at-point (thing fun)
+  "Transform the THING at point using FUN.
+FUN being a function accepting one argument, which is the string representation
+of the THING at point.
+Returns the transformed THING at point, or nil, if THING could not be found.
+See `bounds-of-thing-at-point' for more information about THING."
+  (if-let ((boundaries (bounds-of-thing-at-point thing)))
+      (letrec ((start (car boundaries))
+	       (end (cdr boundaries))
+	       (transformed-thing
+		(funcall fun (buffer-substring-no-properties
+			      start
+			      end))))
+	(delete-region start end)
+	(goto-char start)
+	(insert transformed-thing)
+	transformed-thing)))
+
+(defun +apply-thing-at-point (thing fun)
+  "Apply the given FUN to THING at point.
+See `bounds-of-thing-at-point' for more infromation about THING."
+  (if-let ((boundaries (bounds-of-thing-at-point thing)))
+      (funcall fun (buffer-substring-no-properties
+		    (car boundaries) (cdr boundaries)))))
 
 (provide 'my-utils)
 
