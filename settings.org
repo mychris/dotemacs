@@ -2194,8 +2194,8 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
                           (nil . (telephone-line-minor-mode-segment
                                   telephone-line-buffer-segment)))
      telephone-line-rhs '((nil . (telephone-line-flycheck-segment
-                                  telephone-line-misc-info-segment
-                                  telephone-line-projectile-segment))
+                                  telephone-line-misc-info-segment))
+                          ;; telephone-line-projectile-segment))
                           (accent . (telephone-line-major-mode-segment))
                           (nil . (telephone-line-airline-position-segment))))
     :hook
