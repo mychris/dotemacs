@@ -3327,6 +3327,18 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
     :hook
     (makefile-mode-hook . +makefile-mode-setup))
 #+end_src
+** yamfile-mode
+#+begin_src emacs-lisp
+  (use-package yamfile-mode
+    :ensure nil
+    :commands (yamfile-mode)
+    :general
+    (evil-nmmap
+      'yamfile-mode-map
+      "[[" #'yamfile-mode-previous-dependency
+      "]]" #'yamfile-mode-next-dependency)
+    :mode (("\\(?:/\\|\\`\\)[Yy]amfile\\'\\|\\.yam\\'" . yamfile-mode)))
+#+end_src
 * Markup languages
 ** Org Mode
 #+begin_src emacs-lisp
