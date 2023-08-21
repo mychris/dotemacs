@@ -3312,14 +3312,18 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
             (setq count (1- count)))
           (goto-char beg)
           (dotimes (_ count)
-            (+makefile-join-line 1))))
-      :general
-      (emacs-map
-        'makefile-mode-map
-        "C-c C-c" '(comment-dwim :no-autoload t))
-      (evil-nmap
-        'makefile-mode-map
-        "J" #'+evil-makefile-join))
+            (+makefile-join-line 1)))))
+    :general
+    (emacs-map
+      'makefile-mode-map
+      "C-c C-c" '(comment-dwim :no-autoload t))
+    (evil-nmap
+      'makefile-mode-map
+      "J" #'+evil-makefile-join)
+    (evil-nmmap
+      'makefile-mode-map
+      "[[" #'makefile-previous-dependency
+      "]]" #'makefile-next-dependency)
     :hook
     (makefile-mode-hook . +makefile-mode-setup))
 #+end_src
