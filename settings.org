@@ -45,7 +45,7 @@ This is mostly use-package and local utilities which are used throught the confi
     :prefix "SPC s")
   (general-create-definer mode-action-leader
     :states '(normal motion)
-    :prefix "SPC <escape>")
+    :prefix "SPC e")
   (general-create-definer inspect-leader
     :states '(normal motion)
     :prefix "SPC ,")
@@ -435,6 +435,7 @@ This is mostly use-package and local utilities which are used throught the confi
     (emacs-map
       "C-x 9" #'+delete-most-recent-window)
     (evil-nmmap
+      "SPC q" #'+delete-most-recent-window
       "ZO" #'+delete-most-recent-window))
 #+end_src
 * Evil
@@ -1321,6 +1322,7 @@ This is mostly use-package and local utilities which are used throught the confi
     (which-key-add-key-based-replacements "SPC f" "link-hint prefix")
     (which-key-add-key-based-replacements "SPC g" "buffer-local-leader")
     (which-key-add-key-based-replacements "SPC s" "system-local-leader")
+    (which-key-add-key-based-replacements "SPC e" "mode-action-leader")
     (which-key-add-key-based-replacements "SPC ," "inspect-leader")
     (which-key-add-key-based-replacements "SPC g e" "next-error prefix")
     (which-key-add-key-based-replacements "SPC g h" "hi-lock prefix")
