@@ -231,6 +231,7 @@ The macro definitions are stored in `yamfile-mode--macro-table'."
 (defvar-keymap yamfile-mode-map
   :doc "The keymap that is used in Yamfile mode."
   "C-c C-c" #'comment-dwim
+  "C-c C-p" #'yamfile-mode-pickup-macros
   "C-M-i"   #'completion-at-point
   "M-n"     #'yamfile-mode-next-dependency
   "M-p"     #'yamfile-mode-previous-dependency
