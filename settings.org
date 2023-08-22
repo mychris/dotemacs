@@ -2974,6 +2974,14 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       (modify-syntax-entry ?_ "w"))
     (lsp-maybe-add-predicate 'c-mode #'lsp-maybe-active-if-compile-commands-in-projectile-root)
     :general
+    (mode-action-leader
+      'c-mode-base-map
+      "." #'c-set-style
+      "h" #'ff-find-other-file)
+    (mode-action-leader
+      'c-mode-map)
+    (mode-action-leader
+      'c++-mode-map)
     (emacs-map
       'c-mode-map
       "M-h" #'my/c-mark-block
