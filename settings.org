@@ -430,7 +430,9 @@ This is mostly use-package and local utilities which are used throught the confi
     :commands (+delete-most-recent-window)
     :general
     (emacs-map
-      "C-x 9" #'+delete-most-recent-window))
+      "C-x 9" #'+delete-most-recent-window)
+    (evil-nmmap
+      "ZO" #'+delete-most-recent-window))
 #+end_src
 * Evil
 ** evil - Extensible Vi layer for Emacs.
@@ -1222,16 +1224,16 @@ This is mostly use-package and local utilities which are used throught the confi
       'apropos-mode-map
       "[[" #'apropos-previous-symbol
       "]]" #'apropos-next-symbol
-      "q" #'quit-window
-      "ZQ" #'evil-quit
-      "ZZ" #'quit-window)
+      "q" '(quit-window :no-autoload t)
+      "ZQ" '(evil-quit :no-autoload t)
+      "ZZ" '(quit-window :no-autoload t))
     (emacs-map
       'apropos-mode-map
       "[[" #'apropos-previous-symbol
       "]]" #'apropos-next-symbol
-      "q" #'quit-window
-      "ZQ" #'evil-quit
-      "ZZ" #'quit-window))
+      "q" '(quit-window :no-autoload t)
+      "ZQ" '(evil-quit :no-autoload t)
+      "ZZ" '(quit-window :no-autoload t)))
 #+end_src
 ** descr-text [built-in]
 #+begin_src emacs-lisp
@@ -1266,7 +1268,7 @@ This is mostly use-package and local utilities which are used throught the confi
       "[[" #'Man-previous-section
       "]]" #'Man-next-section
       "q" '(quit-window :no-autoload t)
-      "ZQ" '(quit-window :no-autoload t)
+      "ZQ" '(evil-quit :no-autoload t)
       "ZZ" '(quit-window :no-autoload t))
     (evil-nmmap
       "[[" #'Man-previous-section

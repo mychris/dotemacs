@@ -1,6 +1,6 @@
-;; my-utils.el --- Utility functions                 -*- lexical-binding: t; -*-
+;; my-utils.el --- Utility functions   -*- coding: utf-8; lexical-binding: t; -*-
 
-;; Copyright (c) 2020-2023 Christoph Göttschkes
+;; Copyright (c) Christoph Göttschkes
 
 ;; Author: Christoph Göttschkes
 
