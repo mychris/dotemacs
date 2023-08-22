@@ -2723,7 +2723,8 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       tuareg-mode-hook
       sly-mode-hook
       lsp-mode-hook
-      makefile-mode-hook)
+      makefile-mode-hook
+      yamfile-mode-hook)
      . company-mode))
 
   (use-package company-dabbrev-code
@@ -3340,12 +3341,19 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
   (use-package yamfile-mode
     :ensure nil
     :commands (yamfile-mode)
+    :config
+    (defun +yamfile-mode-setup ()
+      (yamfile-mode-pickup-macros))
     :general
     (evil-nmmap
       'yamfile-mode-map
       "[[" #'yamfile-mode-previous-dependency
       "]]" #'yamfile-mode-next-dependency)
-    :mode (("\\(?:/\\|\\`\\)[Yy]amfile\\'\\|\\.yam\\'" . yamfile-mode)))
+    :mode (("\\(?:/\\|\\`\\)[Yy]amfile\\'\\|\\.yam\\'" . yamfile-mode))
+    :hook
+    (yamfile-mode-hook . +yamfile-mode-setup)
+    (after-save-hook . (lambda () (when (derived-mode-p 'yamfile-mode)
+                                    (yamfile-mode-pickup-macros)))))
 #+end_src
 * Markup languages
 * Outline Mode
