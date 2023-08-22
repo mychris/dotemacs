@@ -3112,6 +3112,8 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (mode-action-leader
       'emacs-lisp-mode-map
       "f" '(+indent-buffer :no-autoload t)
+      "c" #'emacs-lisp-byte-compile-and-load
+      "C" #'emacs-lisp-native-compile-and-load
       "e e" #'eval-last-sexp
       "e E" #'pp-eval-last-sexp
       "e b" #'eval-buffer
