@@ -3340,6 +3340,20 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
     :mode (("\\(?:/\\|\\`\\)[Yy]amfile\\'\\|\\.yam\\'" . yamfile-mode)))
 #+end_src
 * Markup languages
+* Outline Mode
+#+begin_src emacs-lisp
+  (use-package outline-mode
+    :ensure nil
+    :commands (outline-mode
+               outline-minor-mode)
+    :hook
+    (outline-mode-hook . (lambda ()
+                           ;; Check if the mode is realy outline-mode.
+                           ;; Some major modes derive from outline-mode.
+                           (when (eq major-mode 'outline-mode)
+                             (font-lock-mode -1)
+                             (display-line-numbers-mode -1)))))
+#+end_src
 ** Org Mode
 #+begin_src emacs-lisp
   (use-package org
