@@ -2713,31 +2713,35 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       "C-p" #'company-select-previous-or-abort
       "C-k" #'company-select-previous-or-abort)
     :hook
-    ((emacs-lisp-mode-hook . company-mode)
-     (sh-mode-hook . company-mode)
-     (c-mode-common-hook . company-mode)
-     (c-ts-mode-hook . company-mode)
-     (c++-ts-mode-hook . company-mode)
-     (rustic-mode-hook . company-mode)
-     (rust-ts-mode-hook . company-mode)
-     (tuareg-mode-hook . company-mode)
-     (sly-mode-hook . company-mode)
-     (lsp-mode-hook . company-mode)
-     (makefile-mode-hook . company-mode)))
+    ((emacs-lisp-mode-hook
+      sh-mode-hook
+      c-mode-common-hook
+      c-ts-mode-hook
+      c++-ts-mode-hook
+      rustic-mode-hook
+      rust-ts-mode-hook
+      tuareg-mode-hook
+      sly-mode-hook
+      lsp-mode-hook
+      makefile-mode-hook)
+     . company-mode))
 
   (use-package company-dabbrev-code
     :ensure nil ;; packaged with company
+    :after (:all company)
+    :demand t
     :commands (company-dabbrev-code)
-    :config
-    (add-to-list 'company-dabbrev-code-modes 'sh-mode)
-    ;; Change using setq-local for mode specific configurations.
+    :custom
     (setq company-dabbrev-code-other-buffers t)
     (setq company-dabbrev-code-everywhere t)
-    (setq company-dabbrev-code-ignore-case nil))
+    (setq company-dabbrev-code-ignore-case nil)
+    :config
+    (add-to-list 'company-dabbrev-code-modes 'sh-mode))
 
   (use-package company-quickhelp
     :ensure t
     :after (:all company)
+    :demand t
     :commands (company-quickhelp-mode)
     :custom
     (company-quickhelp-delay 0.2)

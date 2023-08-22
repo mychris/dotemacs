@@ -64,6 +64,10 @@
        (any ?+ ?- blank)
        line-end)))
 
+(defvar yamfile-mode--macro-table nil
+  "Table of all macro names known for this buffer.")
+(put 'yamfile-mode--macro-table 'risky-local-variable t)
+
 (defun yamfile-mode--var-use-match-from-to (from limit)
   "Search for variable use from FROM up to LIMIT for fontification."
   (when (and (> limit 0)
@@ -183,6 +187,44 @@ equivalent to `yamfile-mode-next-dependency' with -ARG as an argument."
 		   (backward-char 1)
 		   (goto-char (point-min))))))))
 
+(defun yamfile-mode--remember-macro (macro-name)
+  "Store the given MACRO-NAME in `yamfile-mode--macro-table'."
+  (when (not (zerop (length macro-name)))
+    (when (not (assoc macro-name yamfile-mode--macro-table))
+      (push (list macro-name) yamfile-mode--macro-table))))
+
+(defun yamfile-mode-pickup-macros ()
+  "Scan the buffer for all yam macro definitions.
+The macro definitions are stored in `yamfile-mode--macro-table'."
+  (interactive)
+  (setq yamfile-mode--macro-table nil)
+  (save-excursion
+    (goto-char (point-min))
+    (while (re-search-forward (rx (group-n 1
+				    (regexp yamfile-mode--directive-regexp)
+				    (regexp (regexp-opt yamfile-mode--macro-keywords-with-variable)))
+				  (+ blank)
+				  (group-n 2 (+? nonl))
+				  (or line-end ?\( ?\) blank))
+			      nil t)
+      (yamfile-mode--remember-macro (match-string-no-properties 2))
+      (goto-char (match-end 2)))))
+
+(defun yamfile-completions-at-point ()
+  "Function used for `completion-at-point-functions' in `yamfile-mode'."
+  (let ((beg (save-excursion
+	       (skip-chars-backward "^{")
+	       (point))))
+    (when (char-equal ?{ (char-before beg))
+      (list beg (point)
+	    yamfile-mode--macro-table
+	    :exit-function
+	    (lambda (_s finished)
+	      (when (memq finished '(sole finished))
+		(if (looking-at (regexp-quote "}"))
+		    (goto-char (match-end 0))
+		  (insert "}"))))))))
+
 (define-abbrev-table 'yamfile-mode-abbrev-table ()
   "Abbrev table in use in Yamfile buffers.")
 
@@ -203,6 +245,9 @@ equivalent to `yamfile-mode-next-dependency' with -ARG as an argument."
 
 The hook `yamfile-mode-hook' is run with no args at mode
 initiliazation."
+  (add-hook 'completion-at-point-functions
+	    #'yamfile-completions-at-point nil t)
+  (make-local-variable 'yamfile-mode--macro-table)
   ;; Font lock.
   (set (make-local-variable 'font-lock-defaults)
        '(yamfile-mode-font-lock-keywords))
