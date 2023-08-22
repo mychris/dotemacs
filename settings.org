@@ -1203,6 +1203,36 @@ This is mostly use-package and local utilities which are used throught the confi
       "g[" #'Info-prev-reference
       "T" #'Info-toc))
 #+end_src
+** apropos [built-in]
+#+begin_src emacs-lisp
+  (use-package apropos
+    :ensure nil
+    :commands (apropos-mode
+               apropos
+               apropos-variable
+               apropos-local-variable
+               apropos-function
+               apropos-command
+               apropos-library
+               apropos-value
+               apropos-local-value
+               apropos-documentation)
+    :general
+    (evil-nmmap
+      'apropos-mode-map
+      "[[" #'apropos-previous-symbol
+      "]]" #'apropos-next-symbol
+      "q" #'quit-window
+      "ZQ" #'evil-quit
+      "ZZ" #'quit-window)
+    (emacs-map
+      'apropos-mode-map
+      "[[" #'apropos-previous-symbol
+      "]]" #'apropos-next-symbol
+      "q" #'quit-window
+      "ZQ" #'evil-quit
+      "ZZ" #'quit-window))
+#+end_src
 ** descr-text [built-in]
 #+begin_src emacs-lisp
   (use-package descr-text
