@@ -537,7 +537,7 @@ This is mostly use-package and local utilities which are used throught the confi
     (setq evil-collection-setup-minibuffer t)
     ;; delight this mode in :delight doesn't work because the file is not in the load path
     (delight 'evil-collection-unimpaired-mode nil "evil-collection-unimpaired")
-    (dolist (m '(help info evil-mc))
+    (dolist (m '(help info man evil-mc))
       (delete m evil-collection-mode-list))
     (evil-collection-init))
 #+end_src
@@ -1246,7 +1246,10 @@ This is mostly use-package and local utilities which are used throught the confi
 #+begin_src emacs-lisp
   (use-package man
     :ensure nil
-    :commands (Man-next-section)
+    :commands (Man
+               Man-next-section
+               Man-at-mouse
+               man-follow)
     :custom
     (Man-notify-method 'aggressive)
     :general
@@ -1255,7 +1258,23 @@ This is mostly use-package and local utilities which are used throught the confi
       [remap Man-next-section] #'(lambda (_n)
                                    (interactive "p" man-common)
                                    (call-interactively #'Man-next-section)
-                                   (recenter))))
+                                   (recenter))
+      [remap Man-previous-section] #'(lambda (_n)
+                                       (interactive "p" man-common)
+                                       (call-interactively #'Man-previous-section)
+                                       (recenter))
+      "[[" #'Man-previous-section
+      "]]" #'Man-next-section
+      "q" '(quit-window :no-autoload t)
+      "ZQ" '(quit-window :no-autoload t)
+      "ZZ" '(quit-window :no-autoload t))
+    (evil-nmmap
+      "[[" #'Man-previous-section
+      "]]" #'Man-next-section
+      "gr" #'Man-update-manpage
+      "q" '(quit-window :no-autoload t)
+      "ZQ" '(quit-window :no-autoload t)
+      "ZZ" '(quit-window :no-autoload t)))
 #+end_src
 ** which-key - Display available key bindings in popup
 #+begin_src emacs-lisp
