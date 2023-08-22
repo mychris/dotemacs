@@ -1722,6 +1722,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (scroll-margin 0)
     (scroll-conservatively 100000)
     (scroll-preserve-screen-position 1)
+    (backward-delete-char-untabify-method nil)
     :config
     (defun backward-kill-char-or-word ()
       "Kill characters backward.
