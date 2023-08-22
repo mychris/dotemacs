@@ -1676,6 +1676,18 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (evil-local-mode-hook . turn-on-undo-tree-mode))
 #+end_src
 * Editing
+** indent [built-in] - indentation commands for emacs
+#+begin_src emacs-lisp
+  (use-package emacs ;; indent does not `provide'
+    :ensure nil
+    :demand t
+    :config
+    (defun +indent-buffer ()
+      (interactive)
+      "Indent each nonblank line in the whole buffer."
+      (save-excursion
+        (indent-region (point-min) (point-max)))))
+#+end_src
 ** expand-region - Increase selected region by semantic units
 #+begin_src emacs-lisp
   (use-package expand-region
@@ -3091,6 +3103,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :general
     (mode-action-leader
       'emacs-lisp-mode-map
+      "f" '(+indent-buffer :no-autoload t)
       "e e" #'eval-last-sexp
       "e E" #'pp-eval-last-sexp
       "e b" #'eval-buffer
