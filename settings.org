@@ -2722,7 +2722,8 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
      (rust-ts-mode-hook . company-mode)
      (tuareg-mode-hook . company-mode)
      (sly-mode-hook . company-mode)
-     (lsp-mode-hook . company-mode)))
+     (lsp-mode-hook . company-mode)
+     (makefile-mode-hook . company-mode)))
 
   (use-package company-dabbrev-code
     :ensure nil ;; packaged with company
@@ -3302,7 +3303,8 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
       (setq-local fill-column 132)
       (setq-local show-trailing-whitespace t)
       (setq-local makefile-space 'trailing-whitespace)
-      (display-fill-column-indicator-mode 1))
+      (display-fill-column-indicator-mode 1)
+      (makefile-pickup-everything t))
     (with-eval-after-load 'evil
       (evil-define-operator +evil-makefile-join (beg end)
         "Join the selected lines in a makefile specific way."
@@ -3325,7 +3327,9 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
       "[[" #'makefile-previous-dependency
       "]]" #'makefile-next-dependency)
     :hook
-    (makefile-mode-hook . +makefile-mode-setup))
+    (makefile-mode-hook . +makefile-mode-setup)
+    (after-save-hook . (lambda () (when (derived-mode-p 'makefile-mode)
+                                    (makefile-pickup-everything t)))))
 #+end_src
 ** yamfile-mode
 #+begin_src emacs-lisp
