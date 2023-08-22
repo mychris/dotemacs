@@ -1111,7 +1111,7 @@ This is mostly use-package and local utilities which are used throught the confi
       "C-x t" nil)
     (evil-emap
       "C-x t" '(:keymap tab-prefix-map))
-    (evil-nmap
+    (evil-nmmap
       :keymaps 'override
       "SPC t" '(:keymap tab-prefix-map))
     (emacs-map
@@ -1131,6 +1131,7 @@ This is mostly use-package and local utilities which are used throught the confi
   (use-package help
     :ensure nil
     :commands (help-mode)
+    :after (:all evil) ;; binding into evil map, need to delay loading
     :config
     (advice-add #'help-window-display-message
                 :after #'(lambda (&rest _ignored)
@@ -1156,8 +1157,7 @@ This is mostly use-package and local utilities which are used throught the confi
       "<" #'help-go-back
       ">" #'help-go-forward
       "<tab>" #'forward-button
-      "<backtab>" #'backward-button
-      "SPC t" '(:keymap tab-prefix-map))
+      "<backtab>" #'backward-button)
     (emacs-map
       :keymaps 'evil-window-map
       "e" #'view-echo-area-messages)
