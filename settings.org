@@ -1891,9 +1891,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       :keymaps 'override
       "SPC f" #'link-hint-open-link
       "SPC F" #'link-hint-copy-link))
-#+end_src
-** +link-hint - Enhancements for link-hint
-#+begin_src emacs-lisp
+
   (use-package +link-hint
     :ensure nil
     :after (link-hint)
