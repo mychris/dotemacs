@@ -23,10 +23,14 @@
 
 ;;; Commentary:
 
+;; A major mode for editing yamfiles.  The mode is highly influenced by the
+;; `makefile-mode'.
+
 ;;; Code:
 
 (eval-when-compile
-  (require 'rx))
+  (require 'rx)
+  (require 'cl-lib))
 (require 'regexp-opt)
 
 (defvar yamfile-mode-syntax-table
@@ -48,16 +52,16 @@
     "break" "continue" "endfor" "nop"))
 
 (defconst yamfile-mode--directive-regexp
-  (rx line-start ?$ (zero-or-more whitespace)))
+  (rx line-start ?$ (zero-or-more blank)))
 
 (defconst yamfile-mode--dependency-regexp
   (rx line-start
       (group-n 1
-	(not (any ?# ?$ ?: whitespace ?\n))
-	(+? any))
+	(not (any ?# ?$ ?: blank ?\n))
+	(+? nonl))
       ?:
       (or
-       (any ?+ ?- whitespace)
+       (any ?+ ?- blank)
        line-end)))
 
 (defun yamfile-mode--var-use-match-from-to (from limit)
@@ -112,9 +116,9 @@
     (,(rx (group-n 1
 	    (regexp yamfile-mode--directive-regexp)
 	    (regexp (regexp-opt yamfile-mode--macro-keywords-with-variable)))
-	  (1+ whitespace)
-	  (group-n 2 (1+ (not (any whitespace ?\( ?\) ))))
-	  (or line-end ?\( ?\) whitespace))
+	  (+ blank)
+	  (group-n 2 (+? nonl))
+	  (or line-end ?\( ?\) blank))
      (1 font-lock-keyword-face)
      (2 font-lock-variable-name-face))))
 
@@ -123,38 +127,61 @@
     ("Macro definitions" ,(rx (group-n 1
 				(regexp yamfile-mode--directive-regexp)
 				(regexp (regexp-opt yamfile-mode--macro-keywords-with-variable)))
-			      (1+ whitespace)
-			      (group-n 2 (1+ (not (any whitespace ?\( ?\) ))))
-			      (or line-end ?\( ?\) whitespace))
-     2))
+			      (+ blank)
+			      (group-n 2 (+? nonl))
+			      (or line-end ?\( ?\) blank))
+     2)
+    ("Includes" ,(rx line-start ?$ "include"
+			   (+ blank)
+			   (group-n 1 (+? nonl))
+			   (* blank)
+			   line-end)
+     1))
   "Imenu generic expression for Yamfile mode.  See `imenu-generic-expression'.")
 
 ;;;###autoload
-(defun yamfile-mode-next-dependency ()
-  "Move point to the beginning of the next dependency line."
-  (interactive)
-  (forward-line 1)
-  (if (re-search-forward yamfile-mode--dependency-regexp nil t)
-      (progn (beginning-of-line)
-	     t)
-    (progn (goto-char (point-max))
-	   (beginning-of-line)
-	   nil)))
+(defun yamfile-mode-next-dependency (&optional arg)
+  "Move point to the beginning of the next dependency line.
+With an argument, do it ARG times.  If the argument is negative, the result is
+equivalent to `yamfile-mode-previous-dependency' with -ARG as an argument."
+  (interactive "p")
+  (setq arg (or arg 1))
+  (if (< arg 0)
+      (yamfile-mode-previous-dependency (- arg))
+    (cl-loop while (> arg 0) do
+	     (cl-decf arg)
+	     (forward-line 1)
+	     (if (re-search-forward yamfile-mode--dependency-regexp nil t)
+		 (beginning-of-line)
+	       (progn
+		 ;; First move forward to get an error
+		 ;; if point is at the end of the buffer.
+		 (forward-char 1)
+		 (goto-char (point-max)))))))
 
 ;;;###autoload
-(defun yamfile-mode-previous-dependency ()
-  "Move point to the beginning of the previous dependency line."
-  (interactive)
-  (if (eq (point) (line-beginning-position))
-      (beginning-of-line -1)
-    (beginning-of-line))
-  (when (not (looking-at-p yamfile-mode--dependency-regexp))
-    (if (re-search-backward yamfile-mode--dependency-regexp nil t)
-	(progn (beginning-of-line)
-	       t)
-      (progn (goto-char (point-min))
+(defun yamfile-mode-previous-dependency (&optional arg)
+  "Move point to the beginning of the previous dependency line.
+With an argument, do it ARG times.  If the argument is negative, the result is
+equivalent to `yamfile-mode-next-dependency' with -ARG as an argument."
+  (interactive "p")
+  (setq arg (or arg 1))
+  (if (< arg 0)
+      (yamfile-mode-next-dependency (- arg))
+    (cl-loop while (> arg 0) do
+	     (cl-decf arg)
+	     ;; First move backward to get to the previous line,
+	     ;; if point is at the beginning of the line.
+	     (backward-char 1)
 	     (beginning-of-line)
-	     nil))))
+	     (when (not (looking-at-p yamfile-mode--dependency-regexp))
+	       (if (re-search-backward yamfile-mode--dependency-regexp nil t)
+		   (beginning-of-line)
+		 (progn
+		   ;; First move backward to get an error
+		   ;; if point is at the beginning of the buffer.
+		   (backward-char 1)
+		   (goto-char (point-min))))))))
 
 (define-abbrev-table 'yamfile-mode-abbrev-table ()
   "Abbrev table in use in Yamfile buffers.")
