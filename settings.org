@@ -3426,7 +3426,7 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
                                     (yamfile-mode-pickup-macros)))))
 #+end_src
 * Markup languages
-* Outline Mode
+** Outline Mode
 #+begin_src emacs-lisp
   (use-package outline-mode
     :ensure nil
