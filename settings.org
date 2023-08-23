@@ -1640,42 +1640,6 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :hook
     (emacs-startup-hook . global-highlight-thing-mode))
 #+end_src
-** undo-tree - Treat undo history as a tree
-#+begin_src emacs-lisp
-  (use-package undo-tree
-    :ensure (undo-tree :pin gnu-elpa-devel)
-    :delight (undo-tree-mode)
-    :commands (global-undo-tree-mode
-               unto-tree-visualize
-               unto-tree-undo)
-    :custom
-    (undo-tree-auto-save-history t)
-    (undo-tree-history-directory-alist
-     `(("." . ,(file-name-as-directory
-                (expand-file-name "undo" user-emacs-cache-directory)))))
-    (undo-tree-visualizer-diff t)
-    (undo-tree-visualizer-timestamps t)
-    :config
-    (let
-        ((undo-dir (file-name-as-directory
-                    (expand-file-name "undo" user-emacs-cache-directory))))
-      (unless (file-exists-p undo-dir) (make-directory undo-dir t)))
-    :general
-    (emacs-map
-      'undo-tree-map
-      [remap undo] #'undo-tree-undo
-      [remap undo-redo] #'undo-tree-redo
-      "C-x U" #'undo-tree-visualize)
-    (evil-nmmap
-     'undo-tree-map
-     "SPC U" #'undo-tree-visualize)
-    (emacs-map
-      'undo-tree-visualizer-mode-map
-      "C-x u" #'undo-tree-visualize-quit)
-    :hook
-    (emacs-startup-hook . global-undo-tree-mode)
-    (evil-local-mode-hook . turn-on-undo-tree-mode))
-#+end_src
 * Editing
 ** indent [built-in] - indentation commands for emacs
 #+begin_src emacs-lisp
@@ -1754,6 +1718,50 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       "<XF86Cut>" #'clipboard-kill-region
       "<XF86Copy>" #'clipboard-kill-ring-save
       "<XF86Paste>" #'clipboard-yank))
+#+end_src
+** undo [built-in]
+#+begin_src emacs-lisp
+  (use-package emacs
+    :ensure nil
+    :demand t
+    :custom
+    (undo-limit 160000))
+#+end_src
+** undo-tree - Treat undo history as a tree
+#+begin_src emacs-lisp
+  (use-package undo-tree
+    :ensure (undo-tree :pin gnu-elpa-devel)
+    :delight (undo-tree-mode)
+    :commands (global-undo-tree-mode
+               unto-tree-visualize
+               unto-tree-undo)
+    :custom
+    (undo-tree-auto-save-history t)
+    (undo-tree-history-directory-alist
+     `(("." . ,(file-name-as-directory
+                (expand-file-name "undo" user-emacs-cache-directory)))))
+    (undo-tree-visualizer-diff t)
+    (undo-tree-visualizer-timestamps t)
+    :config
+    (let
+        ((undo-dir (file-name-as-directory
+                    (expand-file-name "undo" user-emacs-cache-directory))))
+      (unless (file-exists-p undo-dir) (make-directory undo-dir t)))
+    :general
+    (emacs-map
+      'undo-tree-map
+      [remap undo] #'undo-tree-undo
+      [remap undo-redo] #'undo-tree-redo
+      "C-x U" #'undo-tree-visualize)
+    (evil-nmmap
+     'undo-tree-map
+     "SPC U" #'undo-tree-visualize)
+    (emacs-map
+      'undo-tree-visualizer-mode-map
+      "C-x u" #'undo-tree-visualize-quit)
+    :hook
+    (emacs-startup-hook . global-undo-tree-mode)
+    (evil-local-mode-hook . turn-on-undo-tree-mode))
 #+end_src
 ** elec-pair - Automatic parenthesis pairing
 #+begin_src emacs-lisp
