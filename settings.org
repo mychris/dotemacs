@@ -1289,6 +1289,7 @@ This is mostly use-package and local utilities which are used throught the confi
       "ZQ" '(evil-quit :no-autoload t)
       "ZZ" '(quit-window :no-autoload t))
     (evil-nmmap
+      'Man-mode-map
       "[[" #'Man-previous-section
       "]]" #'Man-next-section
       "gr" #'Man-update-manpage
