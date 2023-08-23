@@ -123,23 +123,6 @@ This is mostly use-package and local utilities which are used throught the confi
   (emacs-map
     'iso-transl-ctl-x-8-map
     "<menu>" '(execute-extended-command :no-autoload t))
-  (emacs-map
-    "<up>" nil
-    "C-<up>" nil
-    "M-<up>" nil
-    "C-M-<up>" nil
-    "<down>" nil
-    "C-<down>" nil
-    "M-<down>" nil
-    "C-M-<down>" nil
-    "<left>" nil
-    "C-<left>" nil
-    "M-<left>" nil
-    "C-M-<left>" nil
-    "<right>" nil
-    "<C-right>" nil
-    "<M-right>" nil
-    "<C-M-right>" nil)
 
   ;; Use the c-x leader
   ;; For now, disable the old bindings to get used to it
