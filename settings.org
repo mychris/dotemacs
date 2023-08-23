@@ -2024,9 +2024,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       'occur-mode-map
       "C-a" #'+occur-mode-move-beginning-of-line
       "^" #'+occur-mode-move-beginnig-of-line
-      "S-<return>" #'+occur-mode-goto-occurrence-stay-occurrence-buffer)
-    (emacs-map
-      'occur-mode-map
+      "S-<return>" #'+occur-mode-goto-occurrence-stay-occurrence-buffer
       "q" #'kill-buffer-and-window
       "<up>" #'previous-line
       "<down>" #'next-line
@@ -2034,9 +2032,17 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       "k" #'previous-line
       [remap next-line] #'next-error-no-select
       [remap previous-line] #'previous-error-no-select)
+    (evil-nmmap
+      'occur-mode-map
+      "o" #'occur-mode-goto-occurrence-other-window
+      "r" #'occur-rename-buffer
+      "q" #'kill-buffer-and-window)
     (emacs-map
       'occur-edit-mode-map
-      "C-a" #'+occur-mode-move-beginning-of-line))
+      "C-a" #'+occur-mode-move-beginning-of-line)
+    (evil-nmap
+      'occur-edit-mode-map
+      "o" #'occur-mode-goto-occurrence-other-window))
 #+end_src
 ** loccur - Perform an occur-like folding in current buffer
 #+begin_src emacs-lisp
