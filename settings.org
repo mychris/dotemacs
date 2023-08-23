@@ -1136,7 +1136,9 @@ This is mostly use-package and local utilities which are used throught the confi
       'tab-prefix-map
       "<escape>" '(keyboard-quit :no-autoload t)
       "l" #'tab-next
-      "h" #'tab-previous))
+      "h" #'tab-previous
+      "o" #'tab-recent
+      "O" nil))
 #+end_src
 ** pos-tip - Show tooltip at point
 #+begin_src emacs-lisp
