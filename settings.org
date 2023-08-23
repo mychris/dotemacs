@@ -1209,7 +1209,7 @@ This is mostly use-package and local utilities which are used throught the confi
       "<wheel-right>" #'Info-history-forward
       "<" #'Info-history-back
       ">" #'Info-history-forward)
-    (evil-mmap
+    (evil-nmmap
       'Info-mode-map
       "<return>" #'Info-follow-nearest-node
       "C-t" #'Info-history-back
@@ -1223,7 +1223,8 @@ This is mostly use-package and local utilities which are used throught the confi
       "g TAB" #'Info-next-reference
       "g]" #'Info-next-reference
       "g[" #'Info-prev-reference
-      "T" #'Info-toc))
+      "T" #'Info-toc
+      "^" #'Info-up))
 #+end_src
 ** apropos [built-in]
 #+begin_src emacs-lisp
