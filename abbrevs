@@ -1,4 +1,4 @@
-;; abbrev_defs.eld --- Abbrev definitions. -*- lexical-binding: t; coding: utf-8; -*-
+;; abbrevs --- Abbrev definitions. -*- lexical-binding: t; coding: utf-8; mode: lisp-data -*-
 
 
 ;;; c-mode

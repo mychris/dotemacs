@@ -176,9 +176,7 @@ This is mostly use-package and local utilities which are used throught the confi
 #+begin_src emacs-lisp
   (use-package cua-base
     :ensure nil
-    :commands (cua-mode)
-    :hook
-    (after-init-hook . (lambda () (cua-mode -1))))
+    :commands (cua-mode))
 #+end_src
 ** nsm.el [built-in] - Network Security Manager
 #+begin_src emacs-lisp
@@ -1374,7 +1372,8 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   (use-package keyfreq
     :ensure t
     :commands (keyfreq-mode
-               keyfreq-autosave-mode)
+               keyfreq-autosave-mode
+               keyfreq-show)
     :custom
     (keyfreq-buffer "*keyfreq-show*")
     (keyfreq-file (expand-file-name "keyfreq.hist" user-emacs-cache-directory))
@@ -1455,23 +1454,22 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (emacs-map
       :keymaps 'dired-mode-map
       :states '(normal visual motion)
-      "gr" #'revert-buffer))
+      "gr" '(revert-buffer :no-autoload t)))
 
   (use-package +dired
     :ensure nil
     :after (:all dired)
-    :demand t
+    :commands (+dired-maybe-insert-subdir-or-kill-subdir)
     :general
     (emacs-map
       :keymaps 'dired-mode-map
-      [remap dired-maybe-insert-subdir] #'dired-maybe-insert-subdir-or-kill-subdir))
+      [remap dired-maybe-insert-subdir] #'+dired-maybe-insert-subdir-or-kill-subdir))
 #+end_src
 ** dired-narrow - Live-narrowing of search results for dired
 #+begin_src emacs-lisp
   (use-package dired-narrow
     :ensure (dired-narrow :pin melpa)
     :after (:all dired)
-    :demand t
     :commands (dired-narrow
                dired-narrow-regexp
                dired-narrow-fuzzy))
@@ -1535,7 +1533,6 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   (use-package treemacs-persp
     :ensure t
     :after (:all treemacs perspective))
-#+end_src
 #+end_src
 * Visual
 ** whitespace [built-in]
@@ -2450,9 +2447,13 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
                bookmark-bmenu-list)
     :custom
     (bookmark-save-flag 5)
-    (bookmark-default-file (expand-file-name "bookmarks.eld" user-emacs-directory))
+    ;; Do not use the .elp suffix, otherwise prog-mode will be loaded early.
+    (bookmark-default-file (expand-file-name "bookmarks" user-emacs-directory))
     (bookmark-sort-flag t)
     (bookmark-fringe-mark nil)
+    :init
+    (run-with-idle-timer 5 nil (lambda ()
+                                 (bookmark-maybe-load-default-file)))
     :general
     (emacs-map
       'bookmark-map
@@ -2496,7 +2497,8 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
                insert-abbrev-table-description
                abbrev-suggest-show-report)
     :custom
-    (abbrev-file-name (expand-file-name "abbrev_defs.eld" user-emacs-directory))
+    ;; Do not use the .elp suffix, otherwise prog-mode will be loaded early.
+    (abbrev-file-name (expand-file-name "abbrevs" user-emacs-directory))
     (only-global-abbrevs nil "Enable mode-specific abbrevs")
     (save-abbrevs nil "Do not save abbrevs") ;; abbrevs are too complicated
     (abbrev-all-caps nil)
@@ -2507,7 +2509,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 
   (use-package +abbrev
     :ensure nil
-    :after (:all abbrev)
+    :after (:all abbrev yasnippet)
     :demand t)
 #+end_src
 ** paren [built-in] - highlight matching paren
@@ -2647,10 +2649,10 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (yas-also-auto-indent-first-line t)
     (yas-also-indent-empty-lines nil)
     (yas-wrap-around-region t)
-    :init
-    (setq yas-alias-to-yas/prefix-p nil)
+    (yas-alias-to-yas/prefix-p nil)
     :config
-    (yas-reload-all)
+    ;; customizing `yas-snippet-dirs' calls `yas-reload-all' already.
+    ;; (yas-reload-all)
     (defun +yas--find-next-field-expand-abbrev-advice (&rest args)
       "Advice which should run before `yas--find-next-field' to expand abbrevs."
       (expand-abbrev))
