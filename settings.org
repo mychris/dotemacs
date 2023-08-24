@@ -1314,8 +1314,10 @@ This is mostly use-package and local utilities which are used throught the confi
     (which-key-add-key-based-replacements "g ." "evil-mc prefix")
     (which-key-add-key-based-replacements "SPC c" "bookmark prefix")
     (which-key-add-key-based-replacements "SPC w" "window prefix")
+    (which-key-add-key-based-replacements "SPC t" "tab prefix")
     (which-key-add-key-based-replacements "<backspace> h" "help prefix")
     (which-key-add-key-based-replacements "<backspace> p" "proj prefix")
+    (which-key-add-key-based-replacements "<backspace> g" "magit prefix")
     :hook
     (emacs-startup-hook . which-key-mode))
 
@@ -3612,7 +3614,16 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
       (mapc #'kill-buffer (magit-mode-get-buffers)))
     :general
     (c-x-leader
-      "g" #'magit-status)
+      "g g" #'magit-status
+      "g s" #'magit-show-commit
+      "g d" #'magit-diff-buffer-file
+      "g c" #'magit-commit
+      "g f" #'magit-fetch
+      "g p" #'magit-push
+      "g m" #'magit-merge
+      "g b" #'magit-blame
+      "g z" #'maigt-stash
+      "g v" #'magit-generate-changelog)
     (emacs-map
       "C-x g" nil)
     (evil-emap
