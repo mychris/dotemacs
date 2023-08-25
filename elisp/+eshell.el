@@ -1,11 +1,9 @@
-;; eshell-cmds --- additional eshell commands        -*- lexical-binding: t; -*-
+;; +eshell --- Extensions for eshell.el -*- coding:utf-8; lexical-binding: t; -*-
 
-;; Copyright (c) 2023 Christoph Göttschkes
+;; Copyright (c) Christoph Göttschkes
 
 ;; Author: Christoph Göttschkes
 ;; Maintainer: Christoph Göttschkes
-;; Created: 27 Jan 2023
-;; Modified: 27 Jan 2023
 ;; Version: 0.1
 ;; Keywords: convenience
 
@@ -26,10 +24,31 @@
 
 ;;; Commentary:
 
+;;   Extensions for eshell.el
+
 ;;; Code:
 
+(require 'my-utils)
+(require 'eshell)
 (require 'em-alias)
 (require 'em-dirs)
+
+;;;###autoload
+(defun +eshell-toggle ()
+  "Toggle an eshell buffer.
+
+Switch to the most recently used eshell buffer, or to the most recently used
+buffer, if currently in an eshell buffer."
+  (interactive)
+  (require 'eshell)
+  (when (not (+switch-to-buffer-or-most-recent
+	      (lambda (buffer)
+		(string-prefix-p eshell-buffer-name (buffer-name buffer)))
+	      (lambda (buffer)
+		(switch-to-buffer buffer nil nil))))
+    (eshell)))
+
+
 
 (defun eshell/cd. ()
   "Alias for cd .."
@@ -151,6 +170,6 @@ Options:
 				     command)
 			     command-args)))))
 
-(provide 'eshell-cmds)
+(provide '+eshell)
 
-;;; eshell-cmds.el ends here
+;;; +eshell.el ends here

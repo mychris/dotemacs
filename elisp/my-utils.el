@@ -26,7 +26,6 @@
 ;;; Code:
 
 (require 'subr-x)
-(require 'eshell)
 
 (defun +point-in-string-p ()
   "Return non-nil if the point is in a string."
@@ -194,20 +193,6 @@ If SWITCH-FN is not given, `switch-to-buffer' is used."
 	(if target-buffer
 	    (funcall switch-fn target-buffer)
 	  nil)))))
-
-;;;###autoload
-(defun +toggle-eshell ()
-  "Toggle an eshell buffer.
-
-Switch to the most recently used eshell buffer, or to the most recently used
-buffer, if currently in an eshell buffer."
-  (interactive)
-  (when (not (+switch-to-buffer-or-most-recent
-	      (lambda (buffer)
-		(string-prefix-p eshell-buffer-name (buffer-name buffer)))
-	      (lambda (buffer)
-		(switch-to-buffer buffer nil nil))))
-    (eshell)))
 
 (defun +transform-thing-at-point (thing fun)
   "Transform the THING at point using FUN.
