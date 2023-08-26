@@ -548,13 +548,22 @@ This is mostly use-package and local utilities which are used throught the confi
     :after (:all evil)
     :commands (evil-collection-init)
     :demand t
+    :custom
+    (evil-collection-setup-minibuffer t)
     :config
-    (setq evil-collection-setup-minibuffer t)
     ;; delight this mode in :delight doesn't work because the file is not in the load path
     (delight 'evil-collection-unimpaired-mode nil "evil-collection-unimpaired")
-    (dolist (m '(help info man evil-mc))
-      (delete m evil-collection-mode-list))
-    (evil-collection-init))
+    (dolist (m '(help info man image evil-mc magit magit-section magit-todos))
+      (cl-delete-if #'(lambda (e)
+                        (or (equal e m)
+                            (and (listp e)
+                                 (equal (car e) m))))
+                    evil-collection-mode-list))
+    (evil-collection-init)
+    (evil-collection-init '((image image-mode) magit (magit-section magit) (magit-todos magit))))
+    ;;    (cl-delete-if #'(lambda (e) (and (listp e) (eq (car e) 'magit))) evil-collection-mode-list)
+    ;;    (with-eval-after-load 'magit
+    ;;      (evil-collection-init '((magit magit-repos magit-submodule) magit-section magit-todos)))
 #+end_src
 ** evil-escape - Customizable key sequence to escape from insert state and everything else in Emacs.
 #+begin_src emacs-lisp
