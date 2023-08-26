@@ -130,19 +130,32 @@ This is mostly use-package and local utilities which are used throught the confi
   (with-eval-after-load 'evil
     (c-x-leader
       :no-autoload t
-      ":" #'eval-expression
-      ";" #'eval-expression
-      "s" #'save-buffer
-      "S" #'save-some-buffers
-      "k" #'kill-buffer
       "<escape> -" #'save-buffers-kill-terminal
       "<escape> <escape>" #'keyboard-quit
-      "f" #'find-file
-      "x" #'execute-extended-command
+      "(" #'evil-record-macro
+      "*" #'calc-dispatch
+      "+" #'text-scale-adjust
+      "-" #'text-scale-adjust
+      "0" #'text-scale-adjust
+      ":" #'eval-expression
+      ";" #'eval-expression
       "b" #'switch-to-buffer
       "d" #'dired
+      "f" #'find-file
       "h" '(:keymap help-map)
-      "p" '(:package projectile :keymap projectile-command-map))
+      "H" #'mark-whole-buffer
+      "k" #'kill-buffer
+      "p" '(:package projectile :keymap projectile-command-map)
+      "s" #'save-buffer
+      "S" #'save-some-buffers
+      "u" #'undo-tree-visualize
+      "w" #'write-buffer
+      "x" #'execute-extended-command
+      "X" #'exchange-point-and-mark
+      "[" #'backward-page
+      "]" #'forward-page
+      "<left>" #'previous-buffer
+      "<right>" #'next-buffer)
     (evil-emap
       :no-autoload t
       :keymaps 'global
@@ -418,7 +431,7 @@ This is mostly use-package and local utilities which are used throught the confi
       "C-x 9" #'+delete-most-recent-window)
     (evil-nmmap
       "SPC q" #'+delete-most-recent-window
-      "ZO" #'+delete-most-recent-window))
+      "Z O" #'+delete-most-recent-window))
 #+end_src
 * Evil
 ** evil - Extensible Vi layer for Emacs.
