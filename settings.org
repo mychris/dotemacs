@@ -13,6 +13,7 @@ This is mostly use-package and local utilities which are used throught the confi
   ;;; Code:
   (eval-when-compile
     (require 'use-package))
+  (require 'cl-seq)
   (require 'delight)
   (require 'bind-key)
   (require 'my-utils)
@@ -170,7 +171,7 @@ This is mostly use-package and local utilities which are used throught the confi
 #+begin_src emacs-lisp
   (use-package compat
     :ensure t
-    :demand t)
+    :demand nil)
 #+end_src
 ** cua-base.el [built-in] - Emulate CUA key bindings
 #+begin_src emacs-lisp
@@ -332,27 +333,27 @@ This is mostly use-package and local utilities which are used throught the confi
 #+end_src
 ** S - The long lost Emacs string manipulation library
 #+begin_src emacs-lisp
-  (use-package s
-    :demand t
-    :ensure t)
+    (use-package s
+      :ensure t
+      :demand nil)
 #+end_src
 ** f - Modern API for working with files and directories
 #+begin_src emacs-lisp
   (use-package f
-    :demand t
-    :ensure t)
+    :ensure t
+    :demand nil)
 #+end_src
 ** dash - A modern list API for Emacs.
 #+begin_src emacs-lisp
   (use-package dash
-    :demand t
-    :ensure t)
+    :ensure t
+    :demand nil)
 #+end_src
 ** font-utils - Utilities for Unicode characters
 #+begin_src emacs-lisp
   (use-package font-utils
     :ensure t
-    :demand t
+    :demand nil
     :custom
     (font-utils-less-feedback nil)
     (font-utils-use-persistent-storage "font-utils")
@@ -3602,7 +3603,6 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
     :commands (magit-status
                magit-commit
                magit-load-config-extensions
-               magit-auto-revert-mode
                magit-process-git)
     :functions (magit-restore-window-configuration
                 magit-mode-get-buffers)
@@ -3630,7 +3630,6 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
       "C-x g" #'magit-status)
     (evil-nmap
       'magit-status-mode-map
-      "q" #'+kill-magit-buffers
       "J" #'magit-section-forward
       "K" #'magit-section-backward
       "[ [" #'magit-section-backward-sibling
@@ -3641,7 +3640,12 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
       "M-3" nil
       "M-4" nil)
     :hook
-    (magit-mode-hook . magit-load-config-extensions)
+    (magit-mode-hook . magit-load-config-extensions))
+
+  (use-package magit-autorevert ;; part of magit
+    :ensure nil
+    :commands (magit-auto-revert-mode)
+    :hook
     (emacs-startup-hook . magit-auto-revert-mode))
 
   (use-package git-commit ;; part of magit
