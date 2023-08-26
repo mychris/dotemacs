@@ -173,6 +173,7 @@ This is mostly use-package and local utilities which are used throught the confi
   (setq
    initial-buffer-choice nil
    inhibit-startup-message t
+   inhibit-startup-echo-area-message t
    inhibit-startup-screen t
    inhibit-startup-buffer-menu t
    inhibit-x-resources t)
