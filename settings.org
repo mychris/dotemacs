@@ -7,7 +7,7 @@
 To please the compiler, we need to require all the dependencies the settings have, which are not loaded using use-package, or are needed by use-package.
 This is mostly use-package and local utilities which are used throught the configuration or are configured to be used interactively.
 #+begin_src emacs-lisp
-  ;;; settings.el --- personal configuration           -*- lexical-binding: t; -*-
+  ;;; settings.el --- personal configuration -*- coding: utf-8; lexical-binding: t; -*-
   ;;; Commentary:
   ;; Generated from `settings.org' in `init.el'.
   ;;; Code:
@@ -2254,9 +2254,11 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       "M-<kp-0>" #'+text-scale-reset))
 #+end_src
 * Modeline
+** mode-line [built-in]
 #+begin_src emacs-lisp
   (use-package simple
     :ensure nil
+    :disabled t
     :init
     (setq-default mode-line-percent-position '(-3 "%p"))
     ;; mode-line-position-column-line-format '(" %l,%c") ; Emacs 28
@@ -2280,7 +2282,25 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :hook
     (emacs-startup-hook . line-number-mode)
     (emacs-startup-hook . column-number-mode))
-
+#+end_src
+** keycast - Show current command and its binding
+#+begin_src emacs-lisp
+  (use-package keycast
+    :ensure t
+    :commands (keycast-mode)
+    :config
+    (setq keycast-mode-line-remove-tail-elements nil)
+    (setq keycast-mode-line-insert-after 'mode-line-buffer-identification)
+    (dolist (input '(self-insert-command
+                     org-self-insert-command))
+      (add-to-list 'keycast-substitute-alist `(,input "." "Typing…")))
+    (dolist (event '(mouse-event-p
+                     mouse-movement-p
+                     mwheel-scroll))
+      (add-to-list 'keycast-substitute-alist `(,event "." "Mouse…"))))
+#+end_src
+** telephon-line - Rewrite of Powerline
+#+begin_src emacs-lisp
   (use-package telephone-line
     :ensure (telephone-line :pin melpa)
     :delight (telephone-line-mode)
@@ -2305,20 +2325,6 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
                           (nil . (telephone-line-airline-position-segment))))
     :hook
     (emacs-startup-hook . telephone-line-mode))
-
-  (use-package keycast
-    :ensure t
-    :commands (keycast-mode)
-    :config
-    (setq keycast-mode-line-remove-tail-elements nil)
-    (setq keycast-mode-line-insert-after 'mode-line-buffer-identification)
-    (dolist (input '(self-insert-command
-                     org-self-insert-command))
-      (add-to-list 'keycast-substitute-alist `(,input "." "Typing…")))
-    (dolist (event '(mouse-event-p
-                     mouse-movement-p
-                     mwheel-scroll))
-      (add-to-list 'keycast-substitute-alist `(,event "." "Mouse…"))))
 #+end_src
 * Shells
 ** shell [built-in] - specialized comint.el for running the shell
