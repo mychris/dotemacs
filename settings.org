@@ -1311,6 +1311,9 @@ This is mostly use-package and local utilities which are used throught the confi
     :ensure t
     :delight (which-key-mode)
     :commands (which-key-mode
+               which-key-show-top-level
+               which-key-show-major-mode
+               which-key-show-keymap
                which-key-add-key-based-replacements
                which-key-add-major-mode-key-based-replacements
                which-key-add-keymap-based-replacements)
@@ -1342,6 +1345,11 @@ This is mostly use-package and local utilities which are used throught the confi
     (which-key-add-key-based-replacements "<backspace> h" "help prefix")
     (which-key-add-key-based-replacements "<backspace> p" "proj prefix")
     (which-key-add-key-based-replacements "<backspace> g" "magit prefix")
+    :general
+    (c-x-leader
+      "/" #'which-key-show-top-level
+      "@" #'which-key-show-major-mode
+      "^" #'which-key-show-keymap)
     :hook
     (emacs-startup-hook . which-key-mode))
 
