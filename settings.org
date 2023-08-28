@@ -2138,6 +2138,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (rg-mode-hook . wgrep-rg-setup))
 #+end_src
 * Coloring / themes / fonts
+** Themes
 #+begin_src emacs-lisp
   (use-package all-the-icons
     :ensure t)
@@ -2195,20 +2196,9 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
                                     (and (eq system-type 'gnu/linux) (daemonp) (getenv "DISPLAY")))
                                 (switch-theme 'gruvbox-dark-soft)
                               (switch-theme 'gruvbox-dark-soft)))))
-
-  (use-package ligature
-    :ensure t
-    :commands (ligature-mode
-               global-ligature-mode
-               ligature-set-ligatures)
-    :config
-    (ligature-set-ligatures 'c-mode '("==" "!=" "<=" ">=" ">>" "<<" "||" "&&" "++" "--" "->" "//"
-                                      ("0" (rx (and "x" (+ (in "A-F" "a-f" "0-9")))))))
-    (ligature-set-ligatures 'c++-mode '("==" "!=" "<=" ">=" "<=>" ">>" "<<" "||" "&&" "++" "--" "->" "//"
-                                        ("0" (rx (and "x" (+ (in "A-F" "a-f" "0-9")))))))
-    :hook
-    (emacs-startup-hook . global-ligature-mode))
-
+#+end_src
+** Fonst
+#+begin_src emacs-lisp
   (use-package face-remap
     :ensure nil
     :demand t
@@ -2260,6 +2250,21 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       "M-<kp-subtract>" #'text-scale-decrease
       "M-<kp-multiply>" #'+font-cycle-step
       "M-<kp-0>" #'+text-scale-reset))
+#+end_src
+** Ligature
+#+begin_src emacs-lisp
+  (use-package ligature
+    :ensure t
+    :commands (ligature-mode
+               global-ligature-mode
+               ligature-set-ligatures)
+    :config
+    (ligature-set-ligatures 'c-mode '("==" "!=" "<=" ">=" ">>" "<<" "||" "&&" "++" "--" "->" "//"
+                                      ("0" (rx (and "x" (+ (in "A-F" "a-f" "0-9")))))))
+    (ligature-set-ligatures 'c++-mode '("==" "!=" "<=" ">=" "<=>" ">>" "<<" "||" "&&" "++" "--" "->" "//"
+                                        ("0" (rx (and "x" (+ (in "A-F" "a-f" "0-9")))))))
+    :hook
+    (emacs-startup-hook . global-ligature-mode))
 #+end_src
 * Modeline
 ** mode-line [built-in]
