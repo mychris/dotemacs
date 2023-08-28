@@ -2514,11 +2514,11 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :after (:all bookmark)
     :demand t
     :commands (+bookmark-setup
-               +bookmark-load-contents)
+               +bookmark-load-default-contents)
     :config
     ;; Always load bookmarks.
     ;; Didn't find a way to overload bookmark-maybe-load-default-file yet
-    (+bookmark-load-contents bookmark-default-file)
+    (+bookmark-load-default-contents)
     (+bookmark-setup))
 #+end_src
 * Programming generic
