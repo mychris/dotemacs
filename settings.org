@@ -2487,13 +2487,12 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
                bookmark-bmenu-list)
     :custom
     (bookmark-save-flag 5)
+    ;; We do not change the bookmark file from outside of emacs
+    (bookmark-watch-bookmark-file nil)
     ;; Do not use the .elp suffix, otherwise prog-mode will be loaded early.
     (bookmark-default-file (expand-file-name "bookmarks" user-emacs-directory))
     (bookmark-sort-flag t)
     (bookmark-fringe-mark nil)
-    :init
-    (run-with-idle-timer 5 nil (lambda ()
-                                 (bookmark-maybe-load-default-file)))
     :general
     (emacs-map
       'bookmark-map
@@ -2509,7 +2508,12 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :ensure nil
     :after (:all bookmark)
     :demand t
+    :commands (+bookmark-setup
+               +bookmark-load-contents)
     :config
+    ;; Always load bookmarks.
+    ;; Didn't find a way to overload bookmark-maybe-load-default-file yet
+    (+bookmark-load-contents bookmark-default-file)
     (+bookmark-setup))
 #+end_src
 * Programming generic

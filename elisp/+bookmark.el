@@ -66,6 +66,24 @@ to a certain position."
     (+bookmark-del-rear-context-string bookmark-record))
   bookmark-record)
 
+;;;###autoload
+(defun +bookmark-load-default-contents ()
+  "Load bookmarks from FILE."
+  (let ((file bookmark-default-file)
+	(enable-local-variables))
+    (with-temp-buffer
+      (insert-file-contents file)
+      (goto-char (point-min))
+      (let ((blist (bookmark-alist-from-buffer)))
+	(if (not (listp blist))
+	    (error "Invalid bookmark list in %s" file)
+	  (setq bookmark-alist blist
+		bookmark-alist-modification-count 0)
+	  (setq bookmark-bookmarks-timestamp
+		(cons file (nth 5 (file-attributes file))))
+	  (bookmark-bmenu-surreptitiously-rebuild-list)
+	  (setq bookmark-file-coding-system buffer-file-coding-system))))))
+
 
 ;;;###autoload
 (defun +bookmark-setup ()
