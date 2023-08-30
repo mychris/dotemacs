@@ -2953,13 +2953,15 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       :fringe-bitmap 'flycheck-fringe-bitmap-one-excl
       :fringe-face 'flycheck-fringe-info
       :error-list-face 'flycheck-error-list-info)
+    (add-to-list 'flycheck-checkers 'mail-aspell-dynamic)
     :hook
     ((lsp-mode-hook . flycheck-mode)
      (emacs-lisp-mode-hook . flycheck-mode)
      (sh-mode-hook . flycheck-mode)
      (org-src-mode-hook . (lambda ()
                             (setq-local flycheck-disabled-checkers
-                                        '(emacs-lisp-checkdoc))))))
+                                        '(emacs-lisp-checkdoc))))
+     (message-mode-hook . flycheck-mode)))
 
   (use-package flycheck-popup-tip
     :ensure t
@@ -2974,7 +2976,9 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 ** flycheck-aspell - Aspell checker for flycheck
 #+begin_src emacs-lisp
   (use-package flycheck-aspell
-    :ensure t)
+    :ensure t
+    :after (:all flycheck)
+    :demand t)
 #+end_src
 ** next-error [built-in]
 #+begin_src emacs-lisp
@@ -3647,6 +3651,14 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
       [remap evil-redo] #'calc-redo)
     :hook
     (calc-mode-hook . +calc-mode-setup))
+#+end_src
+** ispell [built-in] - Interface to spell checkers
+#+begin_src emacs-lisp
+  (use-package ispell
+    :ensure nil
+    :commands (ispell)
+    :custom
+    (ispell-dictionary "en_US"))
 #+end_src
 ** Magit - A Git Porcelain inside Emacs
 #+begin_src emacs-lisp
