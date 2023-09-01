@@ -337,13 +337,22 @@ This is mostly use-package and local utilities which are used throught the confi
     (display-line-numbers-grow-only t)
     :init
     (set-face-attribute 'line-number-current-line nil :weight 'bold)
+    :config
+    (defun +display-line-numbers-disable ()
+      (when (fboundp #'display-line-numbers-mode)
+        (display-line-numbers-mode 0)))
     :hook
     ((emacs-startup-hook . global-display-line-numbers-mode)
      (prog-mode-hook . (lambda () (setq display-line-numbers-type 'visual)))
-     (imenu-list-major-mode-hook . (lambda () (display-line-numbers-mode 0)))
-     (treemacs-mode-hook . (lambda () (display-line-numbers-mode 0)))
-     (shell-mode-hook . (lambda () (display-line-numbers-mode 0)))
-     (term-mode-hook . (lambda () (display-line-numbers-mode 0)))))
+     (notmuch-hello-mode-hook . +display-line-numbers-disable)
+     (notmuch-show-mode-hook . +display-line-numbers-disable)
+     (notmuch-search-mode-hook . +display-line-numbers-disable)
+     (message-mode-hook . +display-line-numbers-disable)
+     (calc-mode-hook . +display-line-numbers-disable)
+     (imenu-list-major-mode-hook . +display-line-numbers-disable)
+     (treemacs-mode-hook . +display-line-numbers-disable)
+     (shell-mode-hook . +display-line-numbers-disable)
+     (term-mode-hook . +display-line-numbers-disable)))
 #+end_src
 ** S - The long lost Emacs string manipulation library
 #+begin_src emacs-lisp
@@ -3643,8 +3652,7 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
                full-calc)
     :config
     (defun +calc-mode-setup ()
-      (when (fboundp 'undo-tree-mode) (undo-tree-mode -1))
-      (when (fboundp 'display-line-numbers-mode) (display-line-numbers-mode -1)))
+      (when (fboundp 'undo-tree-mode) (undo-tree-mode -1)))
     :general
     (evil-nmmap
       :keymaps 'calc-mode-map
