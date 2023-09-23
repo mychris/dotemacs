@@ -181,6 +181,12 @@ This is mostly use-package and local utilities which are used throught the confi
   ;; https://emacshorrors.com/posts/advertising-your-freedom.html
   (fset 'display-startup-echo-area-message 'ignore)
 #+end_src
+** Libraries
+#+begin_src emacs-lisp
+  (use-package s :ensure t :defer t :demand nil)
+  (use-package f :ensure t :defer t :demand nil)
+  (use-package dash :ensure t :defer t :demand nil)
+#+end_src
 ** compat - Emacs Lisp Compatibility Library
 #+begin_src emacs-lisp
   (use-package compat
@@ -353,24 +359,6 @@ This is mostly use-package and local utilities which are used throught the confi
      (treemacs-mode-hook . +display-line-numbers-disable)
      (shell-mode-hook . +display-line-numbers-disable)
      (term-mode-hook . +display-line-numbers-disable)))
-#+end_src
-** S - The long lost Emacs string manipulation library
-#+begin_src emacs-lisp
-    (use-package s
-      :ensure t
-      :demand nil)
-#+end_src
-** f - Modern API for working with files and directories
-#+begin_src emacs-lisp
-  (use-package f
-    :ensure t
-    :demand nil)
-#+end_src
-** dash - A modern list API for Emacs.
-#+begin_src emacs-lisp
-  (use-package dash
-    :ensure t
-    :demand nil)
 #+end_src
 ** font-utils - Utilities for Unicode characters
 #+begin_src emacs-lisp
