@@ -1140,6 +1140,7 @@ This is mostly use-package and local utilities which are used throught the confi
       "l" #'tab-next
       "h" #'tab-previous
       "o" #'tab-recent
+      "q" #'tab-close
       "O" nil))
 #+end_src
 ** pos-tip - Show tooltip at point
