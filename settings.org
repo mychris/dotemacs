@@ -2067,6 +2067,17 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       'occur-edit-mode-map
       "o" #'occur-mode-goto-occurrence-other-window))
 #+end_src
+** find-dired [built-in] - run a find command and dired the output
+#+begin_src emacs-lisp
+  (use-package find-dired
+    :ensure nil
+    :commands (find-dired
+               find-dired-with-command
+               find-name-dired
+               find-grep-dired)
+    :custom
+    (find-ls-option (cons "-print0 |xargs -0 ls -ldh" "-ldh")))
+#+end_src
 ** loccur - Perform an occur-like folding in current buffer
 #+begin_src emacs-lisp
   (use-package loccur
