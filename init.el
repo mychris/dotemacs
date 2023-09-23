@@ -152,31 +152,65 @@
 
 ;;;; Load settings
 
+(defun +org-babel-tangle-file-fast-sloppy (org-file target-file &optional lang-re)
+  "Extract the bodies of source code blocks from ORG-FILE.
+Do this in a fast and sloppy way, without loading `org'.  Only consider source
+blocks which match LANG-RE.  Store the result to TARGET-FILE.
+
+Only source code blocks are recognized, inline code blocks will be ignored.  In
+addition, switches and other header arguments are not taken into account."
+  (or lang-re (setq lang-re ".*"))
+  (with-temp-buffer
+    ;; read the file into the buffer
+    (insert-file-contents org-file)
+    (goto-char (point-min))
+    ;; Delete everything from the buffer, which is not between begin_src and end_src
+    (let ((start (point))
+	  (count 0))
+      (while (progn
+	       (when (re-search-forward (concat "^#\\+begin_src[[:space:]]+" lang-re) nil t)
+		 (end-of-line)
+		 (delete-region start (point))
+		 (re-search-forward "^#\\+end_src" nil t)))
+	(setq count (1+ count))
+	(beginning-of-line)
+	(setq start (point)))
+      (delete-region start (point-max))
+      (message "Tangled %d code blocks from %s" (- count 1) org-file))
+    ;; Remove the two spaces in front of every line
+    (goto-char (point-min))
+    (while (not (eobp))
+      (beginning-of-line)
+      (when (looking-at-p "^  ")
+	(delete-char 2))
+      (forward-line))
+    ;; Remove the first empty line
+    (goto-char (point-min))
+    (when (looking-at-p "^$")
+      (delete-line))
+    ;; write the buffer to the target file
+    (write-file target-file)))
+
 (defun +file-time-less-p (a b)
   "Return non-nil if the file modification time for A is less than B."
   (time-less-p
    (file-attribute-modification-time (file-attributes a))
    (file-attribute-modification-time (file-attributes b))))
 
-(defun +org-babel-load-file (file-org-path &optional do-byte-compile)
+(defun +org-babel-load-file (file-org-path)
   "Load the given FILE-ORG-PATH using `org-bable-load-file'.
 The file is also byte-compiled, if DO-BYTE-COMPILE evaluates to a non-nil
 value."
   (let* ((file-el-name (concat (file-name-base file-org-path) ".el"))
-	 (file-el-path (expand-file-name file-el-name user-emacs-cache-directory))
-	 (file-elc-path (byte-compile-dest-file file-el-path)))
+	 (file-el-path (expand-file-name file-el-name user-emacs-cache-directory)))
     (if (not (file-exists-p file-org-path))
 	(error "init.el: Org file '%s' not found" file-org-path)
       (when (not (and (file-exists-p file-el-path)
 		      (+file-time-less-p file-org-path file-el-path)))
-	(when (file-exists-p file-elc-path)
-	  (delete-file file-elc-path))
-	(require 'org)
-	(org-babel-tangle-file file-org-path file-el-path "emacs-lisp")
-	(when do-byte-compile
-	  (unless (byte-compile-file file-el-path)
-	    (error "init.el: Failed to byte compile '%s'" file-el-path)))))
-    (when (not (load (file-name-sans-extension file-el-path)))
+	;;(require 'org)
+	;;(org-babel-tangle-file file-org-path file-el-path "emacs-lisp")
+	(+org-babel-tangle-file-fast-sloppy file-org-path file-el-path "emacs-lisp")))
+    (when (not (load-file file-el-path))
       (error "init.el: Failed to load '%s'" (file-name-sans-extension file-el-path)))))
 
 ;; For now, do not byte compile the settings files. For some reason, this
