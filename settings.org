@@ -1833,6 +1833,15 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       "M-{" #'backward-paragraph-recenter
       "M-i" #'back-to-indentation))
 #+end_src
+** xt-mouse [built-in] - support the mouse when emacs run in an xterm
+#+begin_src emacs-lisp
+  (use-package xt-mouse
+    :ensure nil
+    :delight xterm-mouse-mode
+    :commands (xterm-mouse-mode)
+    :hook
+    (after-make-frame-functions . (lambda (frame) (xterm-mouse-mode))))
+#+end_src
 ** goto-chg - Go to last change
 #+begin_src emacs-lisp
   (use-package goto-chg
@@ -2194,12 +2203,12 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
             (enable-theme theme)
           (load-theme theme :no-confirm))))
     :hook
-    (emacs-startup-hook . (lambda ()
-                            (if (or (display-graphic-p)
-                                    ;; daemon running on GNU/Linux with X
-                                    (and (eq system-type 'gnu/linux) (daemonp) (getenv "DISPLAY")))
-                                (switch-theme 'gruvbox-dark-soft)
-                              (switch-theme 'gruvbox-dark-soft)))))
+    (after-make-frame-functions . (lambda (frame)
+                                    (if (or (display-graphic-p)
+                                            ;; daemon running on GNU/Linux with X
+                                            (and (eq system-type 'gnu/linux) (daemonp) (getenv "DISPLAY")))
+                                        (switch-theme 'gruvbox-dark-soft)
+                                      (switch-theme 'gruvbox-dark-soft)))))
 #+end_src
 ** Fonst
 #+begin_src emacs-lisp
@@ -3791,6 +3800,12 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
 #+end_src
 * Postface
 #+begin_src emacs-lisp
+  ;; The functions in `after-make-frame-functions' are not run for the initial frame.
+  ;; So let's do that after emacs started.
+  (add-hook 'emacs-startup-hook #'(lambda ()
+                                    (mapc #'(lambda (callback)
+                                              (apply callback '(nil)))
+                                          after-make-frame-functions)))
   ;; Local Variables:
   ;; indent-tabs-mode: nil
   ;; End:
