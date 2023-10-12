@@ -52,6 +52,7 @@
     (delete-window most-recent-window)))
 
 ;; Detect OS and distribution, at least for systems I use.
+;; TODO: There should be some sort of caching here.
 
 (defun +linux-p ()
   "Return non-nil if the OS is any GNU/Linux distribution."
@@ -129,12 +130,51 @@
 	    (error nil))))
        t))
 
+(defun +bsd-p ()
+  "Return non-nil if the OS is a Berkeley Unix distribution."
+  (eq system-type 'berkeley-unix))
+
+(defun +freebsd-p ()
+  "Return non-nil if the OS is FreeBSD."
+  (and (+bsd-p)
+       (condition-case nil
+	   ;; Check the content of /var/run/os-release
+	   (with-temp-buffer
+	     (insert-file-contents "/var/run/os-release")
+	     (if (not (re-search-forward "^ID="))
+		 nil
+	       (string= "freebsd"
+			(string-trim (buffer-substring-no-properties
+				      (point)
+				      (line-end-position))))))
+	 (error
+	  (condition-case nil
+	      ;; Check the content of /etc/os-release
+	      (with-temp-buffer
+		(insert-file-contents "/etc/os-release")
+		(if (not (re-search-forward "^ID="))
+		    nil
+		  (string= "freebsd"
+			   (string-trim (buffer-substring-no-properties
+					 (point)
+					 (line-end-position))))))
+	    (error
+	     (condition-case nil
+		 ;; Check if freebsd-version exits successfully
+		 (let ((exit-code (call-process "freebsd-version" nil nil nil)))
+		   (eq exit-code 0))
+	       (error nil))))))
+       t))
+
 (defmacro +with-system (type &rest body)
-  "Execute BODY if running an the system TYPE.
+  "Execute BODY if running on the system TYPE.
 TYPE can be one of:
 * `linux'         for any GNU/Linux distribution.
 * `linux-arch'    for the GNU/Linux distribution Arch Linux.
-* `linux-debian'  for the GNU/Linux distribution Debian."
+* `linux-debian'  for the GNU/Linux distribution Debian.
+* `linux-ubuntu'  for the GNU/Linux distribution Debian.
+* `bsd'           for any Berkeley Unix distribution.
+* `freebsd'       for FreeBSD."
   (let ((test-fun (intern (concat "+" (symbol-name type) "-p"))))
     `(when (and (fboundp #',test-fun) (funcall #',test-fun))
        ,@body)))

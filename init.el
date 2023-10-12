@@ -18,7 +18,7 @@
   ;; In addition, some packages like `vertico' are no longer supported in 26.3
   (error "Emacs version < 27.1 no supported"))
 
-(when (not (member system-type '(gnu/linux windows-nt)))
+(when (not (member system-type '(gnu/linux windows-nt berkeley-unix)))
   (error "Unsupported operating system %s" system-type))
 
 ;;;; Customization information
