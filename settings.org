@@ -2409,10 +2409,16 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   (use-package em-hist
     :ensure nil
     :after (:all esh-mode)
-    :config
-    (setq-default eshell-history-file-name (expand-file-name "eshell-history" user-emacs-cache-directory))
-    (setq-default eshell-hist-ignoredups t)
-    (setq-default eshell-save-history-on-exit t))
+    :custom
+    (eshell-history-file-name (expand-file-name "eshell-history" user-emacs-cache-directory))
+    (eshell-hist-ignoredups t)
+    (eshell-save-history-on-exit t))
+
+  (use-package em-dirs
+    :ensure nil
+    :after (:all esh-mode)
+    :custom
+    (eshell-last-dir-ring-file-name (expand-file-name "eshell-lastdir" user-emacs-cache-directory)))
 
   (use-package +eshell
     :ensure nil
