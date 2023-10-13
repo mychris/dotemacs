@@ -86,34 +86,28 @@ This is mostly use-package and local utilities which are used throught the confi
   (put 'upcase-region 'disabled nil)
   (put 'downcase-region 'disabled nil)
   (put 'overwrite-mode 'disabled t)
-  (emacs-map
-    "C-z" nil ;; Use C-z as a prefix key.
-    "<help>" nil
-    "C-h <help>" nil
-    "<f1> <help>" nil
-    "<find>" nil
-    "<open>" nil
-    "<clear>" nil
-    "<f16>" nil
-    "<f18>" nil
-    "<f20>" nil
-    "C-x C-z" nil
-    "C-h g" nil ;; Who needs that?
-    "<f1> g" nil
-    "C-h n" nil
-    "C-h C-n" nil
-    "<f1> n" nil
-    "<f1> C-n" nil
-    "<f1> 4 i" nil
-    "C-h 4 i" nil
-    "M-`" nil ;; tmm-menubar
-    "<f10>" nil ;; menu-bar-open
-    "C-<f10>" nil ;; buffer-menu-open
-    "C-x i" nil ;; insert-file
-    "M-<" nil
-    "M-C-{" '(beginning-of-buffer :no-autoload t)
-    "M->" nil
-    "M-C-}" '(end-of-buffer :no-autoload t))
+  (general-unbind
+    "C-z" ;; Use C-z as a prefix key.
+    "<help>"
+    "C-h <help>"
+    "<f1> <help>"
+    "<find>"
+    "<open>"
+    "<clear>"
+    "<f16>"
+    "<f18>"
+    "<f20>"
+    "C-x C-z"
+    "C-h g" ;; Who needs that?
+    "<f1> g"
+    "<f1> 4 i"
+    "C-h 4 i"
+    "M-`" ;; tmm-menubar
+    "<f10>" ;; menu-bar-open
+    "C-<f10>" ;; buffer-menu-open
+    "C-x i" ;; insert-file
+    "M-<"
+    "M->")
   (emacs-map
     "<menu>" '(:keymap iso-transl-ctl-x-8-map))
   (emacs-map
