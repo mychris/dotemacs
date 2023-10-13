@@ -485,7 +485,10 @@ This is mostly use-package and local utilities which are used throught the confi
     :general
     (emacs-map
       "C-w" nil)
-    (evil-nmmap
+    (evil-mmap
+      "V" #'evil-visual-block
+      "C-v" #'evil-visual-line)
+   (evil-nmmap
       :keymaps 'override
       "SPC w" '(:keymap evil-window-map)
       "C-w" nil)
