@@ -2988,7 +2988,8 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :demand t
     :commands (flycheck-popup-tip-mode)
     :custom
-    (flycheck-popup-tip-error-prefix "\u27a4 ")
+    ;; 27a4 ➤ 2b9e ⮞
+    (flycheck-popup-tip-error-prefix "> ")
     :hook
     (flycheck-mode-hook . flycheck-popup-tip-mode))
 #+end_src
