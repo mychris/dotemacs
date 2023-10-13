@@ -3549,6 +3549,7 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
     (org-agenda-files '("~/Documents/org"))
     (org-agenda-span 14)
     (org-agenda-start-on-weekday 1)
+    (org-id-locations-file (expand-file-name "org-id-locations" user-emacs-cache-directory))
     :config
     ;; code blocks languages
     (org-babel-do-load-languages
