@@ -537,7 +537,7 @@ This is mostly use-package and local utilities which are used throught the confi
 ** evil-collection - A set of keybindings for Evil mode
 #+begin_src emacs-lisp
   (use-package evil-collection
-    :ensure t
+    :ensure (evil-collection :pin melpa)
     :after (:all evil)
     :commands (evil-collection-init)
     :demand t
@@ -3675,7 +3675,7 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
 ** Magit - A Git Porcelain inside Emacs
 #+begin_src emacs-lisp
   (use-package magit
-    :ensure t
+    :ensure (magit :pin melpa)
     :commands (magit-status
                magit-commit
                magit-load-config-extensions
