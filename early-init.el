@@ -25,4 +25,10 @@
 (menu-bar-mode 0)
 (scroll-bar-mode 0)
 
+;; Do not load values from X resources
+(setq inhibit-x-resources t)
+
+;; Disable site-start.el
+(setq site-run-file nil)
+
 ;;; early-init.el ends here
