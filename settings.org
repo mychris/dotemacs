@@ -306,7 +306,7 @@ This is mostly use-package and local utilities which are used throught the confi
     (recentf-save-file-modes #o600)
     (recentf-max-saved-items 1024)
     (recentf-exclude '(;; compressed files and archives
-                       "\\.tar$" "\\.tbz2$" "\\.tbz$" "\\.tgz$" 
+                       "\\.tar$" "\\.tbz2$" "\\.tbz$" "\\.tgz$"
                        "\\.bz2$" "\\.bz$" "\\.gz$" "\\.gzip$" "\\.xz$" "\\.zpaq$"
                        "\\.lz$" "\\.lrz$" "\\.lzo$" "\\.lzma$" "\\.shar$" "\\.kgb$"
                        "\\.zip$" "\\.Z$" "\\.7z$" "\\.rar$"
