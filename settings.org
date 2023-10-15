@@ -2175,7 +2175,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :ensure t)
 
   (use-package gruvbox-theme
-    :ensure t)
+    :ensure (gruvbox-theme :pin melpa))
 
   (use-package naysayer-theme
     :ensure t)
@@ -2492,7 +2492,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 ** fzf - A front-end for fzf.
 #+begin_src emacs-lisp
   (use-package fzf
-    :ensure t
+    :ensure (fzf :pin melpa)
     :after (:all projectile ggtags))
 #+end_src
 ** bookmark [built-in] - Set bookmarks, maybe annotate them, jump to them later
