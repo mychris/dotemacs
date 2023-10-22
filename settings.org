@@ -175,6 +175,7 @@ This is mostly use-package and local utilities which are used throught the confi
   (use-package s :ensure t :defer t :demand nil)
   (use-package f :ensure t :defer t :demand nil)
   (use-package dash :ensure t :defer t :demand nil)
+  (use-package list-utils :ensure (list-utils :pin melpa) :defer t :demand nil)
 #+end_src
 ** compat - Emacs Lisp Compatibility Library
 #+begin_src emacs-lisp
