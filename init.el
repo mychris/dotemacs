@@ -187,7 +187,7 @@ addition, switches and other header arguments are not taken into account."
     ;; Remove the first empty line
     (goto-char (point-min))
     (when (looking-at-p "^$")
-      (delete-line))
+      (delete-char 1))
     ;; write the buffer to the target file
     (write-file target-file)))
 
