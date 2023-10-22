@@ -56,24 +56,23 @@
 ;;;; Setup native compilation
 
 (when (version<= "28" emacs-version)
-  (eval-when-compile
-    (require 'comp))
-  ;; Debug level for native compilation, a number between 0 and 3.
-  (setq native-comp-debug 0)
-  ;; Optimization level for native compilation, a number between -1 and 3.
-  ;; -1 functions are kept in bytecode form and no native compilation is performed.
-  ;;  0 native compilation is performed with no optimizations.
-  ;;  1 light optimizations.
-  ;;  2 max optimization level fully adherent to the language semantic.
-  ;;  3 max optimization level, to be used only when necessary.
-  ;;    Warning: with 3, the compiler is free to perform dangerous optimizations.
-  (setq native-comp-speed 2)
-  ;; Non-nil to prevent native-compiling of Emacs Lisp code.
-  (setq no-native-compile nil)
-  ;; Non-nil means to natively compile packages as part of their installation.
-  (setq package-native-compile t)
-  ;; Whether to report warnings and errors from asynchronous native compilation.
-  (setq native-comp-async-report-warnings-errors 'silent))
+  (custom-set-variables
+   ;; Debug level for native compilation, a number between 0 and 3.
+   '(native-comp-debug 0)
+   ;; Optimization level for native compilation, a number between -1 and 3.
+   ;; -1 functions are kept in bytecode form and no native compilation is performed.
+   ;;  0 native compilation is performed with no optimizations.
+   ;;  1 light optimizations.
+   ;;  2 max optimization level fully adherent to the language semantic.
+   ;;  3 max optimization level, to be used only when necessary.
+   ;;    Warning: with 3, the compiler is free to perform dangerous optimizations.
+   '(native-comp-speed 2)
+   ;; Non-nil to prevent native-compiling of Emacs Lisp code.
+   '(no-native-compile nil)
+   ;; Non-nil means to natively compile packages as part of their installation.
+   '(package-native-compile t)
+   ;; Whether to report warnings and errors from asynchronous native compilation.
+   '(native-comp-async-report-warnings-errors 'silent)))
 
 ;;;; Bootstrap use-package
 
@@ -117,38 +116,37 @@
   (package-refresh-contents)
   (package-install 'delight))
 
-(eval-when-compile
-  (require 'cl-lib))
 (require 'delight)
 (require 'bind-key)
 (require 'my-utils)
 
 (eval-and-compile
-  (require 'use-package)
-  ;; Whether to report about loading and configuration details.
-  ;;(setq use-package-verbose (not (bound-and-true-p byte-compile-current-file)))
-  (setq use-package-verbose nil)
-  ;; If non-nil, compute statistics concerned use-package declarations.
-  ;;(setq use-package-compute-statistics (not (bound-and-true-p byte-compile-current-file)))
-  (setq use-package-compute-statistics nil)
-  ;; Minimal load timet that will be reported
-  (setq use-package-minimum-reported-time 0.001)
-  ;; If non-nil, assume ':demand t' unless ':defer' is used.
-  (setq use-package-always-demand nil)
-  ;; If non-nil, assume ':defer t' unless ':demand' is used.
-  (setq use-package-always-defer t)
-  ;; Treat every package as though it had specified using ':pin SYM'
-  (setq use-package-always-pin nil)
-  ;; Treat every package as though it had specified using ':ensure SEXP'
-  (setq use-package-always-ensure nil)
-  ;; If non-nil, make the expanded code as minimal as possible.
-  (setq use-package-expand-minimally nil)
-  ;; If non-nil, cause imenu to see 'use-package' declarations.
-  (setq use-package-enable-imenu-support t)
-  ;; Text append to the name of hooks mentioned by :hook.
-  (setq use-package-hook-name-suffix nil)
+  (custom-set-variables
+   ;; Whether to report about loading and configuration details.
+   ;;'(use-package-verbose (not (bound-and-true-p byte-compile-current-file)))
+   '(use-package-verbose nil)
+   ;; If non-nil, compute statistics concerned use-package declarations.
+   ;;'(use-package-compute-statistics (not (bound-and-true-p byte-compile-current-file)))
+   '(use-package-compute-statistics nil)
+   ;; Minimal load timet that will be reported
+   '(use-package-minimum-reported-time 0.001)
+   ;; If non-nil, assume ':demand t' unless ':defer' is used.
+   '(use-package-always-demand nil)
+   ;; If non-nil, assume ':defer t' unless ':demand' is used.
+   '(use-package-always-defer t)
+   ;; Treat every package as though it had specified using ':pin SYM'
+   '(use-package-always-pin nil)
+   ;; Treat every package as though it had specified using ':ensure SEXP'
+   '(use-package-always-ensure nil)
+   ;; If non-nil, make the expanded code as minimal as possible.
+   '(use-package-expand-minimally nil)
+   ;; If non-nil, cause imenu to see 'use-package' declarations.
+   '(use-package-enable-imenu-support t)
+   ;; Text append to the name of hooks mentioned by :hook.
+   '(use-package-hook-name-suffix nil))
   ;; Quit the use-package-report window and kill the buffer as well.
-  (define-key use-package-statistics-mode-map (kbd "q") #'kill-buffer-and-window))
+  (with-eval-after-load 'use-package
+    (define-key use-package-statistics-mode-map (kbd "q") #'kill-buffer-and-window)))
 
 ;;;; Load settings
 
