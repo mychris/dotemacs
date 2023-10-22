@@ -96,10 +96,12 @@
 	("nongnu-elpa-devel" . 7)
 	("melpa-stable" . 6)
 	("melpa" . 5)))
-(setq package-quickstart-file (expand-file-name "package-quickstart.el" user-emacs-cache-directory))
-(package-initialize)
-(when (not package-archive-contents)
-  (package-refresh-contents)
+(custom-set-variables
+ '(package-quickstart-file (expand-file-name "package-quickstart.el" user-emacs-cache-directory))
+ '(package-quickstalt t))
+(if (file-exists-p package-quickstart-file)
+    (package-activate-all)
+  (package-initialize)
   (package-quickstart-refresh))
 
 (unless (package-installed-p 'use-package)
@@ -115,8 +117,6 @@
   (package-install 'delight))
 
 (require 'delight)
-(require 'bind-key)
-(require 'my-utils)
 
 (eval-and-compile
   (custom-set-variables

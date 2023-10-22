@@ -8,13 +8,16 @@
 ;;; Code:
 
 ;; increase this early, decrease later on again
-(setq gc-cons-threshold most-positive-fixnum)
-(setq gc-cons-percentage 0.6)
+(custom-set-variables
+ '(gc-cons-threshold most-positive-fixnum)
+ '(gc-cons-percentage 0.6))
 
-;; Initialize installed packages
+;; Initialize installed packages automatically.
+;; Is done in init.el
 (setq package-enable-at-startup nil)
 
-;; Allow loading from the package cache.
+;; Disable loading from the package cache.
+;; Will be configured in init.el
 (setq package-quickstart nil)
 
 ;; Do not resize the frame at this early stage.
