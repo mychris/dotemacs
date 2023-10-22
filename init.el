@@ -76,9 +76,7 @@
 
 ;;;; Bootstrap use-package
 
-;; this should already be loaded, but I got an error in emacs-27.1 for some reason.
-;; TODO: investigate
-(unless (boundp 'package-archives)
+(unless (featurep 'package)
   (require 'package))
 (require 'nsm)
 (require 'gnutls)
