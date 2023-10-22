@@ -219,4 +219,8 @@ value."
   (when (file-exists-p local-settings)
     (+org-babel-load-file local-settings)))
 
+(fmakunbound '+org-babel-tangle-file-fast-sloppy)
+(fmakunbound '+org-babel-load-file)
+(fmakunbound '+file-time-less-p)
+
 ;;; init.el ends here
