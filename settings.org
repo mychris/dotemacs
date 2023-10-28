@@ -1295,7 +1295,11 @@ This is mostly use-package and local utilities which are used throught the confi
       "gr" #'Man-update-manpage
       "q" '(quit-window :no-autoload t)
       "ZQ" '(quit-window :no-autoload t)
-      "ZZ" '(quit-window :no-autoload t)))
+      "ZZ" '(quit-window :no-autoload t))
+    (evil-mmap
+      'Man-mode-map
+      "d" '(evil-scroll-down :no-autoload t)
+      "u" '(evil-scroll-up :no-autoload t)))
 #+end_src
 ** which-key - Display available key bindings in popup
 #+begin_src emacs-lisp
