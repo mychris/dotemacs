@@ -948,7 +948,7 @@ This is mostly use-package and local utilities which are used throught the confi
 
   (use-package +consult
     :ensure nil
-    :after (:all consult)
+    :commands (+consult-major-mode-menu)
     :general
     (c-x-leader
       "M" #'+consult-major-mode-menu))
