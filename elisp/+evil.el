@@ -30,6 +30,7 @@
 
 
 (eval-and-compile
+  (require 'nadvice)
   (require 'evil-common)
   (require 'evil-macros)
   (require 'evil-commands)
@@ -183,6 +184,24 @@
   "Setup `+evil' package."
   (define-key evil-outer-text-objects-map "h" '+evil-whole-buffer)
   (define-key evil-inner-text-objects-map "h" '+evil-whole-buffer))
+
+
+
+(with-eval-after-load 'sly
+  (eval-and-compile (require 'sly))
+  ;; Advice modeled after pp-last-sexp advice in evil-integration.el
+  (defun +evil--sly-macroexpand-advice (orig-fun &rest args)
+    "In normal-state or motion-state, form ends at point."
+    (if (and (not evil-move-beyond-eol)
+	     (or (evil-normal-state-p) (evil-motion-state-p)))
+	(save-excursion
+	  (unless (or (eobp) (eolp)) (forward-char))
+	  (apply orig-fun args))
+      (apply orig-fun args)))
+  (advice-add #'sly-macroexpand-1           :around '+evil--sly-macroexpand-advice '((name . +evil)))
+  (advice-add #'sly-macroexpand-1-inplace   :around '+evil--sly-macroexpand-advice '((name . +evil)))
+  (advice-add #'sly-macroexpand-all         :around '+evil--sly-macroexpand-advice '((name . +evil)))
+  (advice-add #'sly-macroexpand-all-inplace :around '+evil--sly-macroexpand-advice '((name . +evil))))
 
 
 (provide '+evil)
