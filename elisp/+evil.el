@@ -201,7 +201,8 @@
   (advice-add #'sly-macroexpand-1           :around '+evil--sly-macroexpand-advice '((name . +evil)))
   (advice-add #'sly-macroexpand-1-inplace   :around '+evil--sly-macroexpand-advice '((name . +evil)))
   (advice-add #'sly-macroexpand-all         :around '+evil--sly-macroexpand-advice '((name . +evil)))
-  (advice-add #'sly-macroexpand-all-inplace :around '+evil--sly-macroexpand-advice '((name . +evil))))
+  (advice-add #'sly-macroexpand-all-inplace :around '+evil--sly-macroexpand-advice '((name . +evil)))
+  (advice-add #'sly-inspect                 :around '+evil--sly-macroexpand-advice '((name . +evil))))
 
 
 (provide '+evil)

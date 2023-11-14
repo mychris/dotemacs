@@ -3245,12 +3245,14 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package lisp-mode
     :ensure nil
-    :commands (lisp-mode)
+    :commands (lisp-mode lisp-data-mode)
     :config
     (defun +lisp-mode-setup ()
       (setq-local fill-column 100)
       (setq-local show-trailing-whitespace t)
+      (indent-tabs-mode nil)
       (modify-syntax-entry ?- "w"))
+    (font-lock-add-keywords 'lisp-mode '(("(\\(\\(?:generator-lambda\\)\\|\\(?:deftest\\)\\|\\(?:testing\\)\\)" 1 font-lock-keyword-face)))
     :hook
     (lisp-mode-hook . +lisp-mode-setup)
     (lisp-data-mode-hook . +lisp-mode-setup))
@@ -3263,8 +3265,10 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (sly-kill-without-query-p t)
     (sly-net-coding-system 'utf-8-unix)
     (sly-complete-symbol-function #'sly-simple-completions)
+    (sly-default-lisp 'sbcl)
     :config
-    (setq inferior-lisp-program "sbcl")
+    (setq sly-lisp-implementations '((sbcl ("/usr/bin/sbcl"))
+                                     (goingto ("/home/chris/dev/goingto/goingto" "toplevel"))))
     (defun sly-apropos-next-symbol ()
       "Move cursor down to the next symbol in an `sly-apropos-mode' buffer."
       (interactive nil sly-apropos-mode)
@@ -3280,6 +3284,21 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
                   (> (point) (point-min)))
         (forward-line -1)))
     :general
+    (mode-action-leader
+      'sly-mode-map
+      "." #'sly-edit-definition
+      "," #'sly-edit-uses
+      "~" #'sly-mrepl-sync
+      "f" '(+indent-buffer :no-autoload t)
+      "e e" #'sly-eval-last-expression
+      "e E" #'sly-macroexpand-1
+      "e b" #'sly-eval-buffer
+      "e d" #'sly-eval-defun
+      "e p" #'sly-eval-print-last-expression
+      "e i" #'sly-inspect
+      "d ." #'sly-describe-symbol
+      "d a" #'sly-apropos-all
+      "d h" #'sly-hyperspec-lookup)
     (emacs-map 'sly-mode-map
       "C-c C-d ." #'sly-describe-symbol
       "C-c C-d C-." #'sly-describe-symbl)
@@ -3306,8 +3325,16 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (evil-imap 'sly-mrepl-mode-map
       "<up>" #'sly-mrepl-previous-input-or-button
       "<down>" #'sly-mrepl-next-input-or-button))
-#+end_src
 
+  (use-package sly-cl-indent
+    :ensure nil ;; part of sly
+    :defer t ;; will be loaded with sly
+    :demand nil
+    :config
+    (put 'deftest 'sly-common-lisp-indent-function '(&lambda &rest sly--lisp-indent-function-lambda-hack))
+    (put 'testing 'sly-common-lisp-indent-function '(&lambda &rest sly--lisp-indent-function-lambda-hack))
+    (put 'generator-lambda 'sly-common-lisp-indent-function '(&lambda &rest sly--lisp-indent-function-lambda-hack)))
+#+end_src
 ** Shell
 The shell mode is built-in.
 Flycheck can use ~shellcheck~ out of the box.
