@@ -198,11 +198,31 @@
 	  (unless (or (eobp) (eolp)) (forward-char))
 	  (apply orig-fun args))
       (apply orig-fun args)))
+
   (advice-add #'sly-macroexpand-1           :around '+evil--sly-macroexpand-advice '((name . +evil)))
   (advice-add #'sly-macroexpand-1-inplace   :around '+evil--sly-macroexpand-advice '((name . +evil)))
   (advice-add #'sly-macroexpand-all         :around '+evil--sly-macroexpand-advice '((name . +evil)))
   (advice-add #'sly-macroexpand-all-inplace :around '+evil--sly-macroexpand-advice '((name . +evil)))
-  (advice-add #'sly-inspect                 :around '+evil--sly-macroexpand-advice '((name . +evil))))
+  (advice-add #'sly-inspect                 :around '+evil--sly-macroexpand-advice '((name . +evil)))
+  ;; (advice-add #'sly-parse-form-upto-point   :around '+evil--sly-macroexpand-advice '((name . +evil)))
+
+  (add-hook 'sly-autodoc-mode-hook
+	    #'(lambda ()
+		(if sly-autodoc-mode
+		    (progn
+		      (add-hook 'evil-normal-state-exit-hook #'+sly-autodoc-manually nil t)
+		      (add-hook 'evil-insert-state-exit-hook #'+sly-autodoc-manually nil t)
+		      (add-hook 'evil-visual-state-exit-hook #'+sly-autodoc-manually nil t)
+		      (add-hook 'evil-operator-state-exit-hook #'+sly-autodoc-manually nil t)
+		      (add-hook 'evil-motion-state-exit-hook #'+sly-autodoc-manually nil t)
+		      (add-hook 'evil-emacs-state-exit-hook #'+sly-autodoc-manually nil t))
+		  (progn
+		      (remove-hook 'evil-normal-state-exit-hook #'+sly-autodoc-manually t)
+		      (remove-hook 'evil-insert-state-exit-hook #'+sly-autodoc-manually t)
+		      (remove-hook 'evil-visual-state-exit-hook #'+sly-autodoc-manually t)
+		      (remove-hook 'evil-operator-state-exit-hook #'+sly-autodoc-manually t)
+		      (remove-hook 'evil-motion-state-exit-hook #'+sly-autodoc-manually t)
+		      (remove-hook 'evil-emacs-state-exit-hook #'+sly-autodoc-manually t))))))
 
 
 (provide '+evil)

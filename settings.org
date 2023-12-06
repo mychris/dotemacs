@@ -3250,7 +3250,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (defun +lisp-mode-setup ()
       (setq-local fill-column 100)
       (setq-local show-trailing-whitespace t)
-      (indent-tabs-mode nil)
+      (indent-tabs-mode 0)
       (modify-syntax-entry ?- "w"))
     (font-lock-add-keywords 'lisp-mode '(("(\\(\\(?:generator-lambda\\)\\|\\(?:deftest\\)\\|\\(?:testing\\)\\)" 1 font-lock-keyword-face)))
     :hook
@@ -3268,6 +3268,12 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (sly-default-lisp 'sbcl)
     :config
     (setq sly-lisp-implementations '((sbcl ("/usr/bin/sbcl"))
+                                     (clisp ("/usr/bin/clisp"))
+                                     (cmucl ("/usr/bin/cmucl"))
+                                     (ccl ("/usr/bin/ccl"))
+                                     (ecl ("/usr/bin/ecl"))
+                                     (clasp ("/usr/bin/clasp"))
+                                     (abcl ("/usr/bin/abcl"))
                                      (goingto ("/home/chris/dev/goingto/goingto" "toplevel"))))
     (defun sly-apropos-next-symbol ()
       "Move cursor down to the next symbol in an `sly-apropos-mode' buffer."
@@ -3301,7 +3307,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       "d h" #'sly-hyperspec-lookup)
     (emacs-map 'sly-mode-map
       "C-c C-d ." #'sly-describe-symbol
-      "C-c C-d C-." #'sly-describe-symbl)
+      "C-c C-d C-." #'sly-describe-symbol)
     (emacs-map 'sly-apropos-mode-map
       "n" #'sly-apropos-next-symbol
       "p" #'sly-apropos-previous-symbol)
