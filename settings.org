@@ -489,7 +489,10 @@ This is mostly use-package and local utilities which are used throught the confi
       "C-w" nil)
     (evil-mmap
       "V" #'evil-visual-block
-      "C-v" #'evil-visual-line)
+      "C-v" #'evil-visual-line
+      "z Z" #'evil-window-middle
+      "z T" #'evil-window-top
+      "z B" #'evil-window-bottom)
    (evil-nmmap
       :keymaps 'override
       "SPC w" '(:keymap evil-window-map)
