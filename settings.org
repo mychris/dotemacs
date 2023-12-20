@@ -3721,7 +3721,8 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
     :commands (magit-status
                magit-commit
                magit-load-config-extensions
-               magit-process-git)
+               magit-process-git
+               magit-blame)
     :functions (magit-restore-window-configuration
                 magit-mode-get-buffers)
     :config
@@ -3764,7 +3765,31 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
     (emacs-map 'git-rebase-mode-map
       "DEL" nil)
     (emacs-map 'magit-blame-read-only-mode-map
-      "DEL" nil)
+      "DEL" nil
+      "SPC" nil
+      "S-SPC" nil
+      "p" nil
+      "P" nil
+      "n" nil
+      "N" nil
+      "b" nil
+      "r" nil
+      "f" nil
+      "B" nil
+      "c" nil
+      "q" nil
+      "M-w" nil)
+    (evil-nmap
+      'magit-blame-read-only-mode-map
+      "u" #'evil-scroll-up
+      "d" #'evil-scroll-down
+      "c" #'magit-blame-cycle-style
+      "q" #'magit-blame-quit
+      "s" #'magit-show-commit
+      "gk" #'magit-blame-previous-chunk
+      "gK" #'magit-blame-previous-chunk-same-commit
+      "gj" #'magit-blame-next-chunk
+      "gJ" #'magit-blame-next-chunk-same-commit)
     :hook
     (magit-mode-hook . magit-load-config-extensions))
 
