@@ -3757,9 +3757,13 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
       "M-2" nil
       "M-3" nil
       "M-4" nil)
-    (emacs-map 'magit-status-mode-map
+    (emacs-map 'magit-mode-map
       "DEL" nil)
     (emacs-map 'magit-diff-mode-map
+      "DEL" nil)
+    (emacs-map 'git-rebase-mode-map
+      "DEL" nil)
+    (emacs-map 'magit-blame-read-only-mode-map
       "DEL" nil)
     :hook
     (magit-mode-hook . magit-load-config-extensions))
