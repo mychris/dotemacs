@@ -705,7 +705,10 @@ This is mostly use-package and local utilities which are used throught the confi
       "M-RET" #'exit-minibuffer)
     (emacs-map
       'minibuffer-local-filename-completion-map
-      "RET" #'minibuffer-force-complete-and-exit))
+      "RET" #'minibuffer-force-complete-and-exit)
+    (emacs-map
+      'minibuffer-inactive-mode-map
+      "<mouse-1>" nil))
 
   (use-package minibuf-eldef
     :ensure nil
