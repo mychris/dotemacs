@@ -1518,29 +1518,6 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :hook
     (dired-mode-hook . colored-dired-setup-font-locking))
 #+end_src
-** neotree - A tree plugin like NerdTree for Vim
-#+begin_src emacs-lisp
-  (use-package neotree
-    :disabled t
-    :ensure t
-    :commands (neotree-toggle)
-    :custom
-    (neo-smart-open t)
-    (neo-vc-integration '(face char))
-    (neo-window-fixed-size nil)
-    (neo-window-width 55)
-    (neo-theme (if (display-graphic-p) 'icons 'arrow))
-    :general
-    (emacs-map
-      "<f8>" #'neotree-toggle)
-    (emacs-map
-      'neotree-mode-map
-      "<C-return>" #'neotree-change-root
-      "d" #'neotree-delete-node
-      "<delete>" #'neotree-delete-node
-      "C-h" #'neotree-hidden-file-toggle
-      "r" #'neotree-rename-node))
-#+end_src
 ** treemacs - A tree style file explorer package
 #+begin_src emacs-lisp
   (use-package treemacs
