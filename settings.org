@@ -3725,7 +3725,8 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
                magit-commit
                magit-load-config-extensions
                magit-process-git
-               magit-blame)
+               magit-blame
+               magit-log)
     :functions (magit-restore-window-configuration
                 magit-mode-get-buffers)
     :config
@@ -3736,16 +3737,21 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
       (mapc #'kill-buffer (magit-mode-get-buffers)))
     :general
     (c-x-leader
+      "g h" #'magit-info
       "g g" #'magit-status
+      "g G" #'magit-status-quick
       "g s" #'magit-show-commit
+      "g l" #'magit-log
       "g d" #'magit-diff-buffer-file
       "g c" #'magit-commit
       "g f" #'magit-fetch
       "g p" #'magit-push
       "g m" #'magit-merge
       "g b" #'magit-blame
-      "g z" #'maigt-stash
-      "g v" #'magit-generate-changelog)
+      "g z" #'magit-stash
+      "g v" #'magit-generate-changelog
+      "g !" #'magit-shell-command
+      "g U" #'magit-run-git-gui)
     (emacs-map
       "C-x g" nil)
     (evil-emap
