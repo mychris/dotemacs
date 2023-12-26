@@ -809,19 +809,26 @@ This is mostly use-package and local utilities which are used throught the confi
       "C-j" #'vertico-next)
     (evil-nmap
       'vertico-map
+      "<up>" #'vertico-previous
+      "<down>" #'vertico-next
       "<escape>" #'abort-recursive-edit
       "DEL" '(:keymap c-x-leader-map)
       "<backspace>" '(:keymap c-x-leader-map)
       "k" #'vertico-previous
       "j" #'vertico-next
+      "C-p" #'vertico-previous
+      "C-n" #'vertico-next
       "{" #'vertico-scroll-down
       "}" #'vertico-scroll-up
-      "C-u" #'vertico-scroll-up
-      "C-d" #'vertico-scroll-down
+      "C-u" #'vertico-scroll-down
+      "C-d" #'vertico-scroll-up
       "g g" #'vertico-first
       "G" #'vertico-last)
     :hook
-    (emacs-startup-hook . vertico-mode))
+    (emacs-startup-hook . vertico-mode)
+    (minibuffer-setup-hook . (lambda ()
+                               (setq-local evil-move-beyond-eol t)
+                               (setq-local evil-move-cursor-back nil))))
 
   (use-package vertico-quick
     :ensure nil
@@ -837,7 +844,11 @@ This is mostly use-package and local utilities which are used throught the confi
       'vertico-map
       "M-f" #'vertico-quick-insert
       "M-," #'vertico-quick-insert
-      "M-." #'vertico-quick-exit))
+      "M-." #'vertico-quick-exit)
+    (evil-nmap
+      'vertico-map
+      "f" #'vertico-quick-insert
+      "F" #'vertico-quick-exit))
 
   (use-package vertico-directory
     :ensure nil ;; part of vertico
@@ -934,7 +945,7 @@ This is mostly use-package and local utilities which are used throught the confi
     :ensure nil ;; part of consult
     :general
     (buffer-local-leader
-      "i" #'consult-imenu))
+      "i" #'consult-imenu-multi))
 
   (use-package consult-register
     :ensure nil ;; part of consult
