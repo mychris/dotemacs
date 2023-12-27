@@ -331,7 +331,6 @@ This is mostly use-package and local utilities which are used throught the confi
     (display-line-numbers-grow-only t)
     :init
     (set-face-attribute 'line-number-current-line nil :weight 'bold)
-    :config
     (defun +display-line-numbers-disable ()
       (when (fboundp #'display-line-numbers-mode)
         (display-line-numbers-mode 0)))
@@ -451,11 +450,11 @@ This is mostly use-package and local utilities which are used throught the confi
                   (param))
               (setq param
                     (cond ((eq shape 'bar) "6")
-                          ((eq shape 'hbar) "4")
+                          ((eq shape 'hbar) "3")
                           (t "2")))
               (send-string-to-terminal
                (concat "\e[" param " q")))))))
-    (advice-add #'evil-set-cursor :around #'+evil-set-cursor)
+    ;;(advice-add #'evil-set-cursor :around #'+evil-set-cursor)
     (evil-select-search-module 'evil-search-module 'isearch)
     (dolist (m '(help-mode Info-mode))
       (evil-set-initial-state m 'motion))
@@ -1151,7 +1150,6 @@ This is mostly use-package and local utilities which are used throught the confi
   (use-package help
     :ensure nil
     :commands (help-mode)
-    :after (:all evil) ;; binding into evil map, need to delay loading
     :config
     (advice-add #'help-window-display-message
                 :after #'(lambda (&rest _ignored)
@@ -1729,6 +1727,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
                unto-tree-visualize
                unto-tree-undo)
     :custom
+    (undo-tree-limit 160000)
     (undo-tree-auto-save-history t)
     (undo-tree-history-directory-alist
      `(("." . ,(file-name-as-directory
@@ -3690,6 +3689,13 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
     :commands (ispell)
     :custom
     (ispell-dictionary "en_US"))
+#+end_src
+** vc [built-in] - drive a version-control system from within Emacs
+#+begin_src emacs-lisp
+  (use-package vc
+    :ensure nil
+    :custom
+    (vc-handled-backends '(Git)))
 #+end_src
 ** Magit - A Git Porcelain inside Emacs
 #+begin_src emacs-lisp
