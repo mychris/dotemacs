@@ -1336,7 +1336,7 @@ This is mostly use-package and local utilities which are used throught the confi
     (which-key-add-key-based-replacements "SPC g e" "next-error prefix")
     (which-key-add-key-based-replacements "SPC g h" "hi-lock prefix")
     (which-key-add-key-based-replacements "g ." "evil-mc prefix")
-    (which-key-add-key-based-replacements "SPC c" "bookmark prefix")
+    (which-key-add-key-based-replacements "SPC b" "bookmark prefix")
     (which-key-add-key-based-replacements "SPC w" "window prefix")
     (which-key-add-key-based-replacements "SPC t" "tab prefix")
     (which-key-add-key-based-replacements "<backspace> h" "help prefix")
@@ -2504,13 +2504,14 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :general
     (emacs-map
       'bookmark-map
+      "<escape>" '(keyboard-quit :no-autoload t)
       "m" #'bookmark-set-no-overwrite
       "M" #'bookmark-set
       "L" #'bookmark-bmenu-list
       "p" '(projectile-switch-project :no-autoload t))
     (evil-nmmap
       :keymaps 'override
-      "SPC c" '(:keymap bookmark-map)))
+      "SPC b" '(:keymap bookmark-map)))
 
   (use-package +bookmark
     :ensure nil
