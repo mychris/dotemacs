@@ -50,9 +50,6 @@ This is mostly use-package and local utilities which are used throught the confi
   (general-create-definer inspect-leader
     :states '(normal motion)
     :prefix "SPC ,")
-  (general-create-definer quick-ex-leader
-    :states '(normal motion)
-    :prefix "SPC ;")
   ;; Try to replace as many C-x key bindings as possible
   (defvar c-x-leader-map
     (let ((map (make-sparse-keymap)))
@@ -463,21 +460,7 @@ This is mostly use-package and local utilities which are used throught the confi
     (dolist (m '(help-mode Info-mode))
       (evil-set-initial-state m 'motion))
     :hook
-    (emacs-startup-hook . evil-mode)
-    :general
-    (quick-ex-leader
-     "w" #'(lambda ()
-             (interactive)
-             (evil-ex-execute "w"))
-     "q" #'(lambda ()
-             (interactive)
-             (evil-ex-execute "q"))
-     "&" #'(lambda ()
-             (interactive)
-             (evil-ex "%"))
-     "!" #'(lambda ()
-             (interactive)
-             (evil-ex "!"))))
+    (emacs-startup-hook . evil-mode))
 
   ;; Use an additional use-package declaration.
   ;; I think general has some problems with the keybindings.
