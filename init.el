@@ -55,7 +55,8 @@
 
 ;;;; Setup native compilation
 
-(when (version<= "28" emacs-version)
+(when (and (version<= "28" emacs-version)
+	   (boundp 'native-comp-debug))
   (custom-set-variables
    ;; Debug level for native compilation, a number between 0 and 3.
    '(native-comp-debug 0)
@@ -74,49 +75,44 @@
    ;; Whether to report warnings and errors from asynchronous native compilation.
    '(native-comp-async-report-warnings-errors 'silent)))
 
-;;;; Bootstrap use-package
+;;;; Bootstrap package and use-package
 
-(unless (featurep 'package)
+(custom-set-variables
+ '(network-security-level 'high)
+ '(gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
+ '(package-archives
+   '(("gnu-elpa" . "https://elpa.gnu.org/packages/")
+     ("gnu-elpa-devel" . "https://elpa.gnu.org/devel/")
+     ("nongnu-elpa" . "https://elpa.nongnu.org/nongnu/")
+     ("nongnu-elpa-devel" . "https://elpa.nongnu.org/nongnu-devel/")
+     ("melpa-stable" . "https://stable.melpa.org/packages/")
+     ("melpa" . "https://melpa.org/packages/")))
+ '(package-archive-priorities
+   '(("gnu-elpa" . 10)
+     ("gnu-elpa-devel" . 9)
+     ("nongnu-elpa" . 8)
+     ("nongnu-elpa-devel" . 7)
+     ("melpa-stable" . 6)
+     ("melpa" . 5))))
+(unless (fboundp 'package)
   (require 'package))
-(require 'nsm)
-(require 'gnutls)
-(setq network-security-level 'high)
-(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
-(setq package-archives
-      '(("gnu-elpa" . "https://elpa.gnu.org/packages/")
-	("gnu-elpa-devel" . "https://elpa.gnu.org/devel/")
-	("nongnu-elpa" . "https://elpa.nongnu.org/nongnu/")
-	("nongnu-elpa-devel" . "https://elpa.nongnu.org/nongnu-devel/")
-	("melpa-stable" . "https://stable.melpa.org/packages/")
-	("melpa" . "https://melpa.org/packages/"))
-      package-archive-priorities
-      '(("gnu-elpa" . 10)
-	("gnu-elpa-devel" . 9)
-	("nongnu-elpa" . 8)
-	("nongnu-elpa-devel" . 7)
-	("melpa-stable" . 6)
-	("melpa" . 5)))
 (custom-set-variables
  '(package-quickstart-file (expand-file-name "package-quickstart.el" user-emacs-cache-directory))
- '(package-quickstalt t))
+ '(package-quickstart t))
+
 (if (file-exists-p package-quickstart-file)
     (package-activate-all)
   (package-initialize)
   (package-quickstart-refresh))
 
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
-
-(unless (package-installed-p 'general)
-  (package-refresh-contents)
-  (package-install 'general))
-
-(unless (package-installed-p 'delight)
-  (package-refresh-contents)
-  (package-install 'delight))
-
-(require 'delight)
+(let ((refreshed nil))
+  (dolist (pack '(use-package general delight))
+    (unless (package-installed-p pack)
+      (unless refreshed
+	(package-refresh-contents)
+	(setq refreshed t))
+      (package-install pack))
+    (require pack)))
 
 (eval-and-compile
   (custom-set-variables
@@ -144,6 +140,7 @@
    '(use-package-hook-name-suffix nil))
   ;; Quit the use-package-report window and kill the buffer as well.
   (with-eval-after-load 'use-package
+    (defvar use-package-statistics-mode-map)
     (define-key use-package-statistics-mode-map (kbd "q") #'kill-buffer-and-window)))
 
 ;;;; Load settings
@@ -209,13 +206,39 @@ value."
     (when (not (load-file file-el-path))
       (error "init.el: Failed to load '%s'" (file-name-sans-extension file-el-path)))))
 
-;; For now, do not byte compile the settings files. For some reason, this
-;; messes up some of the use-package declaration.
-(let ((main-settings (expand-file-name "settings.org" user-emacs-directory))
-      (local-settings (expand-file-name "settings-local.org" user-emacs-directory)))
-  (+org-babel-load-file main-settings)
-  (when (file-exists-p local-settings)
-    (+org-babel-load-file local-settings)))
+;; `file-name-handler-alist' is very expensive.
+;; With many packages installed, I counted more than 100.000 calls to
+;; `find-file-name-handler' during startup.
+;; emacs -Q only had around 1.500 calls.
+;; Setting `file-name-handler-alist' to `nil' during startup saves time.
+;;
+;; This will be a problem, if during the init phase, some package needs a file
+;; handler. This can happen in very obscure ways.
+;; For instance, when `saveplace' is loaded, it loads its cache from disk, goes
+;; through all the files it has stored and calls some function on the path.
+;; If a file in the cache needs a file handler (it referes to some ssh or sudo
+;; tramp path, for instance), the behavior will change, if
+;; `file-name-handler-alist' does not contain the tramp handler.
+;;
+;; To avoid this, try to load all packages in `after-init-hook'.
+;;
+;; Set `remove-file-name-handler-alist-during-startup' to nil if something
+;; weird happens.
+(let ((backup-file-name-handler-alist file-name-handler-alist)
+      (remove-file-name-handler-alist-during-startup t))
+  (when remove-file-name-handler-alist-during-startup
+    (setq file-name-handler-alist nil))
+  ;; For now, do not byte compile the settings files. For some reason, this
+  ;; messes up some of the use-package declaration.
+  (let ((main-settings (expand-file-name "settings.org" user-emacs-directory))
+	(local-settings (expand-file-name "settings-local.org" user-emacs-directory)))
+    (+org-babel-load-file main-settings)
+    (when (file-exists-p local-settings)
+      (+org-babel-load-file local-settings)))
+  (when remove-file-name-handler-alist-during-startup
+    (dolist (e file-name-handler-alist)
+      (push e backup-file-name-handler-alist))
+    (setq file-name-handler-alist backup-file-name-handler-alist)))
 
 (fmakunbound '+org-babel-tangle-file-fast-sloppy)
 (fmakunbound '+org-babel-load-file)
