@@ -1137,9 +1137,10 @@ This is mostly use-package and local utilities which are used throught the confi
 #+begin_src emacs-lisp
   (use-package tab-bar
     :ensure nil
+    :commands (tab-new)
     :general
     (emacs-map
-      "C-x t" nil)
+      "C-x t" '(:keymap tab-prefix-map))
     (evil-emap
       "C-x t" '(:keymap tab-prefix-map))
     (evil-nmmap
@@ -1148,10 +1149,12 @@ This is mostly use-package and local utilities which are used throught the confi
     (emacs-map
       'tab-prefix-map
       "<escape>" '(keyboard-quit :no-autoload t)
+      "n" #'tab-new
+      "c" #'tab-close
       "l" #'tab-next
       "h" #'tab-previous
-      "o" #'tab-recent
-      "q" #'tab-close
+      "b" #'tab-recent
+      "o" #'tab-close-other
       "O" nil))
 #+end_src
 ** pos-tip - Show tooltip at point
