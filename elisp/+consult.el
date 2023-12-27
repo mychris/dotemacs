@@ -58,4 +58,26 @@
     :lookup #'consult--lookup-candidate
     :history '+consult--major-mode-menu-history)))
 
+(defun +consult--tab-candidates ()
+  "Return list of tab candidate string."
+  (mapcar (lambda (tab-alist)
+	    (propertize
+	     (cdr (assoc 'name tab-alist))
+	     'consult--candidate (cdr (assoc 'name tab-alist))))
+	  (funcall tab-bar-tabs-function)))
+
+;;;###autoload
+(defun +consult-tab ()
+  "Select tab from the list of all tabs."
+  ;; TODO: sort?
+  (interactive)
+  (tab-switch
+   (consult--read
+    (+consult--tab-candidates)
+    :prompt "Switch to: "
+    :require-match t
+    :category 'tab
+    :lookup #'consult--lookup-candidate
+    :history '+consult--tab-menu-history)))
+
 ;;; +consult.el ends here

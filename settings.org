@@ -947,7 +947,8 @@ This is mostly use-package and local utilities which are used throught the confi
 
   (use-package +consult
     :ensure nil
-    :commands (+consult-major-mode-menu)
+    :commands (+consult-major-mode-menu
+               +consult-tab)
     :general
     (c-x-leader
       "M" #'+consult-major-mode-menu))
@@ -1135,7 +1136,9 @@ This is mostly use-package and local utilities which are used throught the confi
       "c" #'tab-close
       "l" #'tab-next
       "h" #'tab-previous
-      "b" #'tab-recent
+      "t" #'tab-recent
+      "T" #'other-tab-prefix
+      "s" '(+consult-tab :no-autoload t)
       "o" #'tab-close-other
       "O" nil))
 #+end_src
