@@ -3038,13 +3038,14 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
           (file-exists-p (expand-file-name "compile_commands.json" project-root)))))
     (defun +c-mode-setup ()
       (lsp-maybe)
-      (setq-local indent-tabs-mode nil)
-      (modify-syntax-entry ?_ "w"))
+      (setq-local indent-tabs-mode nil))
     (lsp-maybe-add-predicate 'c-mode #'lsp-maybe-active-if-compile-commands-in-projectile-root)
     :general
     (mode-action-leader
       'c-mode-base-map
       "." #'c-set-style
+      ";" #'comment-dwim
+      "c" #'projectile-compile-project
       "h" #'ff-find-other-file)
     (mode-action-leader
       'c-mode-map)
@@ -3069,8 +3070,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :config
     (defun +c-ts-mode-setup ()
       (lsp-maybe)
-      (setq-local indent-tabs-mode nil)
-      (modify-syntax-entry ?_ "w"))
+      (setq-local indent-tabs-mode nil))
     (lsp-maybe-add-predicate 'c-ts-mode #'lsp-maybe-active-if-compile-commands-in-projectile-root)
     :hook
     (c-ts-mode-hook . +c-ts-mode-setup)
