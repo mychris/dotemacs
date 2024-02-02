@@ -2170,6 +2170,9 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   (use-package naysayer-theme
     :ensure t)
 
+  (use-package standard-themes
+    :ensure t)
+
   (use-package custom
     :ensure nil
     :commands (switch-theme
@@ -2194,8 +2197,8 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
                                     (if (or (display-graphic-p)
                                             ;; daemon running on GNU/Linux with X
                                             (and (eq system-type 'gnu/linux) (daemonp) (getenv "DISPLAY")))
-                                        (switch-theme 'gruvbox-dark-soft)
-                                      (switch-theme 'gruvbox-dark-soft)))))
+                                        (switch-theme 'naysayer)
+                                      (switch-theme 'naysayer)))))
 #+end_src
 ** Fonst
 #+begin_src emacs-lisp
