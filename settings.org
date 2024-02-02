@@ -2819,6 +2819,10 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
             (lambda (c1 _c2)
               (equal (get-text-property 0 'company-backend c1) 'company-yasnippet)))
       candidates)
+    (defun my/company-abort-insert-tab ()
+      (interactive)
+      (company-abort)
+      (insert ?\t))
     :config
     ;; (setq company-backends (delete 'company-dabbrev company-backends))
     ;; (setq company-backends (delete 'company-bbdb company-backends))
@@ -2845,6 +2849,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       "<return>" nil
       "RET" nil
       "<tab>" #'company-complete-selection
+      "<backtab>" #'my/company-abort-insert-tab
       "TAB" #'company-complete-selection)
     (emacs-map
       'company-search-map
