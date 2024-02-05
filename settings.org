@@ -390,21 +390,6 @@ This is mostly use-package and local utilities which are used throught the confi
             (make-directory dir t)
             dir)))
 #+end_src
-** GCMH - the Garbage Collector Magic Hack
-#+begin_src emacs-lisp
-  (use-package gcmh
-    :ensure t
-    :delight (gcmh-mode)
-    :commands (gcmh-mode)
-    :functions (gcmh-idle-garbage-collect)
-    :custom
-    (gcmh-idle-delay 'auto)
-    (gcmh-auto-idle-delay-factor 10)
-    (gcmh-high-cons-threshold (* 16 1024 1024))
-    (gcmh-verbose nil)
-    :hook
-    (after-init-hook . gcmh-mode))
-#+end_src
 ** utils - Personal utilities
 #+begin_src emacs-lisp
   (use-package my-utils
@@ -417,6 +402,16 @@ This is mostly use-package and local utilities which are used throught the confi
     (evil-nmmap
       "SPC q" #'+delete-most-recent-window
       "Z O" #'+delete-most-recent-window))
+#+end_src
+** GC settings
+#+begin_src emacs-lisp
+  (use-package emacs
+    :ensure nil
+    :hook
+    (after-init-hook . (lambda ()
+                         (custom-set-variables
+                          '(gc-cons-threshold (* 4 1024 1024))
+                          '(gc-cons-percentage 0.2)))))
 #+end_src
 * Evil
 ** evil - Extensible Vi layer for Emacs.
