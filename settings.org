@@ -2667,10 +2667,11 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       "<wheel-left>" #'xref-go-back
       "<wheel-right>" #'xref-go-forward)
     (inspect-leader
-      'emacs-lisp-mode-map
-      "/" #'xref-find-reference
-      "?" #'xref-find-definitions
-      "m" #'+elisp-describe-thing-at-point))
+      "r" #'xref-find-references
+      "d" #'xref-find-definitions
+      "p" #'xref-go-back
+      "n" #'xref-go-forward
+      "s" #'xref-find-apropos))
 #+end_src
 ** smart-tabs-mode - Intelligently indent with tabs, align with spaces!
 #+begin_src emacs-lisp
