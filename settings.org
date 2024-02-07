@@ -2322,8 +2322,18 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (telephone-line-primary-right-separator 'telephone-line-cubed-right)
     (telephone-line-secondary-right-separator 'telephone-line-cubed-hollow-right)
     :config
+    (telephone-line-defsegment* +telephone-line-vc-segment ()
+      (let ((branch vc-mode))
+        (when branch
+          (setq branch (replace-regexp-in-string
+                        "^Git:\\(?:constr\\|detector\\)/PLENG-"
+                        "Git:PLENG-"
+                        branch))
+          (if (< 19 (length branch))
+              (concat (substring branch 0 19) "…")
+            branch))))
     (setq-default
-     telephone-line-lhs '((accent . (telephone-line-vc-segment
+     telephone-line-lhs '((accent . (+telephone-line-vc-segment
                                      telephone-line-erc-modified-channels-segment
                                      telephone-line-process-segment))
                           (evil . (telephone-line-evil-tag-segment))
