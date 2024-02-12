@@ -3601,9 +3601,6 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
       "C-c a" #'org-agenda
       "C-c ." #'org-time-stamp
       "C-c C-." #'org-time-stamp-inactive)
-    (emacs-map
-      'org-src-mode-map
-      "C-c C-c" #'org-edit-src-exit)
     (mode-action-leader
       'org-mode-map
       "'" #'org-edit-special
@@ -3624,6 +3621,7 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
     (emacs-map
       'org-src-mode-map
       "C-c s" #'org-edit-src-save
+      "C-c C-c" #'org-edit-src-exit
       "C-c c" #'org-edit-src-exit
       "C-c k" #'org-edit-src-abort))
 
