@@ -2860,11 +2860,8 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       "C-j" #'company-select-next-or-abort
       "C-p" #'company-select-previous-or-abort
       "C-k" #'company-select-previous-or-abort
-      "<return>" nil
-      "RET" nil
-      "<tab>" #'company-complete-selection
-      "<backtab>" #'my/company-abort-insert-tab
-      "TAB" #'company-complete-selection)
+      "<return>" #'company-complete-selection
+      "RET" #'company-complete-selection)
     (emacs-map
       'company-search-map
       "C-n" #'company-select-next-or-abort
@@ -2892,9 +2889,9 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :demand t
     :commands (company-dabbrev-code)
     :custom
-    (setq company-dabbrev-code-other-buffers t)
-    (setq company-dabbrev-code-everywhere t)
-    (setq company-dabbrev-code-ignore-case nil)
+    (company-dabbrev-code-other-buffers t)
+    (company-dabbrev-code-everywhere t)
+    (company-dabbrev-code-ignore-case nil)
     :config
     (add-to-list 'company-dabbrev-code-modes 'sh-mode))
 
