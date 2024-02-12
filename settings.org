@@ -1481,7 +1481,12 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     (emacs-map
       :keymaps 'dired-mode-map
       :states '(normal visual motion)
-      "gr" '(revert-buffer :no-autoload t)))
+      "SPC" nil
+      "gr" '(revert-buffer :no-autoload t))
+    (mode-action-leader
+      :keymaps 'dired-mode-map
+      "s i" #'dired-maybe-insert-subdir
+      "s k" #'dired-kill-subdir))
 
   (use-package +dired
     :ensure nil
@@ -1499,7 +1504,13 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :after (:all dired)
     :commands (dired-narrow
                dired-narrow-regexp
-               dired-narrow-fuzzy))
+               dired-narrow-fuzzy)
+    :general
+    (mode-action-leader
+      :keymaps 'dired-mode-map
+      "n f" #'dired-narrow-fuzzy
+      "n r" #'dired-narrow-regexp
+      "n q" #'revert-buffer))
 #+end_src
 ** colored-dired - More colors for dired
 #+begin_src emacs-lisp
