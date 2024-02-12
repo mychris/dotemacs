@@ -2907,6 +2907,20 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :hook
     (company-mode-hook . company-quickhelp-local-mode))
 #+end_src
+** completion-preview [built-in] - Preview completion with inline overlay
+#+begin_src emacs-lisp
+  (use-package completion-preview
+    :ensure nil
+    :disabled t
+    :delight (completion-preview-mode)
+    :commands (completion-preview)
+    :custom
+    (completion-preview-minimum-symbol-length 2)
+    :config
+    (setq completion-preview-sort-function #'identity)
+    :hook
+    (company-mode-hook . completion-preview-mode))
+#+end_src
 ** flycheck - On-the-fly syntax checking
 #+begin_src emacs-lisp
   (use-package flycheck
