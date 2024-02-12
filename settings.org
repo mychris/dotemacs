@@ -2749,6 +2749,7 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       (interactive "e")
       (call-interactively #'mouse-set-point)
       (call-interactively #'xref-find-definitions-at-mouse))
+    (add-hook 'lsp-mode-hook #'evil-normalize-keymaps)
     :general
     (emacs-map
       'lsp-mode-map
@@ -2756,6 +2757,10 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       "C-<mouse-1>" #'+lsp-find-definition-at-mouse
       "<wheel-left>" #'xref-go-back
       "<wheel-right>" #'xref-go-forward)
+    (inspect-leader
+      'lsp-mode-map
+      "r" #'lsp-find-references
+      "d" #'lsp-find-definition)
     :hook
     ((rustic-mode-hook . lsp)
      (tuareg-mode-hook . lsp)))
