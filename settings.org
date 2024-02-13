@@ -3896,6 +3896,14 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
       "C-k" #'git-rebase-move-line-up
       "C-j" #'git-rebase-move-line-down))
 #+end_src
+** ediff [built-in] - a comprehensive visual interface to diff & patch
+#+begin_src emacs-lisp
+  (use-package ediff
+    :ensure nil
+    :custom
+    (ediff-split-window-function 'split-window-horizontally)
+    (ediff-window-setup-function 'ediff-setup-windows-plain))
+#+end_src
 ** spray - A speed reading mode for Emacs
 #+begin_src emacs-lisp
   (use-package spray
