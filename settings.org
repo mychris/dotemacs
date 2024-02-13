@@ -2207,7 +2207,13 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :ensure (gruvbox-theme :pin melpa))
 
   (use-package naysayer-theme
-    :ensure t)
+    :ensure t
+    :config
+    (custom-theme-set-faces
+     'naysayer
+     `(tab-bar ((t (:inherit modeline))))
+     `(tab-bar-tab ((t (:foreground "#062329" :background "#d1b897"))))
+     `(tab-bar-tab-inactive ((t (:foreground "#d1b897" :background "#062329"))))))
 
   (use-package standard-themes
     :ensure t)
