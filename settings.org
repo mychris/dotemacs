@@ -602,6 +602,26 @@ This is mostly use-package and local utilities which are used throught the confi
     (evil-mode-hook . global-evil-mc-mode))
 #+end_src
 * Interface enhancements
+** window [built-in]
+#+begin_src emacs-lisp
+  (use-package window
+    :ensure nil
+    :demand t
+    :config
+    (setq display-buffer-alist
+        '(((or . ((derived-mode . occur-mode)
+                  (derived-mode . grep-mode)))
+           (display-buffer-reuse-mode-window
+            +display-buffer-right-or-below-selected)
+           (dedicated . t)
+           (body-function . +select-window-and-fit-to-buffer))
+          )))
+
+  (use-package +window
+    :ensure nil
+    :demand t
+    :after (:all window))
+#+end_src
 ** Minibuffer [built-in]
 #+begin_src emacs-lisp
   (use-package minibuffer
