@@ -1502,11 +1502,26 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       :keymaps 'dired-mode-map
       :states '(normal visual motion)
       "SPC" nil
-      "gr" '(revert-buffer :no-autoload t))
+      "gr" '(revert-buffer :no-autoload t)))
+
+  (use-package dired-aux
+    :ensure nil
+    :after (:all dired)
+    :commands (dired-maybe-insert-subdir
+               dired-kill-subdir
+               dired-hide-subdir
+               dired-hide-all
+               dired-do-touch
+               dired-diff)
+    :general
     (mode-action-leader
       :keymaps 'dired-mode-map
       "s i" #'dired-maybe-insert-subdir
-      "s k" #'dired-kill-subdir))
+      "s k" #'dired-kill-subdir
+      "s h" #'dired-hide-subdir
+      "s H" #'dired-hide-all
+      "t" #'dired-do-touch
+      "d" #'dired-diff))
 
   (use-package +dired
     :ensure nil
