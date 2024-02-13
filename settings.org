@@ -3926,6 +3926,102 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
   (use-package system-packages
     :ensure t)
 #+end_src
+** message [built-in] - composing mail and news messages
+#+begin_src emacs-lisp
+  (use-package message
+    :ensure nil
+    :defer t
+    :commands (message-mode)
+    :config
+    (defun +message-tab-function ()
+      (interactive)
+      (let ((p (point)))
+        (when (re-search-forward "^--text follows this line--$" (point-max) t)
+          (goto-char p)
+          (forward-line 1)
+          (beginning-of-line)
+          (if (looking-at-p "^--text follows this line--$")
+              (message-goto-body)
+            (when (looking-at "^[!-~]+:[ \t]")
+              (message "TEST")
+              (goto-char (match-end 0)))
+            (when (not (= (point)
+                          (save-excursion
+                            (end-of-visual-line)
+                            (point))))
+              (set-mark (point))
+              (end-of-visual-line))))))
+    (defun +message-backtab-function ()
+      (interactive)
+      nil)
+    :custom
+    (message-signature nil)
+    (message-signature-insert-empty-line t)
+    (message-cite-function #'message-cite-original)
+    (message-sendmail-envelope-from 'header)
+    (message-sendmail-extra-arguments '("--passwordeval=gpg --use-agent --quiet --batch -d ~/.msmtp-credentials.gpg")))
+#+end_src
+** sendmail [built-in] - mail sending commends for Emacs
+#+begin_src emacs-lisp
+  (use-package sendmail
+    :ensure nil
+    :defer t
+    :custom
+    (sendmail-program "/usr/bin/msmtp")
+    (send-mail-function 'sendmail-send-it)
+    (mail-specify-envelope-from t)
+    (mail-envelope-from 'header))
+#+end_src
+** notmuch - run notmuch within emacs
+#+begin_src emacs-lisp
+  (use-package notmuch
+    :ensure t
+    :commands (notmuch
+               notmuch-mua-mail
+               notmuch-mua-send-and-exit
+               notmuch-mua-kill-buffer
+               notmuch-mua-send-hook)
+    :custom
+    (mail-user-agent 'notmuch-user-agent)
+    (notmuch-fcc-dirs ".posteo.Sent")
+    (notmuch-archive-tags '("-inbox" "+archived"))
+    (notmuch-show-logo nil)
+    (notmuch-column-control 1.0)
+    (notmuch-hello-sections '(notmuch-hello-insert-saved-searches
+                              notmuch-hello-insert-search))
+    (notmuch-show-empty-saved-searches t)
+    (notmuch-saved-searches
+     '((:name "📥 inbox"          :query "tag:inbox"          :key "i"  :sort-order newest-first :search-type tree)
+       (:name "💬 unread"         :query "tag:unread"         :key "u"  :sort-order newest-first :search-type tree)
+       (:name " emacs-devel"    :query "tag:emacs-devel"    :key "ed" :sort-order newest-first :search-type tree)
+       (:name " emacs-tangents" :query "tag:emacs-tangents" :key "et" :sort-order newest-first :search-type tree)
+       (:name " emacs-help"     :query "tag:emacs-help"     :key "eh" :sort-order newest-first :search-type tree)
+       (:name " emacs-info"     :query "tag:emacs-info"     :key "ei" :sort-order newest-first :search-type tree)
+       (:name " flagged"        :query "tag:flagged"        :key "f"  :sort-order newest-first :search-type unthreaded)
+       (:name " sent"           :query "tag:sent"           :key "t"  :sort-order newest-first :search-type unthreaded)
+       (:name " drafts"         :query "tag:drafts"         :key "d"  :sort-order newest-first :search-type unthreaded)
+       (:name " archive"        :query "tag:archived"       :key "A"  :sort-order newest-first :search-type unthreaded)
+       (:name " all mail"       :query "*"                  :key "a"  :sort-order newest-first :search-type tree)))
+    :init
+    (defun +notmuch-load-on-compose (&rest _)
+      "Load notmuch."
+      (require 'notmuch))
+    (advice-add 'compose-mail :before '+notmuch-load-on-compose)
+    :config
+    (advice-remove 'compose-mail #'+notmuch-load-on-compose)
+    :general
+    (evil-nmmap
+      'notmuch-tree-mode-map
+      "." #'notmuch-tree-next-matching-message
+      "," #'notmuch-tree-prev-matching-message
+      "{" #'notmuch-tree-prev-thread-in-tree
+      "}" #'notmuch-tree-next-thread-in-tree)
+    (mode-action-leader
+      'notmuch-common-keymap
+      "r" #'notmuch-show-reply
+      "R" #'notmuch-show-reply-sender
+      "t" #'notmuch-show-add-tag))
+#+end_src
 * Directory-local variables
 #+begin_src emacs-lisp
   (dir-locals-set-class-variables
