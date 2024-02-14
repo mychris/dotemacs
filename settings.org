@@ -3699,7 +3699,10 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
       "c g" #'org-clock-goto
       "c q" #'org-clock-cancel
       "c d" #'org-clock-display
-      "c r" #'org-clock-remove-overlays)
+      "c r" #'org-clock-remove-overlays
+      "l c" #'org-insert-link
+      "l s" #'org-store-link
+      "t c" #'org-set-tags-command)
     :hook
     (org-mode-hook . (lambda () (indent-tabs-mode 0))))
 
