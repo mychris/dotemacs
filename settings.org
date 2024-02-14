@@ -1471,9 +1471,10 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   This kills the Dired buffer, then visits the directory.
   Otherwise, it is opened via `find-file'."
       (interactive)
-      (if (file-directory-p (dired-get-file-for-visit))
-          (find-alternate-file (dired-get-file-for-visit))
-        (find-file (dired-get-file-for-visit))))
+      (let ((target (dired-get-file-for-visit)))
+        (if (file-directory-p target)
+            (find-alternate-file (file-truename target))
+          (find-file target))))
     (defun +dired-mouse-find-file (event)
       (interactive "e")
       (dired-mouse-find-file event #'find-file #'find-alternate-file))
