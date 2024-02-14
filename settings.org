@@ -41,15 +41,18 @@ This is mostly use-package and local utilities which are used throught the confi
     :keymaps 'buffer-local-leader-map)
 
   (general-create-definer system-local-leader
-    :states '(normal motion)
+    :states '(normal motion visual insert)
     :keymaps 'override
-    :prefix "SPC s")
+    :prefix "SPC s"
+    :non-normal-prefix "C-SPC s")
   (general-create-definer mode-action-leader
-    :states '(normal motion)
-    :prefix "SPC e")
+    :states '(normal motion visual insert)
+    :prefix "SPC e"
+    :non-normal-prefix "C-SPC e")
   (general-create-definer inspect-leader
-    :states '(normal motion)
-    :prefix "SPC ,")
+    :states '(normal motion visual insert)
+    :prefix "SPC ,"
+    :non-normal-prefix "C-SPC ,")
   ;; Try to replace as many C-x key bindings as possible
   (defvar c-x-leader-map
     (let ((map (make-sparse-keymap)))
@@ -58,11 +61,19 @@ This is mostly use-package and local utilities which are used throught the confi
   (general-create-definer c-x-leader
     :keymaps 'c-x-leader-map)
 
-  (evil-nmmap
-    "<backspace>" '(:keymap c-x-leader-map)
-    "DEL" '(:keymap c-x-leader-map)
-    "SPC" nil
-    "SPC g" '(:keymap buffer-local-leader-map))
+  (general-define-key
+   :states '(normal motion)
+   "<backspace>" '(:keymap c-x-leader-map)
+   "DEL" '(:keymap c-x-leader-map)
+   "SPC" nil
+   "SPC g" '(:keymap buffer-local-leader-map))
+
+  (general-define-key
+   :states '(insert visual)
+   "C-<backspace>" '(:keymap c-x-leader-map)
+   "C-DEL" '(:keymap c-x-leader-map)
+   "C-SPC" nil
+   "C-SPC g" '(:keymap buffer-local-leader-map))
 
   (eval-and-compile
     (defvar user-emacs-cache-directory)) ;; from init.el
@@ -468,7 +479,7 @@ This is mostly use-package and local utilities which are used throught the confi
       "z Z" #'evil-window-middle
       "z T" #'evil-window-top
       "z B" #'evil-window-bottom)
-   (evil-nmmap
+    (evil-nmmap
       :keymaps 'override
       "SPC w" '(:keymap evil-window-map)
       "C-w" nil)
