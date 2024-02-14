@@ -4035,6 +4035,7 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
                notmuch-mua-send-hook)
     :custom
     (mail-user-agent 'notmuch-user-agent)
+    (notmuch-poll-script "offlineimap")
     (notmuch-fcc-dirs ".posteo.Sent")
     (notmuch-archive-tags '("-inbox" "+archived"))
     (notmuch-show-logo nil)
