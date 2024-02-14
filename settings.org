@@ -1522,7 +1522,35 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       "s H" #'dired-hide-all
       "t" #'dired-do-touch
       "d" #'dired-diff))
-
+#+end_src
+** dired-quick-sort - Persistent quick sorting of dired buffers in various ways
+#+begin_src emacs-lisp
+  (use-package dired-quick-sort
+    :ensure t
+    :after (:all dired)
+    :demand t
+    :functions (dired-quick-sort-setup)
+    :commands (hydra-dired-quick-sort/body)
+    :config
+    (dired-quick-sort-setup)
+    :general
+    (mode-action-leader
+     :keymaps 'dired-mode-map
+     "S" #'hydra-dired-quick-sort/body))
+#+end_src
+** dired-hide-dotfiles - Hide dotfiles in dired
+#+begin_src emacs-lisp
+  (use-package dired-hide-dotfiles
+    :ensure t
+    :after (:all dired)
+    :demand t
+    :general
+    (mode-action-leader
+      :keymaps 'dired-mode-map
+      "d" #'dired-hide-dotfiles-mode))
+#+end_src
+** +dired - dired extensions
+#+begin_src emacs-lisp
   (use-package +dired
     :ensure nil
     :after (:all dired)
