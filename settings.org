@@ -812,7 +812,8 @@ This is mostly use-package and local utilities which are used throught the confi
       "C-p" #'vertico-previous
       "C-k" #'vertico-previous
       "C-n" #'vertico-next
-      "C-j" #'vertico-next)
+      "C-j" #'vertico-next
+      "C-<return>" #'vertico-exit-input)
     (evil-nmap
       'vertico-map
       "<up>" #'vertico-previous
@@ -820,6 +821,7 @@ This is mostly use-package and local utilities which are used throught the confi
       "<escape>" #'abort-recursive-edit
       "DEL" '(:keymap c-x-leader-map)
       "<backspace>" '(:keymap c-x-leader-map)
+      "C-<return>" #'vertico-exit-input
       "k" #'vertico-previous
       "j" #'vertico-next
       "C-p" #'vertico-previous
