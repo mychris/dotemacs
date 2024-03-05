@@ -2589,7 +2589,12 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
 #+begin_src emacs-lisp
   (use-package fzf
     :ensure (fzf :pin melpa)
-    :after (:all projectile))
+    :commands (fzf-projectile
+               fzf
+               fzf-grep)
+    :general
+    (system-local-leader
+      "F" #'fzf-projectile))
 #+end_src
 ** bookmark [built-in] - Set bookmarks, maybe annotate them, jump to them later
 #+begin_src emacs-lisp
