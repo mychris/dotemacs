@@ -3745,6 +3745,12 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
     :hook
     (org-mode-hook . org-superstar-mode))
 #+end_src
+** AsciiDoc
+#+begin_src emacs-lisp
+  (use-package adoc-mode
+    :ensure (adoc-mode :pin melpa)
+    :commands (adoc-mode))
+#+end_src
 ** Markdown
 #+begin_src emacs-lisp
   (use-package markdown-mode
