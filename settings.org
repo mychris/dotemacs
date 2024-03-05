@@ -40,6 +40,11 @@ This is mostly use-package and local utilities which are used throught the confi
   (general-create-definer buffer-local-leader
     :keymaps 'buffer-local-leader-map)
 
+  (general-create-definer space-leader
+    :states '(normal motion visual insert)
+    :keymaps 'override
+    :prefix "SPC"
+    :non-normal-prefix "C-SPC")
   (general-create-definer system-local-leader
     :states '(normal motion visual insert)
     :keymaps 'override
@@ -410,8 +415,9 @@ This is mostly use-package and local utilities which are used throught the confi
     :general
     (emacs-map
       "C-x 9" #'+delete-most-recent-window)
+    (space-leader
+      "q" #'+delete-most-recent-window)
     (evil-nmmap
-      "SPC q" #'+delete-most-recent-window
       "Z O" #'+delete-most-recent-window))
 #+end_src
 ** GC settings
@@ -479,9 +485,9 @@ This is mostly use-package and local utilities which are used throught the confi
       "z Z" #'evil-window-middle
       "z T" #'evil-window-top
       "z B" #'evil-window-bottom)
+    (space-leader
+      "w" '(:keymap evil-window-map))
     (evil-nmmap
-      :keymaps 'override
-      "SPC w" '(:keymap evil-window-map)
       "C-w" nil)
     (evil-emap
       :keymaps '(gdb-breakpoints-mode-map
@@ -1152,9 +1158,9 @@ This is mostly use-package and local utilities which are used throught the confi
       "C-x t" '(:keymap tab-prefix-map))
     (evil-emap
       "C-x t" '(:keymap tab-prefix-map))
-    (evil-nmmap
+    (space-leader
       :keymaps 'override
-      "SPC t" '(:keymap tab-prefix-map))
+      "t" '(:keymap tab-prefix-map))
     (emacs-map
       'tab-prefix-map
       "<escape>" '(keyboard-quit :no-autoload t)
@@ -2035,10 +2041,9 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :custom
     (link-hint-restore t)
     :general
-    (evil-nmmap
-      :keymaps 'override
-      "SPC f" #'link-hint-open-link
-      "SPC F" #'link-hint-copy-link))
+    (space-leader
+      "f" #'link-hint-open-link
+      "F" #'link-hint-copy-link))
 
   (use-package +link-hint
     :ensure nil
@@ -2613,9 +2618,8 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
       "M" #'bookmark-set
       "L" #'bookmark-bmenu-list
       "p" '(projectile-switch-project :no-autoload t))
-    (evil-nmmap
-      :keymaps 'override
-      "SPC b" '(:keymap bookmark-map)))
+    (space-leader
+      "b" '(:keymap bookmark-map)))
 
   (use-package +bookmark
     :ensure nil
