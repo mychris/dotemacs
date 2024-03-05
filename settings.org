@@ -3952,31 +3952,6 @@ Use ~company-dabbrev-code~ for now, until another tool is found.
     (ediff-split-window-function 'split-window-horizontally)
     (ediff-window-setup-function 'ediff-setup-windows-plain))
 #+end_src
-** spray - A speed reading mode for Emacs
-#+begin_src emacs-lisp
-  (use-package spray
-    :ensure t
-    :commands (spray-mode)
-    :custom
-    (spray-wpm 375 "Words per minute")
-    (spray-height 400 "Height of characters")
-    (spray-margin-top 1 "Character margin at top of buffer")
-    (spray-margin-left 1 "Character margin at left of buffer")
-    (spray-ramp 3 "Initial words before ramping up to full speed")
-    :general
-    (emacs-map
-      'spray-mode-map
-      "SPC" #'spray-start/stop
-      "h" #'spray-backward-word
-      "<left>" #'spray-backward-word
-      "l" #'spray-forward-word
-      "<right>" #'spray-forward-word
-      "f" #'spray-faster
-      "s" #'spray-slower
-      "q" #'spray-quit
-      "RET" #'spray-quit
-      "<return>" #'spray-quit))
-#+end_src
 ** system-packages - functions to manage system packages
 #+begin_src emacs-lisp
   (use-package system-packages
