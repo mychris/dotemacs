@@ -1717,20 +1717,6 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
     :hook
     (emacs-startup-hook . global-hi-lock-mode))
 #+end_src
-** highlight-thing - Minimalistic minor mode to highlight current thing under point
-#+begin_src emacs-lisp
-  (use-package highlight-thing
-    :ensure t
-    :delight (highlight-thing-mode)
-    :commands (highlight-thing-mode
-               global-hightlight-thing-mode)
-    :custom
-    (highlight-thing-delay-seconds 2)
-    (highlight-thing-exclude-thing-under-point t)
-    (highlight-thing-prefer-active-region t)
-    :hook
-    (emacs-startup-hook . global-highlight-thing-mode))
-#+end_src
 * Editing
 ** indent [built-in] - indentation commands for emacs
 #+begin_src emacs-lisp
