@@ -3275,6 +3275,18 @@ Execute ~free-keys~ using C-u M-x "free-keys" and then type "C" "-" "c" into the
   (setq mouse-wheel-scroll-amount '(3 ((shift) . 1) ((control) . nil)))
   (setq mouse-wheel-progressive-speed nil)
 #+end_src
+** Zig
+#+begin_src emacs-lisp
+  (use-package zig-mode
+    :ensure t
+    :config
+    (defun +zig-mode-setup ()
+      (setq-local compile-command "zig build")
+      (setq-local indent-tabs-mode nil)
+      (setq-local show-trailing-whitespace t))
+    :hook
+    (zig-mode-hook . +zig-mode-setup))
+#+end_src
 ** Emacs-lisp
 #+begin_src emacs-lisp
   (use-package elisp-mode
